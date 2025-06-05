@@ -1,0 +1,36 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: podinfo
+  namespace: podinfo
+spec:
+  interval: 24h
+  url: https://stefanprodan.github.io/podinfo
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: podinfo
+  namespace: podinfo
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: podinfo
+      version: "6.4.x"
+      sourceRef:
+        kind: HelmRepository
+        name: podinfo
+        namespace: podinfo
+      interval: 12h
+  values:
+    replicaCount: 2
+    image:
+      repository: ghcr.io/stefanprodan/podinfo
+      tag: "6.4.0"
+    service:
+      enabled: true
+      type: ClusterIP
+    ingress:
+      enabled: false

@@ -2,6 +2,4 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cert-manager${tenant_suffix:-}
-  labels:
-    environment: ${environment}
+  name: cert-manager

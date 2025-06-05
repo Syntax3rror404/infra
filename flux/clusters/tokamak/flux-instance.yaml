@@ -24,3 +24,4 @@ spec:
     ref: "refs/heads/main"
     path: "flux/clusters/tokamak"
     pullSecret: "flux-system"
+    interval: "1m0s"
