@@ -27,3 +27,7 @@ spec:
   prune: true
   dependsOn:
     - name: infrastructure
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-config

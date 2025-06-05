@@ -60,4 +60,4 @@ patchesJson6902:
     patch: |-
       - op: replace
         path: /spec/rules/0/host
-        value: gitops.dev-cluster.local
+        value: gitops.${cilium_domain}
