@@ -21,7 +21,7 @@ spec:
       chart: weave-gitops
       version: "4.x"
       sourceRef:
-        kind: OCIRepository
+        kind: HelmRepository
         name: weave-gitops
         namespace: weave-gitops
       interval: 12h
