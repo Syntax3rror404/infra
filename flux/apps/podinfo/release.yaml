@@ -33,4 +33,8 @@ spec:
       enabled: true
       type: ClusterIP
     ingress:
+      enabled: false  # We manage ingress separately
+    # Use default storage class from cluster config
+    persistence:
       enabled: false
+      storageClass: ""  # Will use default from cluster

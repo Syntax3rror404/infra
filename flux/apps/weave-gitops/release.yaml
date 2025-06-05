@@ -1,0 +1,41 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: weave-gitops
+  namespace: weave-gitops
+spec:
+  interval: 24h
+  url: https://helm.gitops.weave.works
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: weave-gitops
+  namespace: weave-gitops
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: weave-gitops
+      version: "4.x"
+      sourceRef:
+        kind: HelmRepository
+        name: weave-gitops
+        namespace: weave-gitops
+      interval: 12h
+  values:
+    adminUser:
+      create: true
+      username: admin
+      # Password: flux-admin (bcrypt hash)
+      passwordHash: "$2a$10$P/tHQ1DNFXdvX0zRGA8LPeJ4w.BX8W6rrE1ffFu6rCl8Lb6VkbwGe"
+    ingress:
+      enabled: false  # We manage ingress separately
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+  namespace: flux-system
+data:
+  # Ingress Configuration
+  nginx_domain: "menofgaming.de"
+  cilium_domain: "tokamak.labza"
+  default_ingress_class: "nginx"
+  
+  # Storage Configuration
+  default_storage_class: "local-path"
+  
+  # Environment
+  environment: "prod"
+  cluster_name: "tokamak"
+  
+  # TLS Configuration
+  cluster_issuer: "letsencrypt-prod"

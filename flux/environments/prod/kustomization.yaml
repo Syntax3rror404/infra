@@ -3,5 +3,61 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../apps/podinfo
+  - ../../apps/weave-gitops
 patchesStrategicMerge:
   - podinfo-config.yaml
+patchesJson6902:
+  # Patch podinfo ingress domains
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: podinfo-nginx
+      namespace: podinfo
+    patch: |-
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: podinfo.example.com
+      - op: replace
+        path: /spec/rules/0/host
+        value: podinfo.example.com
+      - op: replace
+        path: /metadata/annotations/cert-manager.io~1cluster-issuer
+        value: letsencrypt-prod
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: podinfo-cilium
+      namespace: podinfo
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: podinfo.prod-cluster.local
+  # Patch weave-gitops ingress domains
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: weave-gitops-nginx
+      namespace: weave-gitops
+    patch: |-
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: gitops.example.com
+      - op: replace
+        path: /spec/rules/0/host
+        value: gitops.example.com
+      - op: replace
+        path: /metadata/annotations/cert-manager.io~1cluster-issuer
+        value: letsencrypt-prod
+  - target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: weave-gitops-cilium
+      namespace: weave-gitops
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: gitops.prod-cluster.local
