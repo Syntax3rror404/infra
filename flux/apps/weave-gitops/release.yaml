@@ -16,15 +16,9 @@ metadata:
   namespace: weave-gitops
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: weave-gitops
-      version: "4.x"
-      sourceRef:
-        kind: HelmRepository
-        name: weave-gitops
-        namespace: weave-gitops
-      interval: 12h
+  chartRef:
+    kind: OCIRepository
+    name: weave-gitops
   values:
     adminUser:
       create: true
