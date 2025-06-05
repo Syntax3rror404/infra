@@ -61,9 +61,8 @@ patchesJson6902:
       - op: replace
         path: /spec/rules/0/host
         value: gitops.${cilium_domain}
-      - op: add
-        path: /metadata/annotations/ingress.cilium.io~1loadbalancer-mode
-        value: shared
-      - op: add
-        path: /metadata/annotations/ingress.cilium.io~1websocket
-        value: enabled
+      - op: replace
+        path: /metadata/annotations
+        value:
+          ingress.cilium.io/loadbalancer-mode: shared
+          ingress.cilium.io/websocket: enabled
