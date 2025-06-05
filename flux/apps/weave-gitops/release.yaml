@@ -19,6 +19,7 @@ spec:
   chartRef:
     kind: OCIRepository
     name: weave-gitops
+    namespace: weave-gitops
   values:
     adminUser:
       create: true
