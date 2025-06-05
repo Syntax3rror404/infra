@@ -1,0 +1,31 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager${tenant_suffix:-}
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: cert-manager
+      version: ">=1.13.0 <2.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: cert-manager${tenant_suffix:-}
+      interval: 12h
+  values:
+    installCRDs: true
+    replicaCount: ${cert_manager_replicas}
+    resources:
+      requests:
+        cpu: ${resources_cpu_request}
+        memory: ${resources_memory_request}
+      limits:
+        cpu: ${resources_cpu_limit}
+        memory: ${resources_memory_limit}
+    prometheus:
+      enabled: true
+    webhook:
+      timeoutSeconds: 4
