@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure
+  path: flux/infrastructure
   prune: true
   wait: true
 ---
@@ -23,7 +23,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./environments/dev
+  path: flux/environments/dev
   prune: true
   dependsOn:
     - name: infrastructure
