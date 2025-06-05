@@ -23,7 +23,7 @@ spec:
     kind: GitRepository
     url: "https://github.com/Syntax3rror404/infra.git"
     ref: "refs/heads/main"
-    path: "flux/clusters/tokamak"
+    path: "flux/clusters/tokamak" # Cluster specific path
     pullSecret: "flux-system"
 ---
 apiVersion: fluxcd.controlplane.io/v1
