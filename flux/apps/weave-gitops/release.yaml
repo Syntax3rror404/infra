@@ -26,8 +26,7 @@ spec:
     adminUser:
       create: true
       username: admin
-      # Password: flux-admin (bcrypt hash)
-      passwordHash: "$2a$10$P/tHQ1DNFXdvX0zRGA8LPeJ4w.BX8W6rrE1ffFu6rCl8Lb6VkbwGe"
+      passwordHash: "$2y$10$y.TGP5Roa6qG4oqVl0G6FOboSw1MDVhx/GMVBqH8pzd3PWYOEKKuq"
     ingress:
       enabled: false  # We manage ingress separately
     resources:
