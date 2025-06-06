@@ -23,5 +23,6 @@ spec:
         kind: HelmRepository
         name: jetstack
         namespace: cert-manager
-      valuesFiles:
-        - values.yaml
+  values:
+    crds:
+      enabled: true
