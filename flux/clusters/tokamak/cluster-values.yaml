@@ -8,14 +8,9 @@ data:
   # Ingress Configuration
   nginx_domain: "menofgaming.de"
   cilium_domain: "tokamak.labza"
-  default_ingress_class: "nginx"
   
   # Storage Configuration
-  default_storage_class: "local-path"
-  
-  # Environment
-  environment: "prod"
-  cluster_name: "tokamak"
+  default_storage_class: "longhorn"
   
   # TLS Configuration
   cluster_issuer: "letsencrypt-prod"
