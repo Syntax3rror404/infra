@@ -4,44 +4,47 @@ kind: Kustomization
 resources:
   - ../../apps/podinfo
   - ../../apps/weave-gitops
-patchesStrategicMerge:
-  - podinfo-config.yaml
-patchesJson6902:
-  # Patch podinfo ingress domains
-  - target:
+
+patches:
+  # Strategic merge patch for podinfo configuration
+  - path: podinfo-config.yaml
+    target:
+      kind: HelmRelease
+      name: podinfo
+      namespace: podinfo
+  
+  # Patch podinfo nginx ingress domains
+  - patch: |
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: podinfo.dev.example.com
+      - op: replace
+        path: /spec/rules/0/host
+        value: podinfo.dev.example.com
+      - op: replace
+        path: /metadata/annotations/cert-manager.io~1cluster-issuer
+        value: letsencrypt-staging
+    target:
       group: networking.k8s.io
       version: v1
       kind: Ingress
       name: podinfo-nginx
       namespace: podinfo
-    patch: |-
-      - op: replace
-        path: /spec/tls/0/hosts/0
-        value: podinfo.dev.example.com
+  
+  # Patch podinfo cilium ingress domains
+  - patch: |
       - op: replace
         path: /spec/rules/0/host
-        value: podinfo.dev.example.com
-      - op: replace
-        path: /metadata/annotations/cert-manager.io~1cluster-issuer
-        value: letsencrypt-staging
-  - target:
+        value: podinfo.dev-cluster.local
+    target:
       group: networking.k8s.io
       version: v1
       kind: Ingress
       name: podinfo-cilium
       namespace: podinfo
-    patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: podinfo.dev-cluster.local
-  # Patch weave-gitops ingress domains
-  - target:
-      group: networking.k8s.io
-      version: v1
-      kind: Ingress
-      name: weave-gitops-nginx
-      namespace: weave-gitops
-    patch: |-
+  
+  # Patch weave-gitops nginx ingress domains
+  - patch: |
       - op: replace
         path: /spec/tls/0/hosts/0
         value: gitops.dev.example.com
@@ -51,13 +54,21 @@ patchesJson6902:
       - op: replace
         path: /metadata/annotations/cert-manager.io~1cluster-issuer
         value: letsencrypt-staging
-  - target:
+    target:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: weave-gitops-nginx
+      namespace: weave-gitops
+  
+  # Patch weave-gitops cilium ingress domains
+  - patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: gitops.${cilium_domain}
+    target:
       group: networking.k8s.io
       version: v1
       kind: Ingress
       name: weave-gitops-cilium
       namespace: weave-gitops
-    patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: gitops.${cilium_domain}
