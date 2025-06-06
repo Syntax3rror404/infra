@@ -16,9 +16,15 @@ spec:
   isCA: true
   commonName: labza-ca
   secretName: labza-root-ca-secret
+  subject:
+    organizations:
+      - labza
+  duration: 87600h # 10y#
+  renewBefore: 360h # 15d
   privateKey:
-    algorithm: ECDSA
-    size: 256
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
   issuerRef:
     name: selfsigned-issuer
     kind: Issuer
