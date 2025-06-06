@@ -10,6 +10,7 @@ spec:
       enabled: true
       className: cilium
       annotations:
+        cert-manager.io/cluster-issuer: labza-ca
         ingress.cilium.io/loadbalancer-mode: shared
         ingress.cilium.io/websocket: enabled
       hosts:
@@ -18,5 +19,6 @@ spec:
             - path: /
               pathType: Prefix
       tls:
-        - hosts:
+        - secretName: weave-gitops-tls
+          hosts:
             - gitops.${cilium_domain}
