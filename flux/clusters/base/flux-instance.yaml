@@ -23,6 +23,6 @@ spec:
     kind: GitRepository
     url: "https://github.com/Syntax3rror404/infra.git"
     ref: "refs/heads/main"
-    path: "flux/clusters/${cluster_name}"
+    path: "flux/clusters/clustername"
     pullSecret: "flux-system"
     interval: "1m0s"
