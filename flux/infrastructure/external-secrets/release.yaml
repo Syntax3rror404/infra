@@ -1,14 +1,5 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: external-secrets
-  namespace: external-secrets
-spec:
-  interval: 24h
-  url: https://charts.external-secrets.io
----
-apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: external-secrets
@@ -32,13 +23,9 @@ metadata:
   namespace: external-secrets
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: external-secrets
-      version: "0.17.x"
-      sourceRef:
-        kind: HelmRepository
-        name: external-secrets
-        namespace: external-secrets
+  chartRef:
+    kind: OCIRepository
+    name: external-secrets
+    namespace: external-secrets
   values:
     installCRDs: true
