@@ -5,4 +5,3 @@ resources:
   - cluster-values.yaml
   - cluster-config.yaml
   - flux-operator.yaml
-  - flux-instance.yaml

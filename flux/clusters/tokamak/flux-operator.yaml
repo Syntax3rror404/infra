@@ -10,7 +10,7 @@ metadata:
   name: flux-operator
   namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   ref:
     tag: 0.22.0
     digest: sha256:8f0cf55a0f216c30fc5c3da65c25f0061382c03caae8794b5d37882a3b1d2605
