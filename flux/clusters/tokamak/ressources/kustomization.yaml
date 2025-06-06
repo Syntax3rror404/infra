@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - labza-ca.yaml
   - letsencrypt-prod-ca.yaml
+  - ingress-hubble.yaml

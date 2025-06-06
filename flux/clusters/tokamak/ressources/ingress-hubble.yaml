@@ -1,0 +1,27 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hubble-ingress
+  namespace: kube-system
+  annotations:
+    cert-manager.io/cluster-issuer: labza-ca
+    ingress.cilium.io/websocket: enabled
+    ingress.cilium.io/loadbalancer-mode: shared
+spec:
+  ingressClassName: cilium
+  rules:
+  - host: hubble.${cilium_domain}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hubble-ui
+            port:
+              number: 80
+  tls:
+    - hosts:
+      - hubble.${cilium_domain}
+      secretName: hubble-ingress-cert
