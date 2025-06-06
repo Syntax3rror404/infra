@@ -31,7 +31,14 @@ resources:
 
 # Apply cluster-specific patches per app
 patches:
-  - weave-gitops-values.yaml
+  - path: weave-gitops-values.yaml
+    target:
+      kind: HelmRelease
+      name: weave-gitops
+      namespace: weave-gitops
+    options:
+      allowNameChange: false
+      allowKindChange: false
 
 # Apply cluster-specific values
 postBuild:
