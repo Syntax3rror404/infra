@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cluster-config
+  name: cluster-values
   namespace: flux-system
 data:
   # Ingress Configuration
