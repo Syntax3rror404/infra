@@ -7,6 +7,10 @@ metadata:
 spec:
   values:
     ingress:
+      adminUser:
+        create: true
+        username: admin
+        passwordHash: "${weave_gitops_password_hash}"
       enabled: true
       className: cilium
       annotations:
