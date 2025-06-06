@@ -16,7 +16,7 @@ spec:
   timeout: 10m0s
   retryInterval: 1m0s
 ---
-# Include flux/clusters/tokamak/apps as cluster-apps
+# Include flux/clusters/clustername/apps as cluster-apps
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -27,7 +27,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: flux/clusters/tokamak/apps
+  path: flux/clusters/clustername/apps
   prune: true
   dependsOn:
     - name: cluster-infrastructure
@@ -36,7 +36,7 @@ spec:
       - kind: ConfigMap
         name: cluster-values
 ---
-# Include flux/clusters/tokamak/resources as cluster-resources
+# Include flux/clusters/clustername/resources as cluster-resources
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -47,7 +47,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: flux/clusters/tokamak/resources
+  path: flux/clusters/clustername/resources
   prune: true
   dependsOn:
     - name: cluster-infrastructure

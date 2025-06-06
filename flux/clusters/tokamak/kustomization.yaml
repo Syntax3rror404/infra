@@ -8,18 +8,6 @@ resources:
   - ../base
   - cluster-values.yaml
 
-# Cluster-specific patches
-patches:
-  # Update flux-instance path with cluster name
-  - patch: |
-      - op: replace
-        path: /spec/sync/path
-        value: "flux/clusters/tokamak"
-    target:
-      kind: FluxInstance
-      name: flux
-      namespace: flux-system
-
 # Apply cluster-specific values
 postBuild:
   substituteFrom:
