@@ -1,5 +1,5 @@
 ---
-# flux/clusters/tokamak/kustomization.yaml (Updated)
+# will be applied from the flux-instance.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
