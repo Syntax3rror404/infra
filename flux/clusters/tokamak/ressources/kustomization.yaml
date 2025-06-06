@@ -5,3 +5,9 @@ resources:
   - labza-ca.yaml
   - letsencrypt-prod-ca.yaml
   - ingress-hubble.yaml
+
+# Apply cluster-specific values
+postBuild:
+  substituteFrom:
+    - kind: ConfigMap
+      name: cluster-values
