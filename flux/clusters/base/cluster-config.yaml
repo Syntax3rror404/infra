@@ -35,6 +35,9 @@ spec:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-values
+      - kind: Secret
+        name: cluster-secrets
+        optional: true
 ---
 # Include flux/clusters/clustername/resources as cluster-resources (will be patched per cluster)
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -55,3 +58,6 @@ spec:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-values
+      - kind: Secret
+        name: cluster-secrets
+        optional: true
