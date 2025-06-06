@@ -1,0 +1,35 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Base resources that every cluster needs
+resources:
+  - flux-operator.yaml
+  - flux-instance.yaml
+  - cluster-config.yaml
+
+# Replacements for cluster-specific values
+replacements:
+  # Replace cluster name in FluxInstance
+  - source:
+      kind: ConfigMap
+      name: cluster-values
+      fieldPath: data.cluster_name
+    targets:
+      - select:
+          kind: FluxInstance
+          name: flux
+        fieldPaths:
+          - metadata.name
+  
+  # Replace git repository URL if needed
+  - source:
+      kind: ConfigMap
+      name: cluster-values
+      fieldPath: data.git_repository
+    targets:
+      - select:
+          kind: FluxInstance
+          name: flux
+        fieldPaths:
+          - spec.sync.url

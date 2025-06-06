@@ -1,4 +1,5 @@
 ---
+# This variables will be used as substitutions in the Flux manifests
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,19 +7,19 @@ metadata:
   namespace: flux-system
 data:
   # Cluster Identity
-  cluster_name: "tokamak"
-  cluster_environment: "prod"
-  
+  cluster_name: "REPLACE_ME"
+  cluster_environment: "REPLACE_ME"  # dev, staging, prod
+
   # Git Configuration
   git_repository: "https://github.com/Syntax3rror404/infra.git"
   git_branch: "main"
-  
+
   # Ingress Configuration
-  nginx_domain: "menofgaming.de"
-  cilium_domain: "tokamak.labza"
+  nginx_domain: "REPLACE_ME"
+  cilium_domain: "REPLACE_ME"
   
   # Storage Configuration
-  default_storage_class: "longhorn"
+  default_storage_class: "REPLACE_ME"
   
   # TLS Configuration
-  cluster_issuer: "letsencrypt-prod"
+  cluster_issuer: "REPLACE_ME"

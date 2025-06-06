@@ -13,6 +13,8 @@ spec:
   path: flux/infrastructure
   prune: true
   wait: true
+  timeout: 10m0s
+  retryInterval: 1m0s
 ---
 # Include flux/clusters/tokamak/apps as cluster-apps
 apiVersion: kustomize.toolkit.fluxcd.io/v1
