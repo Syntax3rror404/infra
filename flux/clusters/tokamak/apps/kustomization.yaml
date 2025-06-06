@@ -5,7 +5,7 @@ kind: Kustomization
 # Select specific app configurations
 resources:
   - ../../../apps/podinfo/overlays/prod
-  - ../../../apps/weave-gitops/overlays/dev
+  - ../../../apps/weave-gitops/overlays/prod
 
 # # Cluster-specific patches
 # patches:
