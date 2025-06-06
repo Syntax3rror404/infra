@@ -6,7 +6,7 @@ metadata:
   namespace: podinfo
 spec:
   values:
-    replicaCount: 3
+    replicaCount: 1
     image:
       tag: "6.4.0"
     resources:
@@ -21,6 +21,6 @@ spec:
       color: "#d73027"
     hpa:
       enabled: true
-      maxReplicas: 10
+      maxReplicas: 3
       cpu: 80
       memory: 80

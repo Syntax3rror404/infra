@@ -7,8 +7,6 @@ metadata:
 spec:
   values:
     replicaCount: 1
-    image:
-      tag: "6.4.0"
     resources:
       limits:
         cpu: 100m
