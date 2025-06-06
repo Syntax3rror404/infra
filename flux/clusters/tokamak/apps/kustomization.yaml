@@ -5,7 +5,7 @@ kind: Kustomization
 # Include cluster apps which are deployed in the tokamak cluster
 resources:
   - ../../../apps/podinfo/overlays/prod
-  - ../../../apps/weave-gitops/overlays/prod
+  # - ../../../apps/weave-gitops/overlays/prod
 
 # # Cluster-specific patches
 # patches:
