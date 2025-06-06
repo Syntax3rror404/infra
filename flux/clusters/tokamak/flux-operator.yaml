@@ -25,7 +25,7 @@ spec:
   interval: 30m
   chartRef:
     kind: OCIRepository
-    name: flux
+    name: flux-operator
     namespace: flux-system
   install:
     createNamespace: true
