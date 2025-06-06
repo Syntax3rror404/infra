@@ -1,4 +1,5 @@
 ---
+# This variables will be used as substitutions in the Flux manifests
 apiVersion: v1
 kind: ConfigMap
 metadata:
