@@ -1,0 +1,26 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: weave-gitops
+  namespace: weave-gitops
+spec:
+  values:
+    server:
+      dataStorage:
+        size: 10Gi
+        storageClass: longhorn-staging
+      ingress:
+        enabled: true
+        ingressClassName: cilium
+        annotations:
+          cert-manager.io/cluster-issuer: labza-ca
+          ingress.cilium.io/loadbalancer-mode: shared
+          ingress.cilium.io/websocket: enabled
+        hosts:
+          - host: vault.${cilium_domain}
+            paths: []
+        tls:
+          - hosts:
+              - vault.${cilium_domain}
+            secretName: vault-ingress-cert

@@ -27,9 +27,6 @@ spec:
   values:
     # Base values
     replicaCount: 1
-    image:
-      repository: ghcr.io/stefanprodan/podinfo
-      tag: "6.4.0"
     service:
       enabled: true
       type: ClusterIP

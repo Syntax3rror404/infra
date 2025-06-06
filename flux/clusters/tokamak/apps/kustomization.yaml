@@ -4,7 +4,7 @@ kind: Kustomization
 
 # Include cluster apps which are deployed in the tokamak cluster
 resources:
-  # - ../../../apps/podinfo/overlays/prod
+  - ../../../apps/vault/overlays/prod
   - ../../../apps/weave-gitops/overlays/prod
 
 # # Cluster-specific patches
@@ -36,6 +36,14 @@ patches:
       kind: HelmRelease
       name: weave-gitops
       namespace: weave-gitops
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: vault-values.yaml
+    target:
+      kind: HelmRelease
+      name: vault
+      namespace: vault
     options:
       allowNameChange: false
       allowKindChange: false
