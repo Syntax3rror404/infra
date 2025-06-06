@@ -39,9 +39,3 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
-
-# Apply cluster-specific values
-postBuild:
-  substituteFrom:
-    - kind: ConfigMap
-      name: cluster-values
