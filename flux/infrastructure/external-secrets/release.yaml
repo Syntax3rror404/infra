@@ -1,0 +1,26 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: external-secrets
+  namespace: external-secrets
+spec:
+  interval: 10m
+  ref:
+    tag: 0.17.0
+    digest: sha256:ee8f614ec685dad312afa92d2d7de78efd51aea1624f655487ba8502c8265cb5
+  url: oci://ghcr.io/external-secrets/charts/external-secrets
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-secrets
+  namespace: external-secrets
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: external-secrets
+    namespace: external-secrets
+  values:
+    installCRDs: true
