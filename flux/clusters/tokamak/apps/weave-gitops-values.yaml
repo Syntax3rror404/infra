@@ -6,11 +6,11 @@ metadata:
   namespace: weave-gitops
 spec:
   values:
+    adminUser:
+      create: true
+      username: admin
+      passwordHash: "${weave_gitops_password_hash}"
     ingress:
-      adminUser:
-        create: true
-        username: admin
-        passwordHash: "${weave_gitops_password_hash}"
       enabled: true
       className: cilium
       annotations:
