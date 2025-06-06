@@ -1,12 +1,20 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
   name: podinfo
   namespace: podinfo
 spec:
-  interval: 24h
-  url: https://stefanprodan.github.io/podinfo
+  interval: 1h
+  timeout: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  verify:
+    provider: cosign
+  ref:
+    tag: 6.x.x
+  url: oci://ghcr.io/stefanprodan/charts/podinfo
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -15,15 +23,10 @@ metadata:
   namespace: podinfo
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: podinfo
-      version: "6.x.x"
-      sourceRef:
-        kind: HelmRepository
-        name: podinfo
-        namespace: podinfo
-      interval: 12h
+  chartRef:
+    kind: OCIRepository
+    name: podinfo
+    namespace: podinfo
   values:
     # Base values
     replicaCount: 1
