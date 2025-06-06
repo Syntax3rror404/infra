@@ -34,7 +34,7 @@ spec:
       - kind: ConfigMap
         name: cluster-values
 ---
-# Include flux/clusters/tokamak/ressources as cluster-resources
+# Include flux/clusters/tokamak/resources as cluster-resources
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -45,7 +45,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: flux/clusters/tokamak/ressources
+  path: flux/clusters/tokamak/resources
   prune: true
   dependsOn:
     - name: cluster-infrastructure
