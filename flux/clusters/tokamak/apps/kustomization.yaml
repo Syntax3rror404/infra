@@ -29,6 +29,10 @@ resources:
 #       name: weave-gitops-cilium
 #       namespace: weave-gitops
 
+# Apply cluster-specific patches per app
+patches:
+  - weave-gitops-values.yaml
+
 # Apply cluster-specific values
 postBuild:
   substituteFrom:
