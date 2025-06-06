@@ -2,7 +2,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infrastructure
+  name: cluster-infrastructure
   namespace: flux-system
 spec:
   interval: 10m0s
@@ -16,14 +16,14 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: apps-prod
+  name: cluster-apps
   namespace: flux-system
 spec:
   interval: 5m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: flux/environments/prod
+  path: flux/clusters/tokamak/apps
   prune: true
   dependsOn:
     - name: infrastructure

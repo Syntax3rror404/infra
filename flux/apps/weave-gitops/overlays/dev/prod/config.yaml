@@ -1,0 +1,21 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: weave-gitops
+  namespace: weave-gitops
+spec:
+  values:
+    adminUser:
+      create: true
+      username: admin
+      passwordHash: "$2y$10$y.TGP5Roa6qG4oqVl0G6FOboSw1MDVhx/GMVBqH8pzd3PWYOEKKuq"
+    ingress:
+      enabled: false  # We manage ingress separately
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi

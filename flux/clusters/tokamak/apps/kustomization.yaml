@@ -1,0 +1,36 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Select specific app configurations
+resources:
+  - ../../../apps/podinfo/overlays/prod
+  - ../../../apps/weave-gitops/overlays/dev
+
+# # Cluster-specific patches
+# patches:
+#   # Update podinfo ingress with cluster domain
+#   - patch: |
+#       - op: replace
+#         path: /spec/rules/0/host
+#         value: podinfo.${cilium_domain}
+#     target:
+#       kind: Ingress
+#       name: podinfo-cilium
+#       namespace: podinfo
+  
+#   # Update weave-gitops ingress with cluster domain
+#   - patch: |
+#       - op: replace
+#         path: /spec/rules/0/host
+#         value: gitops.${cilium_domain}
+#     target:
+#       kind: Ingress
+#       name: weave-gitops-cilium
+#       namespace: weave-gitops
+
+# Apply cluster-specific values
+postBuild:
+  substituteFrom:
+    - kind: ConfigMap
+      name: cluster-values

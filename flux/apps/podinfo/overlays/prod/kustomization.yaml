@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+
+patches:
+  # Merge production-specific configuration
+  - path: config.yaml
+    target:
+      kind: HelmRelease
+      name: podinfo
+      namespace: podinfo
+  
+  # # Patch ingress for prod environment
+  # - patch: |
+  #     - op: replace
+  #       path: /spec/rules/0/host
+  #       value: podinfo.prod-cluster.local
+  #   target:
+  #     kind: Ingress
+  #     name: podinfo-cilium
+  #     namespace: podinfo
