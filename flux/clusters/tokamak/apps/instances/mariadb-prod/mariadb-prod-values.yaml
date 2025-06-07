@@ -2,39 +2,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: mariadb-test
-  namespace: mariadb-test
+  name: mariadb-prod
+  namespace: mariadb-prod
 spec:
   values:
     primary:
       persistence:
-        storageClass: longhorn
-        size: 20Gi
+        storageClass: longhorn-prod
       service:
-        type: ClusterIP
-        ports:
-          mysql: 3306
+        type: LoadBalancer
     commonLabels:
-      app: mariadb-test
-      environment: development
+      ciliuml2: pool
     auth:
-      rootPassword: "test"
-      database: "app_dev_1"
-      username: "app_user_1"
-      password: "test"
-    
-    # Performance-spezifische Konfiguration für dev-1
-    resources:
-      limits:
-        memory: 2Gi
-        cpu: 1000m
-      requests:
-        memory: 1Gi
-        cpu: 500m
-    
-    # MariaDB-spezifische Konfiguration
-    configuration: |-
-      [mysqld]
-      max_connections=200
-      innodb_buffer_pool_size=1G
-      server-id=1
+      rootPassword: "${mariadb_prod_root_password}"

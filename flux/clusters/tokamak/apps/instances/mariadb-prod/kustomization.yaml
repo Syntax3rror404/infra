@@ -2,17 +2,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Import base MariaDB configuration
 resources:
   - ../../../../../apps/mariadb/base
 
-# Transform resources for mariadb-test
+# Transform resources for mariadb-prod
 patches:
   # Update namespace
   - patch: |
       - op: replace
         path: /metadata/name
-        value: mariadb-test
+        value: mariadb-prod
     target:
       kind: Namespace
       name: mariadb
@@ -21,10 +20,10 @@ patches:
   - patch: |
       - op: replace
         path: /metadata/name
-        value: mariadb-test
+        value: mariadb-prod
       - op: replace
         path: /metadata/namespace
-        value: mariadb-test
+        value: mariadb-prod
     target:
       kind: OCIRepository
       name: mariadb
@@ -33,16 +32,16 @@ patches:
   - patch: |
       - op: replace
         path: /metadata/name
-        value: mariadb-test
+        value: mariadb-prod
       - op: replace
         path: /metadata/namespace
-        value: mariadb-test
+        value: mariadb-prod
       - op: replace
         path: /spec/chartRef/name
-        value: mariadb-test
+        value: mariadb-prod
       - op: replace
         path: /spec/chartRef/namespace
-        value: mariadb-test
+        value: mariadb-prod
     target:
       kind: HelmRelease
       name: mariadb
@@ -51,5 +50,5 @@ patches:
   - path: mariadb-prod-values.yaml
     target:
       kind: HelmRelease
-      name: mariadb-test
-      namespace: mariadb-test
+      name: mariadb-prod
+      namespace: mariadb-prod

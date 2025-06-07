@@ -15,7 +15,7 @@ resources:
   - ../../../apps/longhorn/overlays/prod
 
 # include cluster apps instances
-  - instances
+  #- instances
 
 # # Cluster-specific patches
 # patches:
