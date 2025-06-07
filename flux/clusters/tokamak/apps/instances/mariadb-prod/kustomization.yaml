@@ -1,0 +1,55 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Import base MariaDB configuration
+resources:
+  - ../../../../apps/mariadb/base
+
+# Transform resources for mariadb-test
+patches:
+  # Update namespace
+  - patch: |
+      - op: replace
+        path: /metadata/name
+        value: mariadb-test
+    target:
+      kind: Namespace
+      name: mariadb
+
+  # Update OCIRepository
+  - patch: |
+      - op: replace
+        path: /metadata/name
+        value: mariadb-test
+      - op: replace
+        path: /metadata/namespace
+        value: mariadb-test
+    target:
+      kind: OCIRepository
+      name: mariadb
+
+  # Update HelmRelease
+  - patch: |
+      - op: replace
+        path: /metadata/name
+        value: mariadb-test
+      - op: replace
+        path: /metadata/namespace
+        value: mariadb-test
+      - op: replace
+        path: /spec/chartRef/name
+        value: mariadb-test
+      - op: replace
+        path: /spec/chartRef/namespace
+        value: mariadb-test
+    target:
+      kind: HelmRelease
+      name: mariadb
+
+  # Apply cluster-specific values
+  - path: ../mariadb-test-values.yaml
+    target:
+      kind: HelmRelease
+      name: mariadb-test
+      namespace: mariadb-test

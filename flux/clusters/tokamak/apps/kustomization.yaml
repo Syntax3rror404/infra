@@ -14,6 +14,9 @@ resources:
   - ../../../apps/rancher/overlays/dev
   - ../../../apps/longhorn/overlays/prod
 
+# include cluster apps instances
+  - instances
+
 # # Cluster-specific patches
 # patches:
 #   # Update podinfo ingress with cluster domain
