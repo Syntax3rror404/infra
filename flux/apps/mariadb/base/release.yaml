@@ -12,10 +12,9 @@ spec:
     operation: copy
   # verify:
   #   provider: cosign
-
-  semver: "^20.5.x"
-
   url: oci://registry-1.docker.io/bitnamicharts/mariadb
+  ref:
+    semver: "^20.5.x"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
