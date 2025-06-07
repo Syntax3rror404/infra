@@ -16,7 +16,7 @@ patches:
       kind: ConfigMap
       name: cluster-values
       namespace: flux-system
-  
+
   # Patch cluster-apps to use correct tokamak path
   - patch: |
       - op: replace
@@ -26,7 +26,7 @@ patches:
       kind: Kustomization
       name: cluster-apps
       namespace: flux-system
-  
+
   # Patch cluster-resources to use correct tokamak path
   - patch: |
       - op: replace
