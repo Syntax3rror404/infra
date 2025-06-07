@@ -6,3 +6,34 @@ metadata:
   namespace: cattle-system
 spec:
   values:
+    extraTolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+    hostname: rancher.example.com
+    ingress:
+      enabled: true
+      extraAnnotations:
+        ingress.cilium.io/loadbalancer-mode: shared
+        ingress.cilium.io/websocket: enabled
+      includeDefaultExtraAnnotations: true
+      ingressClassName: cilium
+      pathType: Prefix
+      servicePort: 80
+      tls:
+        secretName: tls-rancher-ingress
+        source: rancher
+    linux-node-selector-terms:
+      - matchExpressions:
+          - key: node-role.kubernetes.io/control-plane
+            operator: In
+            values:
+              - "true"
+          - key: node-role.kubernetes.io/master
+            operator: In
+            values:
+              - "true"
+    replicas: 1

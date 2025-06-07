@@ -6,3 +6,17 @@ metadata:
   namespace: cattle-system
 spec:
   values:
+    hostname: rancher.example.com
+    ingress:
+      enabled: true
+      extraAnnotations:
+        ingress.cilium.io/loadbalancer-mode: shared
+        ingress.cilium.io/websocket: enabled
+      includeDefaultExtraAnnotations: true
+      ingressClassName: cilium
+      pathType: Prefix
+      servicePort: 80
+      tls:
+        secretName: tls-rancher-ingress
+        source: rancher
+    replicas: 3
