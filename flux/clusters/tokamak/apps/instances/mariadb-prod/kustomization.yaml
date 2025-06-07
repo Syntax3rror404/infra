@@ -48,7 +48,7 @@ patches:
       name: mariadb
 
   # Apply cluster-specific values
-  - path: mariadb-test-values.yaml
+  - path: mariadb-prod-values.yaml
     target:
       kind: HelmRelease
       name: mariadb-test
