@@ -9,5 +9,5 @@ patches:
   - path: config.yaml
     target:
       kind: HelmRelease
-      name: snipeit
+      name: snipe-it
       namespace: snipeit

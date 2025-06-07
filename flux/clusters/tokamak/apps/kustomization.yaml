@@ -78,7 +78,7 @@ patches:
   - path: snipeit-values.yaml
     target:
       kind: HelmRelease
-      name: snipeit
+      name: snipe-it
       namespace: snipeit
     options:
       allowNameChange: false
