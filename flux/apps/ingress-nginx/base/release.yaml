@@ -21,6 +21,6 @@ spec:
       version: "4.12.x"
       sourceRef:
         kind: HelmRepository
-        name: nginx
+        name: ingress-nginx
         namespace: nginx
       interval: 12h
