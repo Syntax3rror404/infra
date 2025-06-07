@@ -14,8 +14,8 @@ spec:
       enabled: false  # We manage ingress separately
     resources:
       limits:
-        cpu: 200m
+        cpu: 500m
         memory: 256Mi
       requests:
-        cpu: 100m
+        cpu: 300m
         memory: 128Mi
