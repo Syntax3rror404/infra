@@ -9,6 +9,7 @@ resources:
   - ../../../apps/authentik/overlays/prod
   - ../../../apps/cloudflared/overlays/prod
   - ../../../apps/nextcloud/overlays/prod
+  - ../../../apps/snipeit/overlays/prod
 
 # # Cluster-specific patches
 # patches:
@@ -74,4 +75,11 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
-
+  - path: snipeit-values.yaml
+    target:
+      kind: HelmRelease
+      name: snipeit
+      namespace: snipeit
+    options:
+      allowNameChange: false
+      allowKindChange: false

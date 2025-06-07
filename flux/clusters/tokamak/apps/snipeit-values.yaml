@@ -1,0 +1,50 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cloudflared
+  namespace: cloudflared
+spec:
+  values:
+    # MariaDB
+    mariadb:
+      global:
+        defaultStorageClass: longhorn-prod
+      auth:
+        rootPassword: "${snipeit_mariadb_root_password}"
+        database: "snipeit"
+        username: "snipeit"
+        password: "${snipeit_mariadb_password}"
+
+    # snipeit config
+    snipeit:
+      config:
+        url: "https://wms.${nginx_domain}"
+        timezone: Europe/Berlin
+        locale: en
+      persistence:
+        size: 50Gi
+        storageClass: longhorn-prod
+
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations:
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        nginx.ingress.kubernetes.io/cors-allow-headers: X-Forwarded-For
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/proxy-body-size: 20G
+        # Handle basic authentication
+        nginx.ingress.kubernetes.io/auth-type: basic
+        nginx.ingress.kubernetes.io/auth-secret: htpasswd
+        nginx.ingress.kubernetes.io/auth-realm: "This site is protected for authorized users only"
+      hosts:
+        - host: "wms.${nginx_domain}"
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: "wms.${nginx_domain}-tls"
+          hosts:
+            - "wms.${nginx_domain}"

@@ -1,0 +1,26 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: snipeit
+  namespace: snipeit
+spec:
+  interval: 12h
+  url: "https://syntax3rror404.github.io/helm-charts/charts"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: snipeit
+  namespace: snipeit
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: snipeit
+      version: "1.x.x"
+      sourceRef:
+        kind: HelmRepository
+        name: snipeit
+        namespace: snipeit
+      interval: 12h
