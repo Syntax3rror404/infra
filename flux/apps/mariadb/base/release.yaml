@@ -1,0 +1,29 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  interval: 1h
+  timeout: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  verify:
+    provider: cosign
+  ref:
+    tag: 20.4.1
+  url: oci://registry-1.docker.io/bitnamicharts/mariadb
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  interval: 30m
+  chartRef:
+    kind: OCIRepository
+    name: mariadb
+    namespace: mariadb

@@ -1,0 +1,17 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mariadb
+  namespace: mariadb
+spec:
+  values:
+    primary:
+      persistence:
+        storageClass: changeme
+      service:
+        type: LoadBalancer
+    commonLabels:
+      ciliuml2: pool
+    auth:
+      rootPassword: changeme
