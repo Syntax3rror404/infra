@@ -11,4 +11,3 @@ patches:
       kind: HelmRelease
       name: authentik
       namespace: authentik
-  

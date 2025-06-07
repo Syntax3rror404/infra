@@ -10,7 +10,7 @@ spec:
       secret_key: "changeme"
       postgresql:
         password: "changeme"
-    server: 
+    server:
       ingress:
         enabled: false
         ingressClassName: "changeme"
