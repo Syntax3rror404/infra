@@ -1,0 +1,29 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: longhorn
+  namespace: longhorn-system
+spec:
+  values:
+    global:
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+          effect: "NoSchedule"
+
+    persistence:
+      defaultClass: false
+      defaultFsType: xfs
+      defaultClassReplicaCount: 1
+      defaultDataLocality: best-effort
+      reclaimPolicy: Retain
+      dataEngine: v1
+
+    defaultSettings:
+      defaultDataPath: /var/lib/longhorn/
+      storageReservedPercentageForDefaultDisk: 0
+      taintToleration: node-role.kubernetes.io/control-plane=:NoSchedule; node-role.kubernetes.io/master=:NoSchedule
