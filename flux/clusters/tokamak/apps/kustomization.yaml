@@ -11,6 +11,7 @@ resources:
   - ../../../apps/nextcloud/overlays/prod
   - ../../../apps/snipeit/overlays/prod
   - ../../../apps/ingress-nginx/overlays/prod
+  - ../../../apps/rancher/overlays/dev
 
 # # Cluster-specific patches
 # patches:
@@ -89,6 +90,14 @@ patches:
       kind: HelmRelease
       name: nginx
       namespace: nginx
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: rancher-values.yaml
+    target:
+      kind: HelmRelease
+      name: rancher
+      namespace: cattle-system
     options:
       allowNameChange: false
       allowKindChange: false
