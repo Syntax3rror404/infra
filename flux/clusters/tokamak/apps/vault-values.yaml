@@ -25,22 +25,11 @@ spec:
               - vault.${cilium_domain}
             secretName: vault-ingress-cert
 
-    tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        operator: "Exists"
-        effect: "NoSchedule"
-      - key: "node-role.kubernetes.io/master"
-        operator: "Exists"
-        effect: "NoSchedule"
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+          effect: "NoSchedule"
 
-    affinity: |
-      podAntiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: {{ template "vault.name" . }}
-                  app.kubernetes.io/instance: "{{ .Release.Name }}"
-                  component: server
-              topologyKey: kubernetes.io/hostname
