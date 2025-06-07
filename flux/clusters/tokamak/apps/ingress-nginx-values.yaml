@@ -1,0 +1,15 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nginx
+  namespace: nginx
+spec:
+  values:
+    controller:
+      allowSnippetAnnotations: true
+      config:
+        annotations-risk-level: Critical
+      service:
+        labels:
+          ciliuml2: nginx

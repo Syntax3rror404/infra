@@ -10,6 +10,7 @@ resources:
   - ../../../apps/cloudflared/overlays/prod
   - ../../../apps/nextcloud/overlays/prod
   - ../../../apps/snipeit/overlays/prod
+  - ../../../apps/ingress-nginx/overlays/prod
 
 # # Cluster-specific patches
 # patches:
@@ -22,7 +23,7 @@ resources:
 #       kind: Ingress
 #       name: podinfo-cilium
 #       namespace: podinfo
-  
+
 #   # Update weave-gitops ingress with cluster domain
 #   - patch: |
 #       - op: replace
@@ -80,6 +81,14 @@ patches:
       kind: HelmRelease
       name: snipe-it
       namespace: snipeit
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: ingress-nginx-values.yaml
+    target:
+      kind: HelmRelease
+      name: nginx
+      namespace: nginx
     options:
       allowNameChange: false
       allowKindChange: false
