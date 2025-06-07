@@ -17,10 +17,10 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: rancher-latest
+      chart: rancher
       version: "2.11.2"
       sourceRef:
         kind: HelmRepository
-        name: rancher 
+        name: rancher-latest 
         namespace: cattle-system 
       interval: 12h
