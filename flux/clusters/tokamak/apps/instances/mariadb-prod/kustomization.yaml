@@ -4,7 +4,7 @@ kind: Kustomization
 
 # Import base MariaDB configuration
 resources:
-  - ../../../../../apps/mariadb/prod
+  - ../../../../../apps/mariadb/base
 
 # Transform resources for mariadb-test
 patches:
