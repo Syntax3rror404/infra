@@ -1,0 +1,17 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: authentik
+spec:
+  values:
+    authentik:
+      secret_key: "changeme"
+      postgresql:
+        password: "changeme"
+    server: 
+      ingress:
+        enabled: false
+        ingressClassName: "changeme"
+        pathType: Prefix

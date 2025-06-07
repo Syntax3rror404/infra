@@ -6,6 +6,7 @@ kind: Kustomization
 resources:
   - ../../../apps/vault/overlays/prod
   - ../../../apps/weave-gitops/overlays/prod
+  - ../../../apps/authentik/overlays/prod
 
 # # Cluster-specific patches
 # patches:
@@ -47,3 +48,12 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
+  - path: authentik-values.yaml
+    target:
+      kind: HelmRelease
+      name: authentik
+      namespace: authentik
+    options:
+      allowNameChange: false
+      allowKindChange: false
+
