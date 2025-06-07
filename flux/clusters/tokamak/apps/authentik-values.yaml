@@ -6,43 +6,43 @@ metadata:
   namespace: authentik
 spec:
   values:
-      authentik:
-        secret_key: "${authentik_secret_key}"
-        postgresql:
-          password: "${authentik_postgresql_password}"
-        email:
-            host: "${system_mail_server}"
-            port: "${system_mail_port}"
-            username: "${system_mail_account}"
-            password: "${system_mail_token}"
-            use_ssl: true
-            timeout: 30
-            from: "authentik <zapf.marcel.95@gmail.com>"
+    authentik:
+      secret_key: "${authentik_secret_key}"
       postgresql:
-        enabled: true
-        auth:
-          password: "${authentik_postgresql_password}"
-        primary:
-          persistence:
-            enabled: true
-            storageClass: longhorn
-      redis:
-        enabled: true
-        master:
-          persistence:
-            storageClass: longhorn
-            enabled: false
-      server: 
-        ingress:
+        password: "${authentik_postgresql_password}"
+      email:
+        host: "${system_mail_server}"
+        port: "${system_mail_port}"
+        username: "${system_mail_account}"
+        password: "${system_mail_token}"
+        use_ssl: true
+        timeout: 30
+        from: "authentik <zapf.marcel.95@gmail.com>"
+    postgresql:
+      enabled: true
+      auth:
+        password: "${authentik_postgresql_password}"
+      primary:
+        persistence:
           enabled: true
-          ingressClassName: "nginx"
-          hosts:
-            - auth.${nginx_domain}
-          annotations:
-            cert-manager.io/cluster-issuer: letsencrypt-prod
-            ingress.cilium.io/loadbalancer-mode: shared
-            ingress.cilium.io/websocket: enabled
-          tls:
-            - secretName: authentik-tls
-              hosts:
-                - auth.${nginx_domain}
+          storageClass: longhorn
+    redis:
+      enabled: true
+      master:
+        persistence:
+          storageClass: longhorn
+          enabled: false
+    server:
+      ingress:
+        enabled: true
+        ingressClassName: "nginx"
+        hosts:
+          - auth.${nginx_domain}
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-prod
+          ingress.cilium.io/loadbalancer-mode: shared
+          ingress.cilium.io/websocket: enabled
+        tls:
+          - secretName: authentik-tls
+            hosts:
+              - auth.${nginx_domain}

@@ -7,6 +7,7 @@ resources:
   - ../../../apps/vault/overlays/prod
   - ../../../apps/weave-gitops/overlays/prod
   - ../../../apps/authentik/overlays/prod
+  - ../../../apps/cloudflared/overlays/prod
 
 # # Cluster-specific patches
 # patches:
@@ -53,6 +54,14 @@ patches:
       kind: HelmRelease
       name: authentik
       namespace: authentik
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: cloudflared-values.yaml
+    target:
+      kind: HelmRelease
+      name: cloudflared
+      namespace: cloudflared
     options:
       allowNameChange: false
       allowKindChange: false

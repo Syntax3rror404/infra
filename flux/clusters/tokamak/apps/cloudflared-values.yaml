@@ -1,0 +1,38 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: authentik
+spec:
+  values:
+    cloudflare:
+      ingress:
+        - hostname: argo.mzapf.de
+          service: http://argocd-server.argocd.svc
+        - hostname: rancher.mzapf.de
+          service: http://rancher.cattle-system.svc
+        - hostname: hubble.mzapf.de
+          service: http://hubble-ui.kube-system.svc
+        - hostname: vault.mzapf.de
+          service: http://vault-active.vault.svc:8200
+        - hostname: vodafone.mzapf.de
+          service: http://192.168.100.1
+        - hostname: opnsense.mzapf.de
+          originRequest:
+            noTLSVerify: true
+          service: https://opnsense.labza:8443
+        - hostname: pve.mzapf.de
+          originRequest:
+            noTLSVerify: true
+          service: https://192.168.33.99:8006
+        - hostname: ipmi.mzapf.de
+          originRequest:
+            noTLSVerify: true
+          service: https://192.168.33.11
+      secretName: cloudflaresecret
+      tunnelName: rancher
+    image:
+      pullPolicy: IfNotPresent
+      repository: cloudflare/cloudflared
+      tag: 2025.5.0
