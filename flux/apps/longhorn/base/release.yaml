@@ -6,7 +6,7 @@ metadata:
   namespace: longhorn-system
 spec:
   interval: 24h
-  url: https://helm.releases.hashicorp.com
+  url: https://charts.longhorn.io
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
