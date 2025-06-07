@@ -6,14 +6,14 @@ metadata:
   name: cluster-infrastructure
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 1m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: flux/infrastructure
   prune: true
   wait: true
-  timeout: 10m0s
+  timeout: 1m0s
   retryInterval: 1m0s
 ---
 # Include flux/clusters/clustername/apps as cluster-apps (will be patched per cluster)
