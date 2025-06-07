@@ -34,7 +34,7 @@ spec:
         cert-manager.io/cluster-issuer: "letsencrypt-prod"
         nginx.ingress.kubernetes.io/cors-allow-headers: X-Forwarded-For
         nginx.ingress.kubernetes.io/enable-cors: "true"
-        nginx.ingress.kubernetes.io/proxy-body-size: 20G
+        nginx.ingress.kubernetes.io/proxy-body-size: 10G
         # Handle basic authentication
         nginx.ingress.kubernetes.io/auth-type: basic
         nginx.ingress.kubernetes.io/auth-secret: htpasswd
