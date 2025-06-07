@@ -7,8 +7,6 @@ metadata:
 spec:
   interval: 10m
   ref:
-    tag: 4.0.36
-  ref:
     semver: "4.0.x"
   url: oci://ghcr.io/weaveworks/charts/weave-gitops
 ---
