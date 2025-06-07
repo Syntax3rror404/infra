@@ -8,6 +8,7 @@ resources:
   - ../../../apps/weave-gitops/overlays/prod
   - ../../../apps/authentik/overlays/prod
   - ../../../apps/cloudflared/overlays/prod
+  - ../../../apps/nextcloud/overlays/prod
 
 # # Cluster-specific patches
 # patches:
@@ -62,6 +63,14 @@ patches:
       kind: HelmRelease
       name: cloudflared
       namespace: cloudflared
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: nextcloud-values.yaml
+    target:
+      kind: HelmRelease
+      name: nextcloud
+      namespace: nextcloud
     options:
       allowNameChange: false
       allowKindChange: false

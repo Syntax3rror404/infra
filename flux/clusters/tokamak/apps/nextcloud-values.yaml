@@ -1,0 +1,135 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+spec:
+  values:
+    nextcloud:
+      host: nextcloud.tokamak.labza
+      username: admin
+      password: ${nextcloud_admin_password}
+
+      configs:
+        custom-overwrite.config.php: |-
+          <?php
+          $CONFIG = array (
+            'overwrite.cli.url' => 'https://nextcloud.nextcloud.svc.cluster.local',
+            'overwriteprotocol' => 'https',
+          );
+
+        custom.config.php: |
+          <?php
+            $CONFIG = array(
+              'check_data_directory_permissions' => false, # https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/
+              'allow_local_remote_servers' => true,
+            );
+
+        proxy.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_proxies' => array(
+              0 => '127.0.0.1',
+              1 => '10.0.0.0/8',
+            ),
+            'forwarded_for_headers' => array('HTTP_X_FORWARDED_FOR'),
+          );
+
+        domains.config.php: |-
+          <?php
+          $CONFIG = array (
+            'trusted_domains' =>
+              array (
+              0 => '192.168.35.*',
+              1 => 'nextcloud.tokamak.labza',
+              2 => 'nextcloud.menofgaming.de',
+              3 => 'rancher.tokamak.labza',
+              4 => 'nextcloud.tokamak.labza',
+              )
+          );
+
+    persistence:
+      enabled: true
+      size: 500Gi
+      storageClass: "longhorn-prod"
+
+    image:
+      flavor: fpm
+
+    nginx:
+      enabled: true
+      image:
+        repository: nginxinc/nginx-unprivileged
+        tag: alpine
+        pullPolicy: IfNotPresent
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 101
+        runAsNonRoot: true
+        readOnlyRootFilesystem: false
+
+    externalDatabase:
+      enabled: true
+      type: mysql
+      host: nextcloud-mariadb.svc
+      user: nextcloud
+      password: "${nextcloud_mariadb_password}"
+      rootPassword: "${nextcloud_mariadb_root_password}"
+      database: nextcloud
+
+    mariadb:
+      enabled: true
+      primary:
+        livenessProbe:
+          enabled: false
+        readinessProbe:
+          enabled: false
+        persistence:
+          enabled: true
+          storageClass: "longhorn-prod"
+      auth:
+        database: nextcloud
+        username: nextcloud
+        password: "${nextcloud_mariadb_password}"
+        rootPassword: "${nextcloud_mariadb_root_password}"
+        existingSecret: ""
+
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: labza-ca
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
+        nginx.ingress.kubernetes.io/proxy-body-size: 20G
+        nginx.ingress.kubernetes.io/server-snippet: |-
+          more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
+          server_tokens off;
+          proxy_hide_header X-Powered-By;
+          rewrite ^/.well-known/webfinger /index.php/.well-known/webfinger last;
+          rewrite ^/.well-known/nodeinfo /index.php/.well-known/nodeinfo last;
+          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+          rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
+          location = /.well-known/carddav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /.well-known/caldav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+          }
+          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+            deny all;
+          }
+          location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
+            deny all;
+          }
+
+      tls:
+        - secretName: nextcloud-tls
+          hosts:
+            - nextcloud.tokamak.labza
