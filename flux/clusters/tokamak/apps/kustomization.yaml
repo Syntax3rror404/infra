@@ -19,28 +19,6 @@ resources:
   # include cluster apps instances
   - instances
 
-# # Cluster-specific patches
-# patches:
-#   # Update podinfo ingress with cluster domain
-#   - patch: |
-#       - op: replace
-#         path: /spec/rules/0/host
-#         value: podinfo.${cilium_domain}
-#     target:
-#       kind: Ingress
-#       name: podinfo-cilium
-#       namespace: podinfo
-
-#   # Update weave-gitops ingress with cluster domain
-#   - patch: |
-#       - op: replace
-#         path: /spec/rules/0/host
-#         value: gitops.${cilium_domain}
-#     target:
-#       kind: Ingress
-#       name: weave-gitops-cilium
-#       namespace: weave-gitops
-
 # Apply cluster-specific patches per app
 patches:
   - path: weave-gitops-values.yaml
@@ -115,3 +93,24 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
+# # Cluster-specific patches
+# patches:
+#   # Update podinfo ingress with cluster domain
+#   - patch: |
+#       - op: replace
+#         path: /spec/rules/0/host
+#         value: podinfo.${cilium_domain}
+#     target:
+#       kind: Ingress
+#       name: podinfo-cilium
+#       namespace: podinfo
+
+#   # Update weave-gitops ingress with cluster domain
+#   - patch: |
+#       - op: replace
+#         path: /spec/rules/0/host
+#         value: gitops.${cilium_domain}
+#     target:
+#       kind: Ingress
+#       name: weave-gitops-cilium
+#       namespace: weave-gitops
