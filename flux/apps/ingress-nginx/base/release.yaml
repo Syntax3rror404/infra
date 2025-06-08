@@ -14,7 +14,7 @@ metadata:
   name: nginx
   namespace: nginx
 spec:
-  interval: 30m
+  interval: 1h
   chart:
     spec:
       chart: ingress-nginx
@@ -23,4 +23,3 @@ spec:
         kind: HelmRepository
         name: ingress-nginx
         namespace: nginx
-      interval: 12h

@@ -5,7 +5,7 @@ metadata:
   name: weave-gitops
   namespace: weave-gitops
 spec:
-  interval: 10m
+  interval: 24h
   ref:
     semver: "4.0.x"
   url: oci://ghcr.io/weaveworks/charts/weave-gitops
@@ -16,7 +16,7 @@ metadata:
   name: weave-gitops
   namespace: weave-gitops
 spec:
-  interval: 30m
+  interval: 1h
   chartRef:
     kind: OCIRepository
     name: weave-gitops

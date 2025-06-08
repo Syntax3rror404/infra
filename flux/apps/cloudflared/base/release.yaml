@@ -14,7 +14,7 @@ metadata:
   name: cloudflared
   namespace: cloudflared
 spec:
-  interval: 30m
+  interval: 1h
   chart:
     spec:
       chart: cloudflare-tunnel
@@ -23,4 +23,3 @@ spec:
         kind: HelmRepository
         name: cloudflared
         namespace: cloudflared
-      interval: 12h

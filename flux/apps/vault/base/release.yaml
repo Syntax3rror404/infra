@@ -14,7 +14,7 @@ metadata:
   name: vault
   namespace: vault
 spec:
-  interval: 30m
+  interval: 1h
   chart:
     spec:
       chart: vault
@@ -23,7 +23,6 @@ spec:
         kind: HelmRepository
         name: vault
         namespace: vault
-      interval: 12h
   values:
     # Base values
     global:

@@ -14,7 +14,7 @@ metadata:
   name: longhorn
   namespace: longhorn-system
 spec:
-  interval: 30m
+  interval: 1h
   chart:
     spec:
       chart: longhorn
@@ -23,4 +23,3 @@ spec:
         kind: HelmRepository
         name: longhorn
         namespace: longhorn-system
-      interval: 12h

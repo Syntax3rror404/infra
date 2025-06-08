@@ -14,7 +14,7 @@ metadata:
   name: nextcloud 
   namespace: nextcloud 
 spec:
-  interval: 30m
+  interval: 1h
   chart:
     spec:
       chart: nextcloud
@@ -23,4 +23,3 @@ spec:
         kind: HelmRepository
         name: nextcloud 
         namespace: nextcloud 
-      interval: 12h
