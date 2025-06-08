@@ -26,7 +26,6 @@ spec:
       externalIPs: []
       type: LoadBalancer
     teamspeak:
-      image: teamspeak
       licenseAccept: accept
       persistence:
         accessMode: ReadWriteOnce
