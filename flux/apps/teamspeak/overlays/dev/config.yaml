@@ -1,0 +1,41 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: teamspeak
+  namespace: teamspeak
+spec:
+  values:
+    customLabels:
+      ciliuml2: pool
+    mariadb:
+      auth:
+        database: teamspeak
+        password: changeme
+        rootPassword: changeme
+        username: teamspeak
+      enabled: false
+      global:
+        defaultStorageClass: longhorn-staging
+      persistence:
+        accessMode: ReadWriteOnce
+        enabled: true
+        size: 8Gi
+        storageClass: longhorn-staging
+    service:
+      externalIPs: []
+      type: LoadBalancer
+    teamspeak:
+      image: teamspeak
+      licenseAccept: accept
+      persistence:
+        accessMode: ReadWriteOnce
+        enabled: true
+        size: 1Gi
+        storageClass: longhorn-staging
+      ports:
+        tcp:
+          - 10011
+          - 30033
+        udp: 9987
+      resources: {}
