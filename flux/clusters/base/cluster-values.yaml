@@ -8,7 +8,7 @@ metadata:
 data:
   # Cluster Identity
   cluster_name: "REPLACE_ME"
-  cluster_environment: "REPLACE_ME"  # dev, staging, prod
+  cluster_environment: "REPLACE_ME" # dev, staging, prod
 
   # Git Configuration
   git_repository: "https://github.com/Syntax3rror404/infra.git"
@@ -17,9 +17,9 @@ data:
   # Ingress Configuration
   nginx_domain: "REPLACE_ME"
   cilium_domain: "REPLACE_ME"
-  
+
   # Storage Configuration
   default_storage_class: "REPLACE_ME"
-  
+
   # TLS Configuration
   cluster_issuer: "REPLACE_ME"

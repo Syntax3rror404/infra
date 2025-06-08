@@ -11,17 +11,17 @@ metadata:
 spec:
   ingressClassName: cilium
   rules:
-  - host: hubble.${cilium_domain}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: hubble-ui
-            port:
-              number: 80
+    - host: hubble.${cilium_domain}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hubble-ui
+                port:
+                  number: 80
   tls:
     - hosts:
-      - hubble.${cilium_domain}
+        - hubble.${cilium_domain}
       secretName: hubble-ingress-cert

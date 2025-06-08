@@ -8,17 +8,17 @@ data:
   # Cluster Identity
   cluster_name: "tokamak"
   cluster_environment: "prod"
-  
+
   # Git Configuration
   git_repository: "https://github.com/Syntax3rror404/infra.git"
   git_branch: "main"
-  
+
   # Ingress Configuration
   nginx_domain: "menofgaming.de"
   cilium_domain: "tokamak.labza"
-  
+
   # Storage Configuration
   default_storage_class: "longhorn"
-  
+
   # TLS Configuration
   cluster_issuer: "letsencrypt-prod"
