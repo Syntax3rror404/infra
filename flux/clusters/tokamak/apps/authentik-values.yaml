@@ -17,7 +17,7 @@ spec:
         password: "${system_mail_token}"
         use_ssl: true
         timeout: 30
-        from: "authentik <zapf.marcel.95@gmail.com>"
+        from: "${authentik_email}"
     postgresql:
       enabled: true
       auth:
