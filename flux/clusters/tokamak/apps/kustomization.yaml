@@ -14,8 +14,9 @@ resources:
   - ../../../apps/rancher/overlays/dev
   - ../../../apps/longhorn/overlays/prod
   - ../../../apps/tekton-operator/overlays/prod
+  - ../../../apps/teamspeak/overlays/prod
 
-# include cluster apps instances
+  # include cluster apps instances
   - instances
 
 # # Cluster-specific patches
@@ -103,6 +104,14 @@ patches:
       kind: HelmRelease
       name: rancher
       namespace: cattle-system
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: teamspeak-values.yaml
+    target:
+      kind: HelmRelease
+      name: teamspeak
+      namespace: teamspeak
     options:
       allowNameChange: false
       allowKindChange: false
