@@ -13,6 +13,7 @@ resources:
   - ../../../apps/ingress-nginx/overlays/prod
   - ../../../apps/rancher/overlays/dev
   - ../../../apps/longhorn/overlays/prod
+  - ../../../apps/tekton-operator/overlays/prod
 
 # include cluster apps instances
   - instances

@@ -1,0 +1,33 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: tekton-operator
+  namespace: tekton-operator
+spec:
+  interval: 12h
+  url: https://github.com/tektoncd/operator
+  ref:
+    branch: "release-v0.76.x"
+  ignore: |
+    # exclude all
+    /*
+    # include charts directory
+    !/charts/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tekton-operator
+  namespace: tekton-operator
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: tekton-operator
+      version: "0.76.x"
+      sourceRef:
+        kind: HelmRepository
+        name: tekton-operator
+        namespace: tekton-operator
+      interval: 12h
