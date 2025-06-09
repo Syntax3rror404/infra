@@ -23,7 +23,7 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
-  interval: 5m0s
+  interval: 1m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
