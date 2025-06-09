@@ -32,14 +32,10 @@ metadata:
   namespace: cert-manager
 spec:
   interval: 30m
-  chart:
-    spec:
-      chart: cert-manager
-      version: "1.17.x"
-      sourceRef:
-        kind: HelmRepository
-        name: jetstack
-        namespace: cert-manager
+  chartRef:
+    kind: OCIRepository
+    name: cert-manager
+    namespace: cert-manager
   values:
     crds:
       enabled: true
