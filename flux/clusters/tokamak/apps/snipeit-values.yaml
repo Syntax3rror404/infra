@@ -32,6 +32,8 @@ spec:
       annotations:
         kubernetes.io/tls-acme: "true"
         cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        cert-manager.io/private-key-algorithm: ECDSA
+        cert-manager.io/private-key-size: "256"
         nginx.ingress.kubernetes.io/cors-allow-headers: X-Forwarded-For
         nginx.ingress.kubernetes.io/enable-cors: "true"
         nginx.ingress.kubernetes.io/proxy-body-size: 20G
