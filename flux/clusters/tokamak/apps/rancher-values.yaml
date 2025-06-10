@@ -12,4 +12,6 @@ spec:
       extraAnnotations:
         ingress.cilium.io/loadbalancer-mode: shared
         ingress.cilium.io/websocket: enabled
+        cert-manager.io/private-key-algorithm: ECDSA
+        cert-manager.io/private-key-size: "256"
       ingressClassName: cilium

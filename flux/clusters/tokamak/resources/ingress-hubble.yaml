@@ -8,6 +8,8 @@ metadata:
     cert-manager.io/cluster-issuer: labza-ca
     ingress.cilium.io/websocket: enabled
     ingress.cilium.io/loadbalancer-mode: shared
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/private-key-size: "256"
 spec:
   ingressClassName: cilium
   rules:
