@@ -13,7 +13,7 @@ spec:
   # verify:
   #   provider: cosign
   ref:
-    semver: "v1.18.x"
+    semver: "v1.17.x"
   url: oci://quay.io/jetstack/charts/cert-manager
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
