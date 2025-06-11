@@ -5,8 +5,8 @@ metadata:
   name: "nginx-pool"
 spec:
   blocks:
-    - start: "192.168.35.79"
-      stop: "192.168.35.79"
+    - start: "192.168.35.52"
+      stop: "192.168.35.52"
   serviceSelector:
     matchLabels:
       ciliuml2: nginx
@@ -17,8 +17,8 @@ metadata:
   name: "cilium-pool"
 spec:
   blocks:
-    - start: "192.168.35.70"
-      stop: "192.168.35.70"
+    - start: "192.168.35.51"
+      stop: "192.168.35.51"
   serviceSelector:
     matchLabels:
       ciliuml2: cilium
@@ -29,8 +29,8 @@ metadata:
   name: "general-pool"
 spec:
   blocks:
-    - start: "192.168.35.90"
-      stop: "192.168.35.100"
+    - start: "192.168.35.60"
+      stop: "192.168.35.120"
   serviceSelector:
     matchLabels:
       ciliuml2: pool
