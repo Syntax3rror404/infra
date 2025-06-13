@@ -71,6 +71,14 @@ spec:
       name: kube-dns
       clusterIP: 10.245.0.10
 
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
     servers:
       - zones:
           - zone: .
