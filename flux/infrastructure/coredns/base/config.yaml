@@ -1,6 +1,6 @@
 ---
 # Rplica count for External Secret
-replicaCount: 1
+replicaCount: 2
 # Tolerations to allow scheduling on control-plane nodes
 tolerations:
   - key: node-role.kubernetes.io/control-plane
