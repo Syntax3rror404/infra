@@ -1,0 +1,17 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: core-dns
+  namespace: kube-system
+spec:
+  interval: 24h
+  timeout: 5m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  verify:
+    provider: cosign
+  ref:
+    semver: "1.42.x"
+  url: oci://ghcr.io/coredns/charts/coredns
