@@ -5,4 +5,3 @@ resources:
   - cert-manager
   - external-secrets
   - cilium
-  - core-dns
