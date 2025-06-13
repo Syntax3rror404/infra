@@ -51,3 +51,18 @@ affinity:
             matchLabels:
               k8s-app: kube-dns
           topologyKey: kubernetes.io/hostname
+
+k8sAppLabelOverride: "kube-dns"
+service:
+  name: kube-dns
+
+servers:
+  - zones:
+      - zone: .
+        scheme: dns://
+        use_tcp: true
+    port: 53
+    servicePort: 53
+    plugins:
+      - name: errors
+      - name: health
