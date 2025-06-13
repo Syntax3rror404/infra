@@ -7,9 +7,6 @@ tolerations:
   - key: node-role.kubernetes.io/control-plane
     operator: Exists
     effect: NoSchedule
-  - key: node-role.kubernetes.io/master
-    operator: Exists
-    effect: NoSchedule
 
 # Preferred scheduling on control-plane nodes
 affinity:
@@ -20,22 +17,12 @@ affinity:
           matchExpressions:
             - key: node-role.kubernetes.io/control-plane
               operator: Exists
-      - weight: 100
-        preference:
-          matchExpressions:
-            - key: node-role.kubernetes.io/master
-              operator: Exists
-
     # Fallback to any node if no control-plane nodes are available
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
         # First Option: Control Plane Nodes
         - matchExpressions:
             - key: node-role.kubernetes.io/control-plane
-              operator: Exists
-        # Second Option: Master Nodes
-        - matchExpressions:
-            - key: node-role.kubernetes.io/master
               operator: Exists
         # Third Option: Any Node
         - matchExpressions:
@@ -55,6 +42,7 @@ affinity:
 k8sAppLabelOverride: "kube-dns"
 service:
   name: kube-dns
+  clusterIP: 10.245.0.10
 
 servers:
   - zones:
@@ -67,9 +55,11 @@ servers:
       # Serves a /health endpoint on :8080, required for livenessProbe
       - name: health
         configBlock: |-
-          lameduck 10s
+          lameduck 5s
       # Serves a /ready endpoint on :8181, required for readinessProbe
       - name: ready
+      - name: log
+        parameters: . "{class error}"
       # Required to query kubernetes API for data
       - name: kubernetes
         parameters: cluster.local in-addr.arpa ip6.arpa
@@ -82,8 +72,13 @@ servers:
         parameters: 0.0.0.0:9153
       - name: forward
         parameters: . /etc/resolv.conf
+        configBlock: |-
+          max_concurrent 1000
       - name: cache
         parameters: 30
+        configBlock: |-
+          disable success cluster.local
+          disable denial cluster.local
       - name: loop
       - name: reload
       - name: loadbalance
