@@ -1,3 +1,4 @@
+# helm --namespace=kube-system install coredns coredns/coredns -f config.yaml
 ---
 # Rplica count for External Secret
 replicaCount: 2
