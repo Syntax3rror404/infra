@@ -6,3 +6,4 @@ resources:
   - external-secrets
   - cilium
   - coredns
+  - metrics-server
