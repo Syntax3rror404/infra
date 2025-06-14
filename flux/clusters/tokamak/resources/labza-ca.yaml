@@ -19,6 +19,8 @@ spec:
   subject:
     organizations:
       - labza
+    organizationalUnits:
+      - Tokamak Cluster
   duration: 87600h # 10y#
   renewBefore: 360h # 15d
   privateKey:
