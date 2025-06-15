@@ -32,7 +32,3 @@ spec:
           service: https://192.168.33.11
       secretName: cloudflaresecret
       tunnelName: rancher
-    image:
-      pullPolicy: IfNotPresent
-      repository: docker.io/cloudflare/cloudflared
-      tag: 2025.5.0
