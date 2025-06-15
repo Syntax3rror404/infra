@@ -24,6 +24,6 @@ spec:
       dataEngine: v1
 
     defaultSettings:
-      defaultDataPath: /var/lib/longhorn/
+      defaultDataPath: /var/mnt/longhorn
       storageReservedPercentageForDefaultDisk: 0
       taintToleration: node-role.kubernetes.io/control-plane=:NoSchedule; node-role.kubernetes.io/master=:NoSchedule
