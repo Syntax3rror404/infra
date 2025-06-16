@@ -6,15 +6,15 @@ metadata:
   name: cluster-infrastructure
   namespace: flux-system
 spec:
-  interval: 1m0s
+  interval: 2m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: flux/infrastructure
   prune: true
   wait: true
-  timeout: 1m0s
-  retryInterval: 1m0s
+  timeout: 2m0s
+  retryInterval: 2m0s
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -27,7 +27,7 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
-  interval: 1m0s
+  interval: 2m0s
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -22,7 +22,7 @@ metadata:
   name: external-secrets
   namespace: external-secrets
 spec:
-  interval: 30m
+  interval: 1h
   chartRef:
     kind: OCIRepository
     name: external-secrets

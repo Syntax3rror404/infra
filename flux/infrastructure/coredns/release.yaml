@@ -22,7 +22,7 @@ metadata:
   name: coredns
   namespace: kube-system
 spec:
-  interval: 30m
+  interval: 1h
   chartRef:
     kind: OCIRepository
     name: coredns
