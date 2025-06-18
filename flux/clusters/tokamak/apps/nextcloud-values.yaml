@@ -99,7 +99,9 @@ spec:
       enabled: true
       className: nginx
       annotations:
-        cert-manager.io/cluster-issuer: labza-ca
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        cert-manager.io/private-key-algorithm: ECDSA
+        cert-manager.io/private-key-size: '256'
         nginx.ingress.kubernetes.io/enable-cors: "true"
         nginx.ingress.kubernetes.io/cors-allow-headers: "X-Forwarded-For"
         nginx.ingress.kubernetes.io/proxy-body-size: 20G
@@ -132,4 +134,4 @@ spec:
       tls:
         - secretName: nextcloud-tls
           hosts:
-            - nextcloud.tokamak.labza
+            - nextcloud.${nginx_domain}
