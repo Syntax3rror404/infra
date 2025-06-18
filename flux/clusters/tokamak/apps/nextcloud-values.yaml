@@ -7,7 +7,7 @@ metadata:
 spec:
   values:
     nextcloud:
-      host: nextcloud.tokamak.labza
+      host: nextcloud.${nginx_domain}
       username: admin
       password: ${nextcloud_admin_password}
 
