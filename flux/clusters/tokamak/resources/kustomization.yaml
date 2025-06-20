@@ -7,3 +7,4 @@ resources:
   - ingress-hubble.yaml
   - cilium-crs.yaml
   - talos-etcd-defrag-cronjob.yaml
+  - tekton-config.yaml

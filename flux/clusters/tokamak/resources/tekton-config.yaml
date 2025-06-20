@@ -1,0 +1,27 @@
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonConfig
+metadata:
+  name: config
+  namespace: tekton-operator
+spec:
+  pipeline:
+    disable-affinity-assistant: false
+    disable-creds-init: false
+    disable-home-env-overwrite: true
+    disable-working-directory-overwrite: true
+    enable-api-fields: stable
+    enable-custom-tasks: false
+    metrics.pipelinerun.duration-type: histogram
+    metrics.pipelinerun.level: pipelinerun
+    metrics.taskrun.duration-type: histogram
+    metrics.taskrun.level: taskrun
+    require-git-ssh-secret-known-hosts: false
+    running-in-environment-with-injected-sidecars: true
+    trusted-resources-verification-no-match-policy: ignore
+    performance:
+      replicas: 1
+      disable-ha: false
+      buckets: 1
+      threads-per-controller: 2
+      kube-api-qps: 5.0
+      kube-api-burst: 10
