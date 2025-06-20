@@ -4,6 +4,12 @@ metadata:
   name: config
   namespace: tekton-operator
 spec:
+  # Tekton namespace configuration
+  targetNamespace: tekton-pipelines
+  targetNamespaceMetadata:
+    labels: {}
+    annotations: {}
+  # Pipeline configuration
   pipeline:
     disable-affinity-assistant: false
     disable-creds-init: false
