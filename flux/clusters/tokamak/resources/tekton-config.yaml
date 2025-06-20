@@ -10,6 +10,8 @@ spec:
     labels: {}
     annotations: {}
 
+  profile: all
+
   # Pipeline configuration
   pipeline:
     disable-affinity-assistant: false
