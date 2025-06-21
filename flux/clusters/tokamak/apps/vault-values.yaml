@@ -10,6 +10,8 @@ spec:
       dataStorage:
         size: 10Gi
         storageClass: longhorn-staging
+      image:
+        tag: 1.19.5
       ingress:
         enabled: true
         ingressClassName: cilium
