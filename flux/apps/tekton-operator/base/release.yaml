@@ -13,7 +13,7 @@ spec:
     # exclude all
     /*
     # include charts directory
-    !/charts/
+    !/charts
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
