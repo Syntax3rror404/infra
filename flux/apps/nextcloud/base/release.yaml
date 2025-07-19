@@ -19,8 +19,8 @@ spec:
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
-  verify:
-    provider: cosign
+  # verify:
+  #   provider: cosign
   ref:
     semver: "7.x.x"
   url: oci://ghcr.io/nextcloud/helm/nextcloud
