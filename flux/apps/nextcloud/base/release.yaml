@@ -1,14 +1,5 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: nextcloud 
-  namespace: nextcloud 
-spec:
-  interval: 24h
-  url: https://nextcloud.github.io/helm/
----
-apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: nextcloud 
@@ -32,11 +23,7 @@ metadata:
   namespace: nextcloud 
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: nextcloud
-      version: "6.6.x"
-      sourceRef:
-        kind: HelmRepository
-        name: nextcloud 
-        namespace: nextcloud 
+  chartRef:
+    kind: OCIRepository
+    name: nextcloud
+    namespace: nextcloud
