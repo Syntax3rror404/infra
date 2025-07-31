@@ -18,7 +18,7 @@ spec:
   chart:
     spec:
       chart: rancher
-      version: "2.11.x"
+      version: "2.12.x"
       sourceRef:
         kind: HelmRepository
         name: rancher-latest 
