@@ -6,3 +6,18 @@ metadata:
   namespace: tekton-operator
 spec:
   targetNamespace: tekton-pipelines
+---
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonDashboard
+metadata:
+  name: dashboard
+spec:
+  targetNamespace: tekton-pipelines
+  readonly: false
+---
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonTrigger
+metadata:
+  name: trigger
+spec:
+  targetNamespace: tekton-pipelines
