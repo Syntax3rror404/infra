@@ -11,6 +11,7 @@ apiVersion: operator.tekton.dev/v1alpha1
 kind: TektonDashboard
 metadata:
   name: dashboard
+  namespace: tekton-operator
 spec:
   targetNamespace: tekton-pipelines
   readonly: false
@@ -19,5 +20,6 @@ apiVersion: operator.tekton.dev/v1alpha1
 kind: TektonTrigger
 metadata:
   name: trigger
+  namespace: tekton-operator
 spec:
   targetNamespace: tekton-pipelines
