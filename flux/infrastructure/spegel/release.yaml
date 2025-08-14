@@ -3,6 +3,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: spegel
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -29,3 +31,6 @@ spec:
         kind: HelmRepository
         name: spegel
         namespace: spegel
+  values:
+    spegel:
+      containerdRegistryConfigPath: /etc/cri/conf.d/hosts
