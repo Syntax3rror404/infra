@@ -7,4 +7,3 @@ resources:
   - cilium
   - coredns
   - metrics-server
-  - spegel
