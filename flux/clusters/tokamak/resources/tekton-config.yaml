@@ -1,25 +1,40 @@
 ---
 apiVersion: operator.tekton.dev/v1alpha1
-kind: TektonPipeline
+kind: TektonConfig
 metadata:
-  name: pipeline
+  name: config
 spec:
   targetNamespace: tekton-pipelines
----
-apiVersion: operator.tekton.dev/v1alpha1
-kind: TektonDashboard
-metadata:
-  name: dashboard
-spec:
-  targetNamespace: tekton-pipelines
-  readonly: false
----
-apiVersion: operator.tekton.dev/v1alpha1
-kind: TektonTrigger
-metadata:
-  name: trigger
-spec:
-  targetNamespace: tekton-pipelines
+  targetNamespaceMetadata:
+    labels: {}
+    annotations: {}
+  profile: all
+  config:
+    nodeSelector: {}
+    tolerations: []
+    priorityClassName: system-cluster-critical
+  pipeline:
+    performance:
+      disable-ha: false
+  dashboard:
+    options: {}
+    readonly: false
+  hub:
+    options: {}
+  chain:
+    disabled: true
+  pruner:
+    disabled: true  # Components not in ready state: Invalid Pruner Configuration!! Both pruners, tektonpruner(event based) and pruner(job based) cannot be enabled simultaneously. Please disable one of them.
+  result:
+    disabled: true
+  tektonpruner:
+    disabled: false
+    options: {}
+  trigger:
+    enable-api-fields: stable
+    options: {}
+  platforms:
+    openshift: {}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
