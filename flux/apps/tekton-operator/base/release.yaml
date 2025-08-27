@@ -25,7 +25,7 @@ spec:
   chart:
     spec:
       chart: charts/tekton-operator
-      version: "0.76.x"
+      version: "0.77.x"
       sourceRef:
         kind: GitRepository
         name: tekton-operator
