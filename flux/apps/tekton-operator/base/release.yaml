@@ -8,7 +8,7 @@ spec:
   interval: 24h
   url: https://github.com/tektoncd/operator
   ref:
-    branch: "release-v0.xx.x"
+    tag: "v0.xx.0"
   ignore: |
     # exclude all
     /*
@@ -25,7 +25,6 @@ spec:
   chart:
     spec:
       chart: charts/tekton-operator
-      version: "0.77.x"
       sourceRef:
         kind: GitRepository
         name: tekton-operator
