@@ -8,7 +8,7 @@ spec:
   interval: 24h
   url: https://github.com/tektoncd/operator
   ref:
-    branch: "release-v0.x.x"
+    branch: "release-v0.xx.x"
   ignore: |
     # exclude all
     /*
