@@ -8,3 +8,4 @@ resources:
   - coredns
   - metrics-server
   - spegel
+  - crossplane
