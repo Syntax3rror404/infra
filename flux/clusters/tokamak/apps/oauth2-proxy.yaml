@@ -1,0 +1,55 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+spec:
+  values:
+    config:
+      annotations: {}
+      clientID: "${oauth2_proxy_clientID}"
+      clientSecret: "${oauth2_proxy_clientSecret}"
+      cookieSecret: "${oauth2_proxy_cookieSecret}"
+      cookieName: "oauth2-proxy"
+
+      # Config file
+      configFile: |-
+        # Provider config
+        provider="oidc"
+        provider_display_name="Authentik"
+        redirect_url="https://sso-proxy.${cilium_domain}/oauth2/callback"
+        oidc_issuer_url="https://auth.${nginx_domain}/application/o/sso-proxy/"
+        code_challenge_method="S256"
+        scope="openid email profile"
+        ssl_insecure_skip_verify=true
+        oidc_email_claim="email"
+        # Upstream config
+        http_address="0.0.0.0:4180"
+        upstreams="file:///dev/null"
+        cookie_domains=[".${cilium_domain}"]
+        whitelist_domains=[".${cilium_domain}"]
+        cookie_secure=false
+        email_domains=["*"]
+        insecure_oidc_allow_unverified_email=true
+        # Allow bearing tokens to be passed through
+        pass_authorization_header=true
+        set_authorization_header=true
+
+    ingress:
+      enabled: true
+      className: "nginx"
+      pathType: Prefix
+      path: /oauth2
+      annotations:
+        cert-manager.io/cluster-issuer: labza-ca
+        ingress.cilium.io/websocket: enabled
+        ingress.cilium.io/loadbalancer-mode: shared
+        cert-manager.io/private-key-algorithm: ECDSA
+        cert-manager.io/private-key-size: "256"
+      hosts:
+        - sso-proxy.${cilium_domain}
+      tls:
+        - hosts:
+            - sso-proxy.${cilium_domain}
+          secretName: sso-proxy-ingress-cert

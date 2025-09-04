@@ -15,6 +15,7 @@ resources:
   - ../../../apps/longhorn/overlays/prod
   - ../../../apps/tekton-operator/overlays/prod
   - ../../../apps/teamspeak/overlays/prod
+  - ../../../apps/oauth2-proxy/overlays/prod
 
   # include cluster apps instances
   - instances
@@ -93,6 +94,16 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
+  - path: oauth2-proxy.yaml
+    target:
+      kind: HelmRelease
+      name: oauth2-proxy
+      namespace: oauth2-proxy
+    options:
+      allowNameChange: false
+      allowKindChange: false
+
+
 # # Cluster-specific patches
 # patches:
 #   # Update podinfo ingress with cluster domain
