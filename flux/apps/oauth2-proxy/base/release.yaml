@@ -1,0 +1,29 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+spec:
+  interval: 12h
+  timeout: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  verify:
+    provider: cosign
+  ref:
+    semver: "8.x.x"
+  url: oci://ghcr.io/oauth2-proxy/charts/oauth2-proxy:8.2.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: oauth2-proxy
+    namespace: oauth2-proxy
