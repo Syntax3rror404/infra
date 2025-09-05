@@ -2,8 +2,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: cloudflared
-  namespace: cloudflared
+  name: mariadb-operator
+  namespace: mariadb-operator
 spec:
   interval: 24h
   url: https://cloudflare.github.io/helm-charts
@@ -11,8 +11,8 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: cloudflared
-  namespace: cloudflared
+  name: mariadb-operator
+  namespace: mariadb-operator
 spec:
   interval: 1h
   chart:
@@ -21,5 +21,5 @@ spec:
       version: "0.3.x"
       sourceRef:
         kind: HelmRepository
-        name: cloudflared
-        namespace: cloudflared
+        name: mariadb-operator
+        namespace: mariadb-operator

@@ -14,6 +14,7 @@ resources:
   - ../../../apps/rancher/overlays/dev
   - ../../../apps/longhorn/overlays/prod
   - ../../../apps/tekton-operator/overlays/prod
+  - ../../../apps/mariadb-operator/overlays/prod
   - ../../../apps/teamspeak/overlays/prod
   - ../../../apps/oauth2-proxy/overlays/prod
 
@@ -102,8 +103,6 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
-
-
 # # Cluster-specific patches
 # patches:
 #   # Update podinfo ingress with cluster domain
