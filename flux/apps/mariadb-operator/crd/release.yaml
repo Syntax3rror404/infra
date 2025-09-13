@@ -14,7 +14,7 @@ metadata:
   name: mariadb-operator-crds
   namespace: mariadb-operator
 spec:
-  interval: 1h
+  interval: 24h
   chart:
     spec:
       chart: mariadb-operator-crds
