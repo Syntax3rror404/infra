@@ -16,7 +16,7 @@ resources:
   - ../../../apps/tekton-operator/overlays/prod
   - ../../../apps/teamspeak/overlays/prod
   - ../../../apps/oauth2-proxy/overlays/prod
-  #- ../../../apps/mariadb-operator/crd
+  - ../../../apps/mariadb-operator/crd
 
   # include cluster apps instances
   - instances

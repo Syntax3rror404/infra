@@ -1,18 +1,12 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
+kind: HelmRepository
 metadata:
   name: mariadb-operator
   namespace: mariadb-operator
 spec:
-  interval: 12h
-  timeout: 15m
-  layerSelector:
-    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
-    operation: copy
-  ref:
-    semver: "25.8.x"
-  url: oci://ghcr.io/mariadb-operator/mariadb-operator
+  interval: 24h
+  url: https://helm.mariadb.com/mariadb-operator
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -20,8 +14,12 @@ metadata:
   name: mariadb-operator-crds
   namespace: mariadb-operator
 spec:
-  interval: 8h
-  chartRef:
-    kind: OCIRepository
-    name: mariadb-operator
-    namespace: mariadb-operator
+  interval: 1h
+  chart:
+    spec:
+      chart: mariadb-operator-crds
+      version: "25.8.x"
+      sourceRef:
+        kind: HelmRepository
+        name: mariadb-operator
+        namespace: mariadb-operator
