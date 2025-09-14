@@ -20,7 +20,7 @@ resources:
   - ../../../apps/mariadb-operator/base
 
   # include cluster apps instances
-  - instances
+  # - instances only includes mariadb-prod which is archived
 
 # Apply cluster-specific patches per app
 patches:
