@@ -8,3 +8,4 @@ resources:
   - cilium-crs.yaml
   - talos-etcd-defrag-cronjob.yaml
   - tekton-config.yaml
+  - mariadb-prod.yaml
