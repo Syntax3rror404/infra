@@ -17,6 +17,7 @@ resources:
   - ../../../apps/teamspeak/overlays/prod
   - ../../../apps/oauth2-proxy/overlays/prod
   - ../../../apps/mariadb-operator/crds
+  - ../../../apps/mariadb-operator/base
 
   # include cluster apps instances
   - instances
