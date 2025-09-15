@@ -12,7 +12,7 @@ metadata:
 spec:
   interval: 30m
   ref:
-    semver: "0.28.x"
+    semver: ">=0.28.0"
   url: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
