@@ -9,4 +9,4 @@ resources:
   - talos-etcd-defrag-cronjob.yaml
   - tekton-config.yaml
   # - mariadb-galera-prod.yaml
-  # - mariadb-prod.yaml
+  - mariadb-prod.yaml
