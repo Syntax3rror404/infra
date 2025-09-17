@@ -21,3 +21,9 @@ spec:
   storage:
     size: 10Gi
     storageClassName: longhorn-prod
+
+  service:
+    type: LoadBalancer
+    metadata:
+      labels:
+        ciliuml2: pool
