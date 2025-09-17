@@ -27,3 +27,60 @@ spec:
     metadata:
       labels:
         ciliuml2: pool
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: ada
+  namespace: mariadb-prod
+spec:
+  mariaDbRef:
+    name: mariadb-prod
+  characterSet: utf8
+  collate: utf8_general_ci
+  # Delete the resource in the database whenever the CR gets deleted.
+  # Alternatively, you can specify Skip in order to omit deletion.
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: mzapf
+  namespace: mariadb-prod
+spec:
+  mariaDbRef:
+    name: mariadb-prod
+  passwordSecretKeyRef:
+    name: mariadb
+    key: password
+  maxUserConnections: 20
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: grant
+  namespace: mariadb-prod
+spec:
+  mariaDbRef:
+    name: mariadb-prod
+  privileges:
+    - "SELECT"
+    - "INSERT"
+    - "UPDATE"
+    # - "ALL PRIVILEGES"
+  database: "*"
+  table: "*"
+  username: mzapf
+  grantOption: true
+  host: "%"
+  # Delete the resource in the database whenever the CR gets deleted.
+  # Alternatively, you can specify Skip in order to omit deletion.
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
