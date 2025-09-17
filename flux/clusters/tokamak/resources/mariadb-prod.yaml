@@ -53,7 +53,7 @@ spec:
   mariaDbRef:
     name: mariadb-prod
   passwordSecretKeyRef:
-    name: mariadb
+    name: user_mzapf
     key: password
   maxUserConnections: 20
   host: "%"
