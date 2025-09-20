@@ -22,11 +22,17 @@ spec:
     size: 10Gi
     storageClassName: longhorn-prod
 
-  securityContext:
-    allowPrivilegeEscalation: false
+  podSecurityContext:
     runAsNonRoot: true
     runAsUser: 999
     runAsGroup: 999
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
 
   service:
     type: LoadBalancer
