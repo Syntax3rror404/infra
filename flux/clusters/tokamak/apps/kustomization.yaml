@@ -18,6 +18,8 @@ resources:
   - ../../../apps/oauth2-proxy/overlays/prod
   - ../../../apps/mariadb-operator/crds
   - ../../../apps/mariadb-operator/base
+  - ../../../apps/CloudNativePG/base
+  
 
   # include cluster apps instances
   # - instances only includes mariadb-prod which is archived
