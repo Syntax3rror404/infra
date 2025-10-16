@@ -18,7 +18,7 @@ resources:
   - ../../../apps/oauth2-proxy/overlays/prod
   - ../../../apps/mariadb-operator/crds
   - ../../../apps/mariadb-operator/base
-  - ../../../apps/CloudNativePG/base
+  - ../../../apps/cloudnative-pg/base
   
 
   # include cluster apps instances
