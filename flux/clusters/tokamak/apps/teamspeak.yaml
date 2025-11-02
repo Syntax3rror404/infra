@@ -8,20 +8,15 @@ spec:
   values:
     customLabels:
       ciliuml2: pool
-    mariadb:
-      auth:
-        database: teamspeak
-        password: ${teamspeak_mariadb_password}
-        rootPassword: ${teamspeak_mariadb_root_password}
-        username: teamspeak
-      enabled: false
-      global:
-        defaultStorageClass: longhorn-staging
-      persistence:
-        accessMode: ReadWriteOnce
+    mariadbOperator:
+      enabled: true
+      database: teamspeak
+      username: teamspeak
+      password: "${teamspeak_mariadb_password}"
+      useExisting:
         enabled: true
-        size: 8Gi
-        storageClass: longhorn-staging
+        namespace: mariadb-prod
+        mariaDbRef: mariadb-prod
     service:
       externalIPs: []
       type: LoadBalancer
