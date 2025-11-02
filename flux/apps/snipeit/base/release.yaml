@@ -18,7 +18,7 @@ spec:
   chart:
     spec:
       chart: snipeit
-      version: "1.x.x"
+      version: "2.x.x"
       sourceRef:
         kind: HelmRepository
         name: snipeit
