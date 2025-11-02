@@ -7,14 +7,15 @@ metadata:
 spec:
   values:
     # MariaDB
-    mariadb:
-      global:
-        defaultStorageClass: longhorn-prod
-      auth:
-        rootPassword: "${snipeit_mariadb_root_password}"
-        database: "snipeit"
-        username: "snipeit"
-        password: "${snipeit_mariadb_password}"
+    mariadbOperator:
+      enabled: true
+      database: snipeit
+      username: snipeit
+      password: "${snipeit_mariadb_password}"
+      useExisting:
+        enabled: true
+        namespace: mariadb-prod
+        mariaDbRef: mariadb-prod
 
     # snipeit config
     snipeit:
