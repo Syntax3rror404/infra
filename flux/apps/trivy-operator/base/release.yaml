@@ -2,25 +2,25 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: authentik
-  namespace: authentik
+  name: trivy-operator
+  namespace: trivy-system
 spec:
   interval: 12h
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    semver: ">=2025.8.0 <2026.1.0"
+    semver: ">=0.31.0 <1.00.0"
   url: oci://ghcr.io/aquasecurity/helm-charts/trivy-operator
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: authentik
-  namespace: authentik
+  name: trivy-operator
+  namespace: trivy-system
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: authentik
-    namespace: authentik
+    name: trivy-operator
+    namespace: trivy-system
