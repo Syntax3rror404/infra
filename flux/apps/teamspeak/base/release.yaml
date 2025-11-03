@@ -18,7 +18,7 @@ spec:
   chart:
     spec:
       chart: teamspeak
-      version: "0.x.x"
+      version: "1.x.x"
       sourceRef:
         kind: HelmRepository
         name: teamspeak
