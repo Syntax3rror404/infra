@@ -56,8 +56,6 @@ spec:
     name: flux-system
   path: flux/clusters/clustername/resources
   prune: true
-  dependsOn:
-    - name: cluster-infrastructure
   postBuild:
     substituteFrom:
       - kind: ConfigMap
