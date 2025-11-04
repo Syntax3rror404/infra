@@ -38,7 +38,7 @@ spec:
     type: LoadBalancer
     metadata:
       labels:
-        ciliuml2: pool
+        lb.cilium.io/pool: general
 ---
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Database

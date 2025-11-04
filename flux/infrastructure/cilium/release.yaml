@@ -40,7 +40,7 @@ spec:
       enabled: true
       service:
         labels:
-          ciliuml2: cilium
+          lb.cilium.io/pool: cilium
     ipam:
       mode: kubernetes
     ipv4NativeRoutingCIDR: 10.244.0.0/16
