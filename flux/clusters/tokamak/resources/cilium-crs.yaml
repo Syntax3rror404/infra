@@ -1,4 +1,7 @@
 ---
+#
+# cilium
+#
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumLoadBalancerIPPool
 metadata:
@@ -10,30 +13,6 @@ spec:
   serviceSelector:
     matchLabels:
       lb.cilium.io/pool: cilium
----
-apiVersion: "cilium.io/v2alpha1"
-kind: CiliumLoadBalancerIPPool
-metadata:
-  name: "nginx-pool"
-spec:
-  blocks:
-    - start: "192.168.35.52"
-      stop: "192.168.35.52"
-  serviceSelector:
-    matchLabels:
-      lb.cilium.io/pool: nginx
----
-apiVersion: "cilium.io/v2alpha1"
-kind: CiliumLoadBalancerIPPool
-metadata:
-  name: "general-pool"
-spec:
-  blocks:
-    - start: "192.168.35.60"
-      stop: "192.168.35.120"
-  serviceSelector:
-    matchLabels:
-      lb.cilium.io/pool: general
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
@@ -58,6 +37,21 @@ spec:
     matchLabels:
       lb.cilium.io/pool: cilium
 ---
+#
+# nginx
+#
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "nginx-pool"
+spec:
+  blocks:
+    - start: "192.168.35.52"
+      stop: "192.168.35.52"
+  serviceSelector:
+    matchLabels:
+      lb.cilium.io/pool: nginx
+---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
 metadata:
@@ -80,6 +74,21 @@ spec:
   serviceSelector:
     matchLabels:
       lb.cilium.io/pool: nginx
+---
+#
+# lb.cilium.io/pool: general
+#
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "general-pool"
+spec:
+  blocks:
+    - start: "192.168.35.60"
+      stop: "192.168.35.120"
+  serviceSelector:
+    matchLabels:
+      lb.cilium.io/pool: general
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
