@@ -7,7 +7,7 @@ metadata:
 spec:
   values:
     customLabels:
-      ciliuml2: pool
+      lb.cilium.io/pool: general
     mariadbOperator:
       enabled: true
       database: teamspeak
