@@ -1,0 +1,26 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: wg-portal
+  namespace: wg-portal
+spec:
+  interval: 12h
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    semver: ">=0.7.2 <1.0.0"
+  url: oci://ghcr.io/h44z/charts/wg-portal
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: wg-portal
+  namespace: wg-portal
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: wg-portal
+    namespace: wg-portal

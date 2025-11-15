@@ -1,0 +1,10 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: wg-portal
+  namespace: wg-portal
+spec:
+  values:
+    cloudflare:
+      ingress:
