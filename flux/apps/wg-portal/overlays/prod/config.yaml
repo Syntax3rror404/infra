@@ -15,5 +15,6 @@ spec:
               apiVersion: v1
               kind: Service
               metadata:
+                name: wg-portal-wireguard
                 labels:
                   lb.cilium.io/pool: general
