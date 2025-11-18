@@ -5,6 +5,13 @@ metadata:
   name: wg-portal
   namespace: wg-portal
 spec:
+  values:
+    ingress:
+      enabled: true
+      className: cilium
+    config: 
+      web:
+        external_url: wg.${cilium_domain}
   postRenderers:
     - kustomize:
         patches:
