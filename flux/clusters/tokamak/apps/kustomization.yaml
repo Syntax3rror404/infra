@@ -19,6 +19,7 @@ resources:
   - ../../../apps/mariadb-operator/crds
   - ../../../apps/mariadb-operator/base
   - ../../../apps/cloudnative-pg/base
+  - ../../../apps/wg-portal/overlays/prod
   
 
   # include cluster apps instances
