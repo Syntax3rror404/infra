@@ -5,6 +5,15 @@ metadata:
   name: wg-portal
   namespace: wg-portal
 spec:
-  values:
-    cloudflare:
-      ingress: false
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Service
+              name: wg-portal-wireguard
+            patch: |
+              apiVersion: v1
+              kind: Service
+              metadata:
+                labels:
+                  lb.cilium.io/pool: general
