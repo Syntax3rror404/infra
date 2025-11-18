@@ -9,9 +9,9 @@ spec:
     ingress:
       enabled: true
       className: cilium
-    config: 
-      web:
-        external_url: wg.${cilium_domain}
+    #config: 
+    #  web:
+    #    external_url: wg.${cilium_domain}
   postRenderers:
     - kustomize:
         patches:
