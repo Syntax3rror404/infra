@@ -32,6 +32,7 @@ spec:
       tls:
         - hosts:
             - git.${cilium_domain}
+          secretName: ingress_cert
 
     gitea:
       config:
