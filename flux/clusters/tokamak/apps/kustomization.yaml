@@ -20,6 +20,7 @@ resources:
   - ../../../apps/mariadb-operator/base
   - ../../../apps/cloudnative-pg/base
   - ../../../apps/wg-portal/overlays/prod
+  - ../../../apps/forgejo/base
   
 
   # include cluster apps instances
@@ -96,6 +97,14 @@ patches:
       kind: HelmRelease
       name: teamspeak
       namespace: teamspeak
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: forgejo.yaml
+    target:
+      kind: HelmRelease
+      name: forgejo
+      namespace: forgejo
     options:
       allowNameChange: false
       allowKindChange: false

@@ -1,0 +1,36 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: forgejo
+  namespace: forgejo
+spec:
+  values:
+    persistence:
+      enabled: true
+      create: true
+      mount: true
+      size: 10Gi
+      storageClass: longhorn-prod
+
+    ingress:
+      enabled: true
+      className: cilium
+      hosts:
+        - host: git.${cilium_domain}
+          paths:
+            - path: /
+              pathType: Prefix
+              port: http
+      tls:
+          hosts:
+            - git.${cilium_domain}
+
+    gitea:
+      config:
+        database:
+          DB_TYPE: mysql
+          HOST: mariadb-prod-internal.mariadb-prod.svc
+          NAME: mariadb-prod
+          USER: forgejo
+          PASSWD: "${forgejo_mariadb_password}"
