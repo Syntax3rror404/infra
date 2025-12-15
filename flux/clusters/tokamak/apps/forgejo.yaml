@@ -16,6 +16,10 @@ spec:
     ingress:
       enabled: true
       className: cilium
+
+      annotations:
+        ingress.cilium.io/loadbalancer-mode: shared
+        ingress.cilium.io/websocket: enabled
       hosts:
         - host: git.${cilium_domain}
           paths:
