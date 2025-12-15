@@ -40,6 +40,9 @@ spec:
       labels:
         lb.cilium.io/pool: general
 ---
+#
+# ADA --------------------------
+#
 apiVersion: k8s.mariadb.com/v1alpha1
 kind: Database
 metadata:
@@ -89,6 +92,66 @@ spec:
   database: "*"
   table: "*"
   username: mzapf
+  grantOption: true
+  host: "%"
+  # Delete the resource in the database whenever the CR gets deleted.
+  # Alternatively, you can specify Skip in order to omit deletion.
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
+---
+#
+# forgejo --------------------------
+#
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Database
+metadata:
+  name: forgejo
+  namespace: mariadb-prod
+spec:
+  mariaDbRef:
+    name: mariadb-prod
+  characterSet: utf8
+  collate: utf8mb4_general_ci
+  # Delete the resource in the database whenever the CR gets deleted.
+  # Alternatively, you can specify Skip in order to omit deletion.
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: User
+metadata:
+  name: forgejo
+  namespace: mariadb-prod
+spec:
+  mariaDbRef:
+    name: mariadb-prod
+  passwordSecretKeyRef:
+    name: user-forgejo
+    key: password
+  maxUserConnections: 20
+  host: "%"
+  cleanupPolicy: Delete
+  requeueInterval: 10h
+  retryInterval: 30s
+---
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: Grant
+metadata:
+  name: forgejo
+  namespace: mariadb-prod
+spec:
+  mariaDbRef:
+    name: mariadb-prod
+  privileges:
+    - "SELECT"
+    - "INSERT"
+    - "UPDATE"
+    # - "ALL PRIVILEGES"
+  database: "*"
+  table: "*"
+  username: forgejo
   grantOption: true
   host: "%"
   # Delete the resource in the database whenever the CR gets deleted.
