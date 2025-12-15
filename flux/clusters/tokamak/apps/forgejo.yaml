@@ -23,8 +23,8 @@ spec:
               pathType: Prefix
               port: http
       tls:
-        hosts:
-          - git.${cilium_domain}
+        - hosts:
+            - git.${cilium_domain}
 
     gitea:
       config:
