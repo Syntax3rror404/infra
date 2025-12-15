@@ -31,6 +31,6 @@ spec:
         database:
           DB_TYPE: mysql
           HOST: mariadb-prod-internal.mariadb-prod.svc
-          NAME: mariadb-prod
+          NAME: forgejo
           USER: forgejo
           PASSWD: "${forgejo_mariadb_password}"
