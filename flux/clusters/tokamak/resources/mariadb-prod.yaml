@@ -112,7 +112,7 @@ spec:
   mariaDbRef:
     name: mariadb-prod
   characterSet: utf8mb4
-  collate: utf8mb4_bin
+  collate: utf8mb4_0900_as_cs
   # Delete the resource in the database whenever the CR gets deleted.
   # Alternatively, you can specify Skip in order to omit deletion.
   cleanupPolicy: Delete
