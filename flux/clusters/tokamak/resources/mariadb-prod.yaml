@@ -145,11 +145,8 @@ spec:
   mariaDbRef:
     name: mariadb-prod
   privileges:
-    - "SELECT"
-    - "INSERT"
-    - "UPDATE"
-    # - "ALL PRIVILEGES"
-  database: "*"
+    - "ALL PRIVILEGES"
+  database: "forgejo"
   table: "*"
   username: forgejo
   grantOption: true
