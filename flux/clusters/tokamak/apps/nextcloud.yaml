@@ -72,7 +72,7 @@ spec:
     externalDatabase:
       enabled: true
       type: mysql
-      host: mariadb-prod-internal.mariadb-prod.svc:3306
+      host: mariadb-prod-internal.mariadb-prod.svc
       user: nextcloud
       password: "${nextcloud_mariadb_password}"
       database: nextcloud
