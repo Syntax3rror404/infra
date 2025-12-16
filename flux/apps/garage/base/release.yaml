@@ -1,0 +1,32 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: garage
+  namespace: garage
+spec:
+  interval: 24h
+  url: https://git.deuxfleurs.fr/Deuxfleurs/garage
+  ref:
+    # semver uses tag
+    semver: ">=v2.1.0 <v3.0.0"
+  ignore: |
+    # exclude all
+    /*
+    # include charts directory
+    !/scripts/helm
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: garage
+  namespace: garage
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: scripts/helm/garage
+      sourceRef:
+        kind: GitRepository
+        name: garage
+        namespace: garage
