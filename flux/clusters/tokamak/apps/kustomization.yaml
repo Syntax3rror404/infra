@@ -21,7 +21,7 @@ resources:
   - ../../../apps/cloudnative-pg/base
   - ../../../apps/wg-portal/overlays/prod
   - ../../../apps/forgejo/base
-  
+  - ../../../apps/garage/base
 
   # include cluster apps instances
   # - instances only includes mariadb-prod which is archived
@@ -105,6 +105,14 @@ patches:
       kind: HelmRelease
       name: forgejo
       namespace: forgejo
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: garage.yaml
+    target:
+      kind: HelmRelease
+      name: garage
+      namespace: garage
     options:
       allowNameChange: false
       allowKindChange: false

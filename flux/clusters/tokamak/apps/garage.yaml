@@ -1,0 +1,39 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: garage
+  namespace: garage
+spec:
+  values:
+    deployment:
+      replicaCount: 3
+
+    persistence:
+      meta:
+        storageClass: "longhorn-prod"
+        size: 500Mi
+      data:
+        storageClass: "longhorn-prod"
+        size: 5Gi
+
+    ingress:
+      s3:
+        api:
+          enabled: true
+          className: "cilium"
+          annotations:
+            ingress.cilium.io/loadbalancer-mode: shared
+            ingress.cilium.io/websocket: enabled
+            cert-manager.io/cluster-issuer: labza-ca
+            cert-manager.io/private-key-algorithm: ECDSA
+            cert-manager.io/private-key-size: '256'
+          hosts:
+            - host: s3-api.${cilium_domain}
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: garage-ingress-cert
+              hosts:
+                - s3-api.${cilium_domain}
