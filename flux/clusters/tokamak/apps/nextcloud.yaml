@@ -54,7 +54,7 @@ spec:
           $CONFIG = array (
             'log_type' => 'file',
             'logfile' => 'nextcloud.log',
-            'loglevel' => 3,
+            'loglevel' => 2,
             'logdateformat' => 'F d, Y H:i:s'
             );
 
