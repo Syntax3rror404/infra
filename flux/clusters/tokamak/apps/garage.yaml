@@ -37,3 +37,22 @@ spec:
             - secretName: garage-ingress-cert
               hosts:
                 - s3-api.${cilium_domain}
+
+        web:
+          enabled: true
+          className: "cilium"
+          annotations:
+            ingress.cilium.io/loadbalancer-mode: shared
+            ingress.cilium.io/websocket: enabled
+            cert-manager.io/cluster-issuer: labza-ca
+            cert-manager.io/private-key-algorithm: ECDSA
+            cert-manager.io/private-key-size: '256'
+          hosts:
+          - host: "web.${cilium_domain}"
+            paths:
+              - path: /
+                pathType: Prefix
+          tls:
+            - secretName: garage-ingress-cert
+              hosts:
+                - "web.${cilium_domain}"
