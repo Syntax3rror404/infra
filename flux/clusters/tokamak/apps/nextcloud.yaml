@@ -78,25 +78,25 @@ spec:
         runAsNonRoot: true
         readOnlyRootFilesystem: false
 
-    externalDatabase:
-      enabled: true
-      type: mysql
-      host: mariadb-prod-internal.mariadb-prod.svc
-      user: nextcloud
-      password: "${nextcloud_mariadb_password}"
-      database: nextcloud
-
     #externalDatabase:
     #  enabled: true
     #  type: mysql
-    #  host: nextcloud-mariadb.svc
+    #  host: mariadb-prod-internal.mariadb-prod.svc
     #  user: nextcloud
     #  password: "${nextcloud_mariadb_password}"
-    #  rootPassword: "${nextcloud_mariadb_root_password}"
     #  database: nextcloud
-#
+
+    externalDatabase:
+      enabled: true
+      type: mysql
+      host: nextcloud-mariadb.svc
+      user: nextcloud
+      password: "${nextcloud_mariadb_password}"
+      rootPassword: "${nextcloud_mariadb_root_password}"
+      database: nextcloud
+
     mariadb:
-      enabled: false
+      enabled: true
       primary:
         livenessProbe:
           enabled: false
