@@ -48,11 +48,11 @@ spec:
             cert-manager.io/private-key-algorithm: ECDSA
             cert-manager.io/private-key-size: '256'
           hosts:
-          - host: "web.${cilium_domain}"
+          - host: "s3-web.${cilium_domain}"
             paths:
               - path: /
                 pathType: Prefix
           tls:
             - secretName: garage-ingress-cert
               hosts:
-                - "web.${cilium_domain}"
+                - "s3-web.${cilium_domain}"
