@@ -49,6 +49,15 @@ spec:
               )
           );
 
+        logging.config.php: |-
+          <?php
+          $CONFIG = array (
+            'log_type' => 'file',
+            'logfile' => 'nextcloud.log',
+            'loglevel' => 2,
+            'logdateformat' => 'F d, Y H:i:s'
+            );
+
     persistence:
       enabled: true
       size: 500Gi
