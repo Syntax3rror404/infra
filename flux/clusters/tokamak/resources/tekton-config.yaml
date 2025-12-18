@@ -35,32 +35,32 @@ spec:
     options: {}
   platforms:
     openshift: {}
-#---
-#apiVersion: networking.k8s.io/v1
-#kind: Ingress
-#metadata:
-#  name: dashboard-ingress
-#  namespace: tekton-pipelines
-#  annotations:
-#    ingress.cilium.io/websocket: enabled
-#    ingress.cilium.io/loadbalancer-mode: shared
-#    cert-manager.io/cluster-issuer: labza-ca
-#    cert-manager.io/private-key-algorithm: ECDSA
-#    cert-manager.io/private-key-size: "256"
-#spec:
-#  ingressClassName: cilium
-#  rules:
-#    - host: tekton.${cilium_domain}
-#      http:
-#        paths:
-#          - path: /
-#            pathType: Prefix
-#            backend:
-#              service:
-#                name: tekton-dashboard
-#                port:
-#                  number: 9097
-#  tls:
-#    - hosts:
-#        - tekton.${cilium_domain}
-#      secretName: tekton-ingress-cert
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboard-ingress
+  namespace: tekton-pipelines
+  annotations:
+    ingress.cilium.io/websocket: enabled
+    ingress.cilium.io/loadbalancer-mode: shared
+    cert-manager.io/cluster-issuer: labza-ca
+    cert-manager.io/private-key-algorithm: ECDSA
+    cert-manager.io/private-key-size: "256"
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: tekton.${cilium_domain}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tekton-dashboard
+                port:
+                  number: 9097
+  tls:
+    - hosts:
+        - tekton.${cilium_domain}
+      secretName: tekton-ingress-cert
