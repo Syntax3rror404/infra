@@ -1,3 +1,5 @@
+# terraform apply -var-file=terraform.tfvars
+
 cluster_name             = "ich-talos"
 default_gateway          = "192.168.35.1"
 nameserver               = "192.168.33.1"
