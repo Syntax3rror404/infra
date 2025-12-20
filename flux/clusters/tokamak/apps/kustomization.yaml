@@ -5,7 +5,7 @@ kind: Kustomization
 # Include cluster apps which are deployed in the tokamak cluster
 resources:
   - ../../../apps/vault/overlays/prod
-  - ../../../apps/weave-gitops/overlays/prod
+#  - ../../../apps/weave-gitops/overlays/prod
   - ../../../apps/authentik/overlays/prod
   - ../../../apps/cloudflared/overlays/prod
   - ../../../apps/nextcloud/overlays/prod
