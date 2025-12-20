@@ -23,3 +23,10 @@ spec:
         kind: HelmRepository
         name: metrics-server
         namespace: kube-system
+  values:
+    nodeSelector: 
+      node-role.kubernetes.io/control-plane: ""
+    tolerations: 
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
