@@ -26,3 +26,18 @@ spec:
     path: "flux/clusters/tokamak"
     pullSecret: "flux-system"
     interval: "1m0s"
+  kustomize:
+    patches:
+      - target:
+          kind: Deployment
+        patch: |
+          - op: replace
+            path: /spec/template/spec/nodeSelector
+            value:
+              node-role.kubernetes.io/control-plane: ""
+          - op: add
+            path: /spec/template/spec/tolerations
+            value:
+              - key: "node-role.kubernetes.io/control-plane"
+                operator: "Exists"
+                effect: "NoSchedule"
