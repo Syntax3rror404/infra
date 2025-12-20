@@ -6,8 +6,7 @@ metadata:
   namespace: nginx
 spec:
   values:
-    server:
-      controller:
-        allowSnippetAnnotations: true
-        config:
-          annotations-risk-level: Critical
+    controller:
+      allowSnippetAnnotations: true
+      config:
+        annotations-risk-level: Critical
