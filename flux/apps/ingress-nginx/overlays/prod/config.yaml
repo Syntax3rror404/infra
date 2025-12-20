@@ -9,5 +9,12 @@ spec:
     server:
       controller:
         allowSnippetAnnotations: true
+        nodeSelector:
+          kubernetes.io/os: linux
+          node-role.kubernetes.io/control-plane: ""
+        tolerations: 
+          - key: "node-role.kubernetes.io/control-plane"
+            operator: "Exists"
+            effect: "NoSchedule"
         config:
           annotations-risk-level: Critical
