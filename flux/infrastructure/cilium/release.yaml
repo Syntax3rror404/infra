@@ -31,11 +31,29 @@ spec:
       hostRoot: /sys/fs/cgroup
     externalIPs:
       enabled: true
+    operator:
+      nodeSelector:
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/control-plane: ""
     hubble:
       relay:
         enabled: true
+        tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+            effect: NoSchedule
+        nodeSelector:
+          kubernetes.io/os: linux
+          node-role.kubernetes.io/control-plane: ""
       ui:
         enabled: true
+        tolerations:
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
+            effect: NoSchedule
+        nodeSelector:
+          kubernetes.io/os: linux
+          node-role.kubernetes.io/control-plane: ""
     ingressController:
       enabled: true
       service:
