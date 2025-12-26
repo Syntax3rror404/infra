@@ -27,10 +27,10 @@ spec:
     bpf:
       masquerade: true
       datapathMode: netkit
-    # Needs bunch of memory
-    #  distributedLRU:
-    #    enabled: true
-    #  mapDynamicSizeRatio: 0.08
+    Needs bunch of memory
+     distributedLRU:
+       enabled: true
+     #mapDynamicSizeRatio: 0.08
     bpfClockProbe: true
     # fix for masquerade under talos
     socketLB:
