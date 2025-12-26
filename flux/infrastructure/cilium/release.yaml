@@ -26,6 +26,7 @@ spec:
   values:
     bpf:
       masquerade: true
+      datapathMode: netkit
     bpfClockProbe: true
     # fix for masquerade under talos
     socketLB:
