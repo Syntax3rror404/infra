@@ -82,6 +82,8 @@ spec:
       enabled: true
     loadBalancer:
       mode: hybrid
+      # XDP could, needs driver support
+      acceleration: native
     routingMode: native
     securityContext:
       capabilities:
