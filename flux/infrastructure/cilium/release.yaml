@@ -27,6 +27,10 @@ spec:
     bpf:
       masquerade: true
     bpfClockProbe: true
+    # fix for masquerade under talos
+    socketLB:
+      enabled: true
+      hostNamespaceOnly: true
     autoDirectNodeRoutes: true
     cgroup:
       autoMount:
