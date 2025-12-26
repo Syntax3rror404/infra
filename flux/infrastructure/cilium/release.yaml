@@ -26,6 +26,7 @@ spec:
   values:
     bpf:
       masquerade: true
+    bpfClockProbe: true
     autoDirectNodeRoutes: true
     cgroup:
       autoMount:
