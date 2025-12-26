@@ -24,6 +24,8 @@ spec:
         name: cilium
         namespace: kube-system
   values:
+    bpf:
+      masquerade: true
     autoDirectNodeRoutes: true
     cgroup:
       autoMount:
