@@ -31,6 +31,9 @@ data "talos_machine_configuration" "controlplane" {
               - os:operator
             allowedKubernetesNamespaces:
               - kube-system
+          hostDNS:
+            enabled: false
+            forwardKubeDNSToHost: false
       cluster:
         allowSchedulingOnControlPlanes: false
         proxy:
@@ -73,7 +76,10 @@ data "talos_machine_configuration" "worker" {
         install:
           image: ${data.talos_image_factory_urls.this.urls.installer}
           wipe: true
-
+        features:
+          hostDNS:
+            enabled: false
+            forwardKubeDNSToHost: false
       cluster:
         discovery:
           enabled: false
