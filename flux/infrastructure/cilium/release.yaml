@@ -29,7 +29,7 @@ spec:
       datapathMode: netkit
       distributedLRU:
         enabled: true
-      mapDynamicSizeRatio: 0.005
+      mapDynamicSizeRatio: 0.004
     bpfClockProbe: true
     # fix for masquerade under talos
     socketLB:
