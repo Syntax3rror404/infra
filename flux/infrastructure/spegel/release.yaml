@@ -37,3 +37,5 @@ spec:
   values:
     spegel:
       containerdRegistryConfigPath: /etc/cri/conf.d/hosts
+    grafanaDashboard:
+      enabled: true
