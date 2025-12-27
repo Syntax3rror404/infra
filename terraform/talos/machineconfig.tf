@@ -34,6 +34,7 @@ data "talos_machine_configuration" "controlplane" {
           hostDNS:
             enabled: true
             forwardKubeDNSToHost: true
+            resolveMemberNames: true
       cluster:
         allowSchedulingOnControlPlanes: false
         proxy:
@@ -80,6 +81,7 @@ data "talos_machine_configuration" "worker" {
           hostDNS:
             enabled: true
             forwardKubeDNSToHost: true
+            resolveMemberNames: true
       cluster:
         discovery:
           enabled: false
