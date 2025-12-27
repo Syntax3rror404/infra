@@ -32,8 +32,8 @@ data "talos_machine_configuration" "controlplane" {
             allowedKubernetesNamespaces:
               - kube-system
           hostDNS:
-            enabled: false
-            forwardKubeDNSToHost: false
+            enabled: true
+            forwardKubeDNSToHost: true
       cluster:
         allowSchedulingOnControlPlanes: false
         proxy:
@@ -78,8 +78,8 @@ data "talos_machine_configuration" "worker" {
           wipe: true
         features:
           hostDNS:
-            enabled: false
-            forwardKubeDNSToHost: false
+            enabled: true
+            forwardKubeDNSToHost: true
       cluster:
         discovery:
           enabled: false
@@ -119,7 +119,9 @@ resource "talos_machine_configuration_apply" "controlplanes" {
             dhcp: false
             vip:
               ip: ${var.endpoint_vip}
-
+          - interface: lo
+            addresses:
+              - 169.254.116.108/32
       install:
         wipe: true
         diskSelector:
@@ -164,7 +166,9 @@ resource "talos_machine_configuration_apply" "workers" {
               - network: 0.0.0.0/0
                 gateway: ${var.default_gateway}
             dhcp: false
-
+          - interface: lo
+            addresses:
+              - 169.254.116.108/32
       install:
         wipe: true
         diskSelector:
