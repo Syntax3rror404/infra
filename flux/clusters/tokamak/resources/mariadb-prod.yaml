@@ -211,23 +211,3 @@ spec:
   requeueInterval: 10h
   retryInterval: 30s
 ---
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: mariadb-test
----
-apiVersion: k8s.mariadb.com/v1alpha1
-kind: MariaDB
-metadata:
-  name: mariadb-test
-  namespace: mariadb-test
-spec:
-  rootPasswordSecretKeyRef:
-    name: mariadb
-    key: root-password
-    generate: true
-
-  storage:
-    size: 10Gi
-    storageClassName: longhorn-prod
