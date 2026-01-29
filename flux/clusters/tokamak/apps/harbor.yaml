@@ -6,7 +6,7 @@ metadata:
   namespace: harbor
 spec:
   values:
-  
+
     expose:
       type: ingress
       tls:
@@ -29,6 +29,12 @@ spec:
         registry:
           storageClass: "longhorn-staging"
           size: 50Gi
+        redis:
+          storageClass: "longhorn-staging"
+          size: 1Gi
+        jobservice:
+          storageClass: "longhorn-staging"
+          size: 1Gi
 
     database:
       type: external
