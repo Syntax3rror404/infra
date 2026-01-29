@@ -1,0 +1,41 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: harbor
+  namespace: harbor
+spec:
+  values:
+  
+    expose:
+      type: ingress
+      tls:
+        enabled: true
+        certSource: secret
+        secret:
+          secretName: "harbor-ingress"
+      ingress:
+        hosts:
+          core: harbor.${cilium_domain}
+        className: "cilium"
+        annotations:
+          ingress.cilium.io/loadbalancer-mode: shared
+          ingress.cilium.io/websocket: enabled
+          cert-manager.io/private-key-algorithm: ECDSA
+          cert-manager.io/private-key-size: "256"
+
+    persistence:
+      persistentVolumeClaim:
+        registry:
+          storageClass: "longhorn-staging"
+          size: 50Gi
+
+    database:
+      type: external
+      external:
+        host: "pgsql-prod-rw.pgsql-prod.svc"
+        port: "5432"
+        existingSecret: ""
+        coreDatabase: "harbor"
+        username: "harbor"
+        password: "password"
