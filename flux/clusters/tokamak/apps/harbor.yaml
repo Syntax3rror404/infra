@@ -34,6 +34,10 @@ spec:
           storageClass: "longhorn-staging"
           size: 1Gi
         jobservice:
+          jobLog:
+            storageClass: "longhorn-staging"
+            size: 1Gi
+        trivy:
           storageClass: "longhorn-staging"
           size: 1Gi
 
