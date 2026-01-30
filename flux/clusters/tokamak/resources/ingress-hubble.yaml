@@ -6,7 +6,7 @@ metadata:
   namespace: kube-system
 spec:
   parentRefs:
-    - name: envoy-gateway
+    - name: envoy-gateway-internal
       namespace: envoy-gateway-system
   hostnames:
     - hubble.${cilium_domain}
