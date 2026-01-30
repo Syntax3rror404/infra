@@ -9,6 +9,11 @@ spec:
 
     expose:
       type: route
+      tls:
+        enabled: true
+        certSource: secret
+        secret:
+          secretName: "harbor-ingress"
       route:
         parentRefs:
           - name: envoy-gateway-internal
