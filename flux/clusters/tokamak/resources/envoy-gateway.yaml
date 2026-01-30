@@ -38,4 +38,24 @@ spec:
         certificateRefs:
           - kind: Secret
             namespace: envoy-gateway-system
-            name: envoy-gateway-tls-cert
+            name: envoy-gateway-internal-cert
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: envoy-gateway-internal-cert
+  namespace: envoy-gateway-system
+spec:
+  dnsNames:
+    - "*.tokamak.labza"
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: labza-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  secretName: envoy-gateway-internal-cert
+  usages:
+    - digital signature
+    - key encipherment
