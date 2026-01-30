@@ -8,22 +8,13 @@ spec:
   values:
 
     expose:
-      type: ingress
-      tls:
-        enabled: true
-        certSource: secret
-        secret:
-          secretName: "harbor-ingress"
-      ingress:
+      type: route
+      route:
+        parentRefs:
+          - name: envoy-gateway-internal
+            namespace: envoy-gateway-system
         hosts:
-          core: harbor.${cilium_domain}
-        className: "cilium"
-        annotations:
-          ingress.cilium.io/loadbalancer-mode: shared
-          ingress.cilium.io/websocket: enabled
-          cert-manager.io/cluster-issuer: labza-ca
-          cert-manager.io/private-key-algorithm: ECDSA
-          cert-manager.io/private-key-size: "256"
+          - "harbor.${cilium_domain}"
 
     persistence:
       persistentVolumeClaim:
