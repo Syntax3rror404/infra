@@ -10,8 +10,8 @@ spec:
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
-  verify:
-    provider: cosign
+  #verify:
+  #  provider: cosign
   ref:
     semver: ">=v1.4.6 <v2.0.0"
   url: oci://docker.io/envoyproxy/gateway-helm
