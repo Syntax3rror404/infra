@@ -37,5 +37,5 @@ spec:
       tls:
         certificateRefs:
           - kind: Secret
-            namespace: cert-manager
+            namespace: envoy-gateway-system
             name: envoy-gateway-tls-cert
