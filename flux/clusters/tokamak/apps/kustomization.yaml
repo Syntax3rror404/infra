@@ -23,6 +23,7 @@ resources:
   - ../../../apps/forgejo/base
   - ../../../apps/garage/base
   - ../../../apps/harbor
+  - ../../../apps/envoy-gateway
 
   # include cluster apps instances
   # - instances only includes mariadb-prod which is archived
