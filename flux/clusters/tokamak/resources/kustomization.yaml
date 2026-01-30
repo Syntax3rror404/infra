@@ -10,3 +10,4 @@ resources:
   - tekton-config.yaml
   # - mariadb-galera-prod.yaml
   - mariadb-prod.yaml
+  - envoy-gateway.yaml

@@ -1,0 +1,44 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy-gateway
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: envoy
+    namespace: envoy-system
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: envoy-gateway-internal
+spec:
+  gatewayClassName: envoy-gateway
+  infrastructure:
+    annotations:
+      ingress.cilium.io/loadbalancer-mode: dedicated
+    labels:
+      lb.cilium.io/pool: general
+  listeners:
+    - name: http
+      protocol: HTTP
+      hostname: "*.tokamak.labza"
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https
+      protocol: HTTPS
+      hostname: "*.tokamak.labza"
+      port: 443
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            namespace: cert-manager
+            name: envoy-gateway-tls-cert
