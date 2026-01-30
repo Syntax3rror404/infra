@@ -4,15 +4,3 @@ kind: HelmRelease
 metadata:
   name: rancher
   namespace: cattle-system
-spec:
-  values:
-    hostname: rancher.${cilium_domain}
-    replicas: 2
-    ingress:
-      enabled: true
-      extraAnnotations:
-        ingress.cilium.io/loadbalancer-mode: shared
-        ingress.cilium.io/websocket: enabled
-        cert-manager.io/private-key-algorithm: ECDSA
-        cert-manager.io/private-key-size: "256"
-      ingressClassName: cilium
