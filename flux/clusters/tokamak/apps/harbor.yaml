@@ -9,6 +9,8 @@ spec:
 
     expose:
       type: route
+      tls:
+        enabled: false
       route:
         parentRefs:
           - name: envoy-gateway-internal
