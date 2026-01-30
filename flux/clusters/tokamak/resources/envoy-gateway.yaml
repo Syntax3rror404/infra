@@ -22,14 +22,14 @@ spec:
   listeners:
     - name: http
       protocol: HTTP
-      hostname: "*.tokamak.labza"
+      #hostname: "*.tokamak.labza"
       port: 80
       allowedRoutes:
         namespaces:
           from: Same
     - name: https
       protocol: HTTPS
-      hostname: "*.tokamak.labza"
+      #hostname: "*.tokamak.labza"
       port: 443
       allowedRoutes:
         namespaces:
