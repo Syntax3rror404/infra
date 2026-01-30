@@ -72,7 +72,7 @@ spec:
           kubernetes.io/os: linux
           node-role.kubernetes.io/control-plane: ""
     ingressController:
-      enabled: true
+      enabled: false
       service:
         labels:
           lb.cilium.io/pool: cilium
