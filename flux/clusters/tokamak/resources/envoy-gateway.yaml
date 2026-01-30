@@ -18,7 +18,7 @@ spec:
     annotations:
       ingress.cilium.io/loadbalancer-mode: dedicated
     labels:
-      lb.cilium.io/pool: general
+      lb.cilium.io/pool: cilium
   listeners:
     - name: http
       protocol: HTTP
