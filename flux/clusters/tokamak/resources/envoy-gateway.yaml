@@ -59,3 +59,36 @@ spec:
   usages:
     - digital signature
     - key encipherment
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: envoy-gateway-external
+  namespace: envoy-gateway-system
+spec:
+  gatewayClassName: envoy-gateway
+  infrastructure:
+    annotations:
+      ingress.cilium.io/loadbalancer-mode: dedicated
+    labels:
+      lb.cilium.io/pool: nginx
+  listeners:
+    - name: http
+      protocol: HTTP
+      #hostname: "*.tokamak.labza"
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: https
+      protocol: HTTPS
+      #hostname: "*.tokamak.labza"
+      port: 443
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - kind: Secret
+            namespace: envoy-gateway-system
+            name: envoy-gateway-internal-cert
