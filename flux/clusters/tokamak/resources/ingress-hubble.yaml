@@ -193,6 +193,6 @@ spec:
       issuer: "https://auth.${nginx_domain}/application/o/sso-proxy/"
     clientID: "${oauth2_proxy_clientID}"
     clientSecret:
-      name: "${oauth2_proxy_clientSecret}"
+      name: sso-oidc-secret
     redirectURL: "https://sso-proxy.${cilium_domain}/oauth2/callback"
     logoutPath: "/myapp/logout"
