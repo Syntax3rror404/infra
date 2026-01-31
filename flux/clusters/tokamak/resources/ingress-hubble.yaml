@@ -194,5 +194,5 @@ spec:
     clientID: "${oauth2_proxy_clientID}"
     clientSecret:
       name: sso-oidc-secret
-    redirectURL: "https://sso-proxy.${cilium_domain}/oauth2/callback"
+    redirectURL: "wms.${nginx_domain}"
     logoutPath: "/myapp/logout"
