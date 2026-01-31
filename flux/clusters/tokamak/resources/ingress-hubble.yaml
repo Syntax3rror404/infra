@@ -194,5 +194,5 @@ spec:
     clientID: "${oauth2_proxy_clientID}"
     clientSecret:
       name: sso-oidc-secret
-    redirectURL: "https://wms.${nginx_domain}"
+    redirectURL: "https://wms.${nginx_domain}/oauth2/callback"
     logoutPath: "/myapp/logout"
