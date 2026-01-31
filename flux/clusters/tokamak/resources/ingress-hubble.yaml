@@ -157,3 +157,23 @@ spec:
       backendRefs:
         - name: nextcloud
           port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: snipeit
+  namespace: snipeit
+spec:
+  parentRefs:
+    - name: envoy-gateway-internal
+      namespace: envoy-gateway-system
+  hostnames:
+    - wms.${nginx_domain}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: snipe-it-snipeit
+          port: 80
