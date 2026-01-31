@@ -118,3 +118,42 @@ spec:
       backendRefs:
         - name: authentik-server
           port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+spec:
+  parentRefs:
+    - name: envoy-gateway-external
+      namespace: envoy-gateway-system
+  hostnames:
+    - nextcloud.{nginx_domain}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+      filters:
+        # Security Header (HSTS)
+        - type: ResponseHeaderModifier
+          responseHeaderModifier:
+            add:
+              - name: Strict-Transport-Security
+                value: "max-age=31536000; includeSubDomains; preload"
+            remove:
+              - X-Powered-By
+              - Server
+
+        # CORS
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            add:
+              - name: Access-Control-Allow-Headers
+                value: X-Forwarded-For
+
+      backendRefs:
+        - name: nextcloud
+          port: 8080
