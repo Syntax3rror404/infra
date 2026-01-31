@@ -188,7 +188,6 @@ spec:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
       name: snipeit
-      namespace: snipeit
   oidc:
     provider:
       issuer: "https://auth.${nginx_domain}/application/o/sso-proxy/"
