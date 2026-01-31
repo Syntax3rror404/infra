@@ -22,3 +22,7 @@ data:
 
   # TLS Configuration
   cluster_issuer: "letsencrypt-prod"
+
+  # Databases
+  mariadb_prod: mariadb-prod-internal.mariadb-prod.svc
+  pgsql_prod_rw: pgsql-prod-rw.pgsql-prod.svc
