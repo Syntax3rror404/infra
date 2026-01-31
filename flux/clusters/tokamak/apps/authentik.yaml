@@ -32,19 +32,3 @@ spec:
         persistence:
           storageClass: longhorn
           enabled: false
-    server:
-      ingress:
-        enabled: true
-        ingressClassName: "nginx"
-        hosts:
-          - auth.${nginx_domain}
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt-prod
-          ingress.cilium.io/loadbalancer-mode: shared
-          ingress.cilium.io/websocket: enabled
-          cert-manager.io/private-key-algorithm: ECDSA
-          cert-manager.io/private-key-size: "256"
-        tls:
-          - secretName: authentik-tls
-            hosts:
-              - auth.${nginx_domain}
