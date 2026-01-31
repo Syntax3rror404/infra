@@ -12,22 +12,6 @@ spec:
         storageClass: longhorn-staging
       image:
         tag: 1.21.2
-      ingress:
-        enabled: true
-        ingressClassName: cilium
-        annotations:
-          cert-manager.io/cluster-issuer: labza-ca
-          ingress.cilium.io/loadbalancer-mode: shared
-          ingress.cilium.io/websocket: enabled
-          cert-manager.io/private-key-algorithm: ECDSA
-          cert-manager.io/private-key-size: "256"
-        hosts:
-          - host: vault.${cilium_domain}
-            paths: []
-        tls:
-          - hosts:
-              - vault.${cilium_domain}
-            secretName: vault-ingress-cert
 
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
