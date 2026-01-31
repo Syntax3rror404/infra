@@ -122,7 +122,7 @@ spec:
         memory: 2048Mi
 
     ingress:
-      enabled: true
+      enabled: false
       labels: {}
       path: /
       pathType: Prefix
