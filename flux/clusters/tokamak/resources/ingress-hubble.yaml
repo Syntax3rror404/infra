@@ -129,7 +129,7 @@ spec:
     - name: envoy-gateway-external
       namespace: envoy-gateway-system
   hostnames:
-    - nextcloud.{nginx_domain}
+    - nextcloud.${nginx_domain}
   rules:
     - matches:
         - path:
