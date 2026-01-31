@@ -177,3 +177,23 @@ spec:
       backendRefs:
         - name: snipe-it-snipeit
           port: 80
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: snipeit
+  namespace: snipeit
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: snipeit
+      namespace: snipeit
+  oidc:
+    provider:
+      issuer: "https://auth.${nginx_domain}/application/o/sso-proxy/"
+    clientID: "${oauth2_proxy_clientID}"
+    clientSecret:
+      name: "${oauth2_proxy_clientSecret}"
+    redirectURL: "https://sso-proxy.${cilium_domain}/oauth2/callback"
+    logoutPath: "/myapp/logout"
