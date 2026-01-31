@@ -165,7 +165,7 @@ metadata:
   namespace: snipeit
 spec:
   parentRefs:
-    - name: envoy-gateway-internal
+    - name: envoy-gateway-external
       namespace: envoy-gateway-system
   hostnames:
     - wms.${nginx_domain}
