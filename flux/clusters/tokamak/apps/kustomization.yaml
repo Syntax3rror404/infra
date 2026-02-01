@@ -10,7 +10,7 @@ resources:
   - ../../../apps/cloudflared/overlays/prod
   - ../../../apps/nextcloud/overlays/prod
   - ../../../apps/snipeit/overlays/prod
-  - ../../../apps/ingress-nginx/overlays/prod
+ # - ../../../apps/ingress-nginx/overlays/prod
   - ../../../apps/rancher/overlays/dev
   - ../../../apps/longhorn/overlays/prod
   - ../../../apps/tekton-operator/overlays/prod
