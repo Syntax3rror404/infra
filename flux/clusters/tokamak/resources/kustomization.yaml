@@ -4,10 +4,11 @@ kind: Kustomization
 resources:
   - labza-ca.yaml
   #- letsencrypt-prod-ca.yaml
-  - ingress-hubble.yaml
   - cilium-crs.yaml
   - talos-etcd-defrag-cronjob.yaml
   - tekton-config.yaml
   # - mariadb-galera-prod.yaml
   - mariadb-prod.yaml
   - envoy-gateway.yaml
+  - gateway-external.yaml
+  - gateway-internal.yaml
