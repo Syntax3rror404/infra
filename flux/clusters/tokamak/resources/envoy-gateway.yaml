@@ -18,7 +18,7 @@ spec:
     annotations:
       ingress.cilium.io/loadbalancer-mode: dedicated
     labels:
-      lb.cilium.io/pool: cilium
+      lb.cilium.io/pool: envoy-gateway-internal
   listeners:
     - name: http
       protocol: HTTP
@@ -71,7 +71,7 @@ spec:
     annotations:
       ingress.cilium.io/loadbalancer-mode: dedicated
     labels:
-      lb.cilium.io/pool: nginx
+      lb.cilium.io/pool: envoy-gateway-external
   listeners:
     - name: http
       protocol: HTTP

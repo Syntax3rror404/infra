@@ -1,23 +1,23 @@
 ---
 #
-# lb.cilium.io/pool: cilium
+# lb.cilium.io/pool: envoy-gateway-internal
 #
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: "cilium-pool"
+  name: "envoy-gateway-internal"
 spec:
   blocks:
     - start: "192.168.35.51"
       stop: "192.168.35.51"
   serviceSelector:
     matchLabels:
-      lb.cilium.io/pool: cilium
+      lb.cilium.io/pool: envoy-gateway-internal
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
 metadata:
-  name: cilium-policy
+  name: envoy-gateway-internal
 spec:
   externalIPs: true
   loadBalancerIPs: true
@@ -35,27 +35,27 @@ spec:
   # - ^veth[0-9a-zA-Z]+   # Matches virtual ethernet interfaces like veth0, veth1, etc.
   serviceSelector:
     matchLabels:
-      lb.cilium.io/pool: cilium
+      lb.cilium.io/pool: envoy-gateway-internal
 ---
 #
-# lb.cilium.io/pool: nginx
+# lb.cilium.io/pool: envoy-gateway-external-pool
 #
 apiVersion: "cilium.io/v2alpha1"
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: "nginx-pool"
+  name: "envoy-gateway-external"
 spec:
   blocks:
     - start: "192.168.35.52"
       stop: "192.168.35.52"
   serviceSelector:
     matchLabels:
-      lb.cilium.io/pool: nginx
+      lb.cilium.io/pool: envoy-gateway-external
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
 metadata:
-  name: nginx-policy
+  name: envoy-gateway-external
 spec:
   externalIPs: true
   loadBalancerIPs: true
@@ -73,7 +73,7 @@ spec:
   # - ^veth[0-9a-zA-Z]+   # Matches virtual ethernet interfaces like veth0, veth1, etc.
   serviceSelector:
     matchLabels:
-      lb.cilium.io/pool: nginx
+      lb.cilium.io/pool: envoy-gateway-external
 ---
 #
 # lb.cilium.io/pool: general
