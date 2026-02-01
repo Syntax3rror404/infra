@@ -125,6 +125,10 @@ spec:
   type: ExternalName
   externalName: ich-pve1
   sessionAffinity: None
+  ports:
+    - name: https
+      port: 8086
+      targetPort: 8086
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
