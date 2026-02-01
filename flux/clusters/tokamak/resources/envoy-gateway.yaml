@@ -123,7 +123,8 @@ metadata:
   namespace: envoy-gateway-system
 spec:
   secretName: envoy-gateway-external-cert
-  issuerRef: 
+  issuerRef:
+    group: cert-manager.io
     kind: ClusterIssuer
     name: letsencrypt-prod
   isCA: false
