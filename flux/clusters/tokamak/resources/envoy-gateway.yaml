@@ -126,6 +126,10 @@ spec:
   issuerRef: 
     kind: ClusterIssuer
     name: letsencrypt-prod
+  isCA: false
+  privateKey:
+    algorithm: ECDSA
+    size: 256
   commonName: "*.menofgaming.de"
   dnsNames:
     - "*.menofgaming.de" 
