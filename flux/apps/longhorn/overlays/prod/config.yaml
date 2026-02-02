@@ -27,3 +27,9 @@ spec:
       defaultDataPath: /var/mnt/longhorn
       storageReservedPercentageForDefaultDisk: 0
       taintToleration: node-role.kubernetes.io/control-plane=:NoSchedule; node-role.kubernetes.io/master=:NoSchedule
+
+    image:
+      longhorn:
+        instanceManager:
+          repository: derekbit/longhorn-instance-manager
+          tag: 1.11.0-fix-leak@sha256:1ba4526862acce68253f848ae33ce590b8ed1443119519f49c009ae66a74902b
