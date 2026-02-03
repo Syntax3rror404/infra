@@ -54,6 +54,7 @@ spec:
     name: labza-ca
   privateKey:
     algorithm: ECDSA
+    encoding: PKCS8
     size: 256
   secretName: envoy-gateway-internal-cert
   usages:
@@ -130,6 +131,7 @@ spec:
   isCA: false
   privateKey:
     algorithm: ECDSA
+    encoding: PKCS8
     size: 256
   commonName: "*.menofgaming.de"
   dnsNames:
