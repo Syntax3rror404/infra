@@ -13,7 +13,7 @@ spec:
   #verify:
   #  provider: cosign
   ref:
-    semver: ">=1.18.0 <2.00.0"
+    semver: ">=1.18.6 <1.19.0"
   url: oci://quay.io/cilium/charts/cilium
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
