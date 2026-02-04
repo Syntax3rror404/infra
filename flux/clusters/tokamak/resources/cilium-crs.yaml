@@ -14,7 +14,7 @@ spec:
     matchLabels:
       lb.cilium.io/pool: envoy-gateway-internal
 ---
-apiVersion: cilium.io/v2
+apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
 metadata:
   name: envoy-gateway-internal
@@ -52,7 +52,7 @@ spec:
     matchLabels:
       lb.cilium.io/pool: envoy-gateway-external
 ---
-apiVersion: cilium.io/v2
+apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
 metadata:
   name: envoy-gateway-external
@@ -90,7 +90,7 @@ spec:
     matchLabels:
       lb.cilium.io/pool: general
 ---
-apiVersion: cilium.io/v2
+apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
 metadata:
   name: general-policy
