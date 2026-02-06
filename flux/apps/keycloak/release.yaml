@@ -1,0 +1,25 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: keycloak
+  namespace: keycloak
+spec:
+  interval: 12h
+  url: "https://syntax3rror404.github.io/helm-charts/charts"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: keycloak
+  namespace: keycloak
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: keycloak
+      version: "0.x.x"
+      sourceRef:
+        kind: HelmRepository
+        name: keycloak
+        namespace: keycloak
