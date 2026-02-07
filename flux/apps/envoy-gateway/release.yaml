@@ -2,28 +2,28 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: prometheus-smartctl-exporter
-  namespace: prometheus-smartctl-exporter
+  name: envoy-gateway
+  namespace: envoy-gateway-system
 spec:
   interval: 12h
   timeout: 15m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
-  verify:
-    provider: cosign
+  #verify:
+  #  provider: cosign
   ref:
-    semver: ">=0.16.0 <1.0.0"
-  url: oci://ghcr.io/prometheus-community/charts/prometheus-smartctl-exporter
+    semver: ">=v1.4.6 <v2.0.0"
+  url: oci://docker.io/envoyproxy/gateway-helm
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prometheus-smartctl-exporter
-  namespace: prometheus-smartctl-exporter
+  name: envoy-gateway
+  namespace: envoy-gateway-system
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: prometheus-smartctl-exporter
-    namespace: prometheus-smartctl-exporter
+    name: envoy-gateway
+    namespace: envoy-gateway-system
