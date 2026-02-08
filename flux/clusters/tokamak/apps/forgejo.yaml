@@ -23,3 +23,5 @@ spec:
           PASSWD: "${forgejo_mariadb_password}"
         server:
           ROOT_URL: git.${cilium_domain}
+          SSH_DOMAIN: git.${cilium_domain}
+          DOMAIN: git.${cilium_domain}
