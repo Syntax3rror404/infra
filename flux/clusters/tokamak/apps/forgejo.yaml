@@ -21,3 +21,5 @@ spec:
           NAME: forgejo
           USER: forgejo
           PASSWD: "${forgejo_mariadb_password}"
+        server:
+          ROOT_URL: git.${cilium_domain}
