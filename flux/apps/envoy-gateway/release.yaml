@@ -27,3 +27,13 @@ spec:
     kind: OCIRepository
     name: envoy-gateway
     namespace: envoy-gateway-system
+  values:
+    deployment:
+      pod: 
+        nodeSelector:
+          kubernetes.io/os: linux
+          node-role.kubernetes.io/control-plane: ""
+        tolerations:
+          - key: "node-role.kubernetes.io/control-plane"
+            operator: "Exists"
+            effect: "NoSchedule"
