@@ -95,7 +95,7 @@ spec:
     #  database: nextcloud
 
     mariadb:
-      enabled: true
+      enabled: false
       primary:
         livenessProbe:
           enabled: false
