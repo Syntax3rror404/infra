@@ -94,8 +94,8 @@ spec:
     #  password: "${nextcloud_mariadb_password}"
     #  database: nextcloud
 
-    #mariadb:
-    #  enabled: true
+    mariadb:
+      enabled: false
     #  primary:
     #    livenessProbe:
     #      enabled: false
