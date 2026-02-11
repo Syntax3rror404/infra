@@ -27,7 +27,7 @@ spec:
           DOMAIN: git.${cilium_domain}
 
     httpRoute:
-      enabled: true
+      enabled: false
       parentRefs:
         - name: envoy-gateway-external
           namespace: envoy-gateway-system
