@@ -5,7 +5,7 @@ default_gateway          = "192.168.35.1"
 nameserver               = "192.168.33.1"
 endpoint_vip             = "192.168.35.40"
 talos_version            = "1.11.6"
-kubernetes_version       = "1.34.3"
+kubernetes_version       = "1.34.4"
 
 talos_extensions = [
   "siderolabs/amd-ucode",
