@@ -25,3 +25,11 @@ spec:
           ROOT_URL: https://git.${cilium_domain}
           SSH_DOMAIN: git.${cilium_domain}
           DOMAIN: git.${cilium_domain}
+
+    httpRoute:
+      enabled: true
+      parentRefs:
+        - name: envoy-gateway-external
+          namespace: envoy-gateway-system
+      hostnames:
+        - git.${nginx_domain}
