@@ -21,10 +21,10 @@ metadata:
 spec:
   externalIPs: true
   loadBalancerIPs: true
-  #nodeSelector:
-  #  matchExpressions:
-  #    - key: node-role.kubernetes.io/control-plane
-  #      operator: DoesNotExist
+  nodeSelector:
+    matchExpressions:
+      - key: node-role.kubernetes.io/control-plane
+        operator: DoesNotExist
   interfaces:
     - ^eth[0-9]+ # Matches interfaces like eth0, eth1, etc.
     - ^enp[0-9]+s[0-9]+ # Matches interfaces like enp3s0, enp4s1, etc.
@@ -59,10 +59,10 @@ metadata:
 spec:
   externalIPs: true
   loadBalancerIPs: true
-  #nodeSelector:
-  #  matchExpressions:
-  #    - key: node-role.kubernetes.io/control-plane
-  #      operator: DoesNotExist
+  nodeSelector:
+    matchExpressions:
+      - key: node-role.kubernetes.io/control-plane
+        operator: DoesNotExist
   interfaces:
     - ^eth[0-9]+ # Matches interfaces like eth0, eth1, etc.
     - ^enp[0-9]+s[0-9]+ # Matches interfaces like enp3s0, enp4s1, etc.
@@ -97,10 +97,10 @@ metadata:
 spec:
   externalIPs: true
   loadBalancerIPs: true
-  #nodeSelector:
-  #  matchExpressions:
-  #    - key: node-role.kubernetes.io/control-plane
-  #      operator: DoesNotExist
+  nodeSelector:
+    matchExpressions:
+      - key: node-role.kubernetes.io/control-plane
+        operator: DoesNotExist
   interfaces:
     - ^eth[0-9]+ # Matches interfaces like eth0, eth1, etc.
     - ^enp[0-9]+s[0-9]+ # Matches interfaces like enp3s0, enp4s1, etc.
