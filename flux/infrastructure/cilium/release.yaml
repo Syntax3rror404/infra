@@ -113,6 +113,5 @@ spec:
     # replaced by envoy-gateway
     gatewayAPI:
       enabled: false
-    # replaced with envoy-gateway
     envoy:
       enabled: false
