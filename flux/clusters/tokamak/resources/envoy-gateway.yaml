@@ -15,8 +15,7 @@ metadata:
 spec:
   provider:
     kubernetes:
-      service:
-        externalTrafficPolicy: Local
+      externalTrafficPolicy: Local
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
