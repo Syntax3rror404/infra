@@ -16,12 +16,9 @@ spec:
   gatewayClassName: envoy-gateway
   infrastructure:
     annotations:
-      gateway.envoyproxy.io/service-external-traffic-policy: Local
+      gateway.envoyproxy.io/service-external-traffic-policy: Cluster
     labels:
       lb.cilium.io/pool: envoy-gateway-internal
-    parameters:
-      service:
-        externalTrafficPolicy: Cluster
   listeners:
     - name: http
       protocol: HTTP
@@ -73,12 +70,9 @@ spec:
   gatewayClassName: envoy-gateway
   infrastructure:
     annotations:
-      gateway.envoyproxy.io/service-external-traffic-policy: Local
+      gateway.envoyproxy.io/service-external-traffic-policy: Cluster
     labels:
       lb.cilium.io/pool: envoy-gateway-external
-    parameters:
-      service:
-        externalTrafficPolicy: Cluster
   listeners:
     - name: http
       protocol: HTTP
