@@ -87,8 +87,6 @@ spec:
       leaseDuration: 15s
       leaseRenewDeadline: 10s
       leaseRetryPeriod: 2s
-
-
     loadBalancer:
       mode: hybrid
       # XDP could, needs driver support

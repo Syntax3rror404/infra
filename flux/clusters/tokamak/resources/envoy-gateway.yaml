@@ -14,6 +14,10 @@ metadata:
   namespace: envoy-gateway-system
 spec:
   gatewayClassName: envoy-gateway
+  provider:
+    kubernetes:
+      service:
+        externalTrafficPolicy: Cluster 
   infrastructure:
     #annotations:
     #  ingress.cilium.io/loadbalancer-mode: dedicated
@@ -68,6 +72,10 @@ metadata:
   namespace: envoy-gateway-system
 spec:
   gatewayClassName: envoy-gateway
+  provider:
+    kubernetes:
+      service:
+        externalTrafficPolicy: Cluster 
   infrastructure:
     #annotations:
     #  ingress.cilium.io/loadbalancer-mode: dedicated
