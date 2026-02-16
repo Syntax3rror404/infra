@@ -84,9 +84,11 @@ spec:
     kubeProxyReplacement: true
     l2announcements:
       enabled: true
-      leaseDuration: 120s
-      leaseRenewDeadline: 60s
-      leaseRetryPeriod: 1s
+      leaseDuration: 15s
+      leaseRenewDeadline: 10s
+      leaseRetryPeriod: 2s
+
+
     loadBalancer:
       mode: hybrid
       # XDP could, needs driver support
