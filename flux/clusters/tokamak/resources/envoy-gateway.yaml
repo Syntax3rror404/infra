@@ -15,8 +15,8 @@ metadata:
 spec:
   gatewayClassName: envoy-gateway
   infrastructure:
-    #annotations:
-    #  ingress.cilium.io/loadbalancer-mode: dedicated
+    annotations:
+      gateway.envoyproxy.io/service-external-traffic-policy: Local
     labels:
       lb.cilium.io/pool: envoy-gateway-internal
     parameters:
@@ -72,8 +72,8 @@ metadata:
 spec:
   gatewayClassName: envoy-gateway
   infrastructure:
-    #annotations:
-    #  ingress.cilium.io/loadbalancer-mode: dedicated
+    annotations:
+      gateway.envoyproxy.io/service-external-traffic-policy: Local
     labels:
       lb.cilium.io/pool: envoy-gateway-external
     parameters:
