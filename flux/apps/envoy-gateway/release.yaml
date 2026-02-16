@@ -13,7 +13,7 @@ spec:
   #verify:
   #  provider: cosign
   ref:
-    semver: ">=v1.4.6 <v1.7.0"
+    semver: ">=v1.4.6 <v2.0.0"
   url: oci://docker.io/envoyproxy/gateway-helm
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
