@@ -1,4 +1,3 @@
----
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -35,61 +34,72 @@ spec:
             - name: etcd-defrag
               image: docker.io/library/alpine:3.22.0@sha256:8a1f59ffb675680d47db6337b49d22281a139e9d709335b492be023728e11715
               env:
-                - name: NODE_IP
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: status.hostIP
+                - name: ETCD_IPS
+                  value: "tokamak-m1 tokamak-m2 tokamak-m3"
+
+                - name: TALOSCTL_VERSION
+                  value: "v1.12.4"
+
               command:
                 - sh
                 - -c
                 - |
                   set -euo pipefail
 
-                  echo "Installing jq..."
-                  apk update
-                  apk add jq
-
-                  echo "Installing talosctl..."
-                  wget https://github.com/siderolabs/talos/releases/download/v1.10.4/talosctl-linux-amd64 -O /usr/local/bin/talosctl
-                  chmod +x /usr/local/bin/talosctl
-
                   WAIT_TIME=20
 
-                  echo "Fetching etcd node IPs..."
-                  etcd_ips=$(talosctl --nodes "${NODE_IP}" get members.cluster.talos.dev -o json | \
-                      jq -r 'select(.spec.machineType == "controlplane") | .spec.addresses[0]' | \
-                      while read -r controlplane; do
-                          talosctl --nodes "${controlplane}" get etcdspecs.etcd.talos.dev -o json | jq -r '.spec.advertisedAddresses[0]'
-                      done)
-
-                  echo "Found IPs:"
-                  echo "${etcd_ips}"
-
                   echo "================================================"
+                  echo "Using ETCD IPs:"
+                  echo "${ETCD_IPS}"
+                  echo ""
+                  echo "Using talosctl version: ${TALOSCTL_VERSION}"
+                  echo "================================================"
+                  echo ""
 
-                  echo "Starting etcd defragmentation and waiting ${WAIT_TIME} seconds between..."
+                  echo "Installing dependencies..."
+                  apk update
+                  apk add --no-cache wget
+
+                  echo "Downloading talosctl ${TALOSCTL_VERSION}..."
+                  wget https://github.com/siderolabs/talos/releases/download/${TALOSCTL_VERSION}/talosctl-linux-amd64 -O /usr/local/bin/talosctl
+                  chmod +x /usr/local/bin/talosctl
+
+                  echo ""
+                  echo "================================================"
+                  echo "Starting etcd defragmentation and waiting ${WAIT_TIME} seconds between nodes..."
+                  echo "================================================"
+                  echo ""
 
                   count=0
-                  total=$(echo "${etcd_ips}" | grep -c '^')
+                  total=$(echo "${ETCD_IPS}" | wc -w)
 
-                  echo "${etcd_ips}" | while IFS= read -r ip; do
+                  for ip in ${ETCD_IPS}; do
                     count=$((count + 1))
+
                     echo "================================================"
                     echo "Defragmenting etcd on node ${ip}..."
-                    echo "Initial etcd status before defragmentation:"
-                    /usr/local/bin/talosctl --nodes ${ip} etcd status
+                    echo "================================================"
 
-                    if /usr/local/bin/talosctl --nodes ${ip} etcd defrag; then
+                    echo ""
+                    echo "Initial etcd status before defragmentation:"
+                    talosctl --nodes ${ip} etcd status
+                    echo ""
+
+                    if talosctl --nodes ${ip} etcd defrag; then
+                      echo ""
                       echo "Successfully defragmented etcd on ${ip}"
                     else
+                      echo ""
                       echo "Failed to defragment etcd on ${ip}"
                       echo "Failed etcd status:"
-                      /usr/local/bin/talosctl --nodes ${ip} etcd status
+                      talosctl --nodes ${ip} etcd status
                       exit 1
                     fi
 
+                    echo ""
                     echo "Final etcd status after defragmentation:"
-                    /usr/local/bin/talosctl --nodes ${ip} etcd status
+                    talosctl --nodes ${ip} etcd status
+                    echo ""
 
                     if [ "${count}" -lt "${total}" ]; then
                       echo "Waiting ${WAIT_TIME} seconds before next node..."
@@ -104,6 +114,7 @@ spec:
 
                   echo "================================================"
                   echo "etcd defragmentation completed for all etcd nodes!"
+                  echo "================================================"
               securityContext:
                 capabilities:
                   drop:
@@ -118,13 +129,3 @@ spec:
             - name: talos-etcd-defrag-secret
               secret:
                 secretName: talos-etcd-defrag-secret
----
-# Creates talos-etcd-defrag-secret inside kube-system namespace with talosconfig
-apiVersion: talos.dev/v1alpha1
-kind: ServiceAccount
-metadata:
-  name: talos-etcd-defrag-secret
-  namespace: kube-system
-spec:
-  roles:
-    - os:operator
