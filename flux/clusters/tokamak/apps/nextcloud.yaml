@@ -70,7 +70,7 @@ spec:
       enabled: true
       type: cronjob
       cronjob: 
-        successfulJobsHistoryLimit: 2
+        successfulJobsHistoryLimit: 1
         failedJobsHistoryLimit: 1
         securityContext:
           runAsUser: 33
