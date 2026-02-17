@@ -129,3 +129,13 @@ spec:
             - name: talos-etcd-defrag-secret
               secret:
                 secretName: talos-etcd-defrag-secret
+---
+# Creates talos-etcd-defrag-secret inside kube-system namespace with talosconfig
+apiVersion: talos.dev/v1alpha1
+kind: ServiceAccount
+metadata:
+  name: talos-etcd-defrag-secret
+  namespace: kube-system
+spec:
+  roles:
+    - os:operator
