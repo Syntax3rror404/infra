@@ -71,7 +71,7 @@ spec:
       type: cronjob
       cronjob: 
         securityContext:
-          runAsUser: 101
+          runAsUser: 33
           runAsGroup: 101
           allowPrivilegeEscalation: false
           capabilities:
