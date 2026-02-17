@@ -58,6 +58,12 @@ spec:
             'logdateformat' => 'F d, Y H:i:s'
             );
 
+        db.config.php: |-
+          <?php
+          $CONFIG['dbhost'] = 'mariadb-prod-internal.mariadb-prod.svc';
+
+
+
     persistence:
       enabled: true
       size: 500Gi
@@ -92,35 +98,35 @@ spec:
         runAsNonRoot: true
         readOnlyRootFilesystem: false
 
-    #externalDatabase:
-    #  enabled: true
-    #  type: mysql
-    #  host: mariadb-prod-internal.mariadb-prod.svc
-    #  user: nextcloud
-    #  password: "${nextcloud_mariadb_password}"
-    #  database: nextcloud
-
     externalDatabase:
       enabled: true
       type: mysql
-      host: nextcloud-mariadb.svc
+      host: mariadb-prod-internal.mariadb-prod.svc
       user: nextcloud
       password: "${nextcloud_mariadb_password}"
       database: nextcloud
 
-    mariadb:
-      enabled: true
-      primary:
-        livenessProbe:
-          enabled: false
-        readinessProbe:
-          enabled: false
-        persistence:
-          enabled: true
-          storageClass: "longhorn-prod"
-      auth:
-        database: nextcloud
-        username: nextcloud
-        password: "${nextcloud_mariadb_password}"
-        rootPassword: "${nextcloud_mariadb_root_password}"
-        existingSecret: ""
+    #externalDatabase:
+    #  enabled: true
+    #  type: mysql
+    #  host: nextcloud-mariadb.svc
+    #  user: nextcloud
+    #  password: "${nextcloud_mariadb_password}"
+    #  database: nextcloud
+#
+    #mariadb:
+    #  enabled: true
+    #  primary:
+    #    livenessProbe:
+    #      enabled: false
+    #    readinessProbe:
+    #      enabled: false
+    #    persistence:
+    #      enabled: true
+    #      storageClass: "longhorn-prod"
+    #  auth:
+    #    database: nextcloud
+    #    username: nextcloud
+    #    password: "${nextcloud_mariadb_password}"
+    #    rootPassword: "${nextcloud_mariadb_root_password}"
+    #    existingSecret: ""
