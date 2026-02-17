@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pgsql-prod
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: pgsql-prod
+  namespace: pgsql-prod
+spec:
+  instances: 3
+  storage:
+    storageClass: longhorn-prod
+    size: 20Gi
+
+  managed:
+    roles:
+
+    - name: harbor
+      ensure: present
+      comment: Harbor user
+      login: true
+      superuser: false
+      inRoles:
+        - pg_monitor
+        - pg_signal_backend
+      passwordSecret:
+        name: pguser-harbor-password
+
+    - name: authentik
+      ensure: present
+      comment: authentik user
+      login: true
+      superuser: false
+      inRoles:
+        - pg_monitor
+        - pg_signal_backend
+      passwordSecret:
+        name: pguser-authentik-password
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: harbor
+  namespace: pgsql-prod
+spec:
+  name: harbor
+  owner: harbor
+  cluster:
+    name: pgsql-prod
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: authentik
+  namespace: pgsql-prod
+spec:
+  name: authentik
+  owner: authentik
+  cluster:
+    name: pgsql-prod

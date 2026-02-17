@@ -9,6 +9,7 @@ resources:
   - tekton-config.yaml
   # - mariadb-galera-prod.yaml
   - mariadb-prod.yaml
+  - pgsql-prod.yaml
   - envoy-gateway.yaml
   - gateway-external.yaml
   - gateway-internal.yaml
