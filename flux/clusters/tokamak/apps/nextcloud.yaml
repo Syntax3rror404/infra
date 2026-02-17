@@ -114,19 +114,19 @@ spec:
     #  password: "${nextcloud_mariadb_password}"
     #  database: nextcloud
 #
-    #mariadb:
-    #  enabled: true
-    #  primary:
-    #    livenessProbe:
-    #      enabled: false
-    #    readinessProbe:
-    #      enabled: false
-    #    persistence:
-    #      enabled: true
-    #      storageClass: "longhorn-prod"
-    #  auth:
-    #    database: nextcloud
-    #    username: nextcloud
-    #    password: "${nextcloud_mariadb_password}"
-    #    rootPassword: "${nextcloud_mariadb_root_password}"
-    #    existingSecret: ""
+    mariadb:
+      enabled: false
+      primary:
+        livenessProbe:
+          enabled: false
+        readinessProbe:
+          enabled: false
+        persistence:
+          enabled: true
+          storageClass: "longhorn-prod"
+      auth:
+        database: nextcloud
+        username: nextcloud
+        password: "${nextcloud_mariadb_password}"
+        rootPassword: "${nextcloud_mariadb_root_password}"
+        existingSecret: ""
