@@ -68,14 +68,15 @@ spec:
 
     cronjob:
       enabled: true
-      useCronJobInsteadOfCrond: true
-      securityContext:
-        runAsUser: 101
-        runAsGroup: 101
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
+      type: cronjob
+      cronjob: 
+        securityContext:
+          runAsUser: 101
+          runAsGroup: 101
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
 
     nginx:
       enabled: true
