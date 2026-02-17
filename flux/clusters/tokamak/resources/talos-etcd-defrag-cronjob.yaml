@@ -40,13 +40,14 @@ spec:
                 - name: TALOSCTL_VERSION
                   value: "v1.12.4"
 
+                - name: WAIT_TIME
+                  value: "10"
+
               command:
                 - sh
                 - -c
                 - |
                   set -euo pipefail
-
-                  WAIT_TIME=20
 
                   echo "================================================"
                   echo "Using ETCD IPs:"
