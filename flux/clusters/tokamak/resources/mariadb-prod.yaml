@@ -153,80 +153,61 @@ spec:
   cleanupPolicy: Delete
   requeueInterval: 10h
   retryInterval: 30s
----
+#---
+##
+## nextcloud --------------------------
+##
+#apiVersion: k8s.mariadb.com/v1alpha1
+#kind: Database
+#metadata:
+#  name: nextcloud
+#  namespace: mariadb-prod
+#spec:
+#  mariaDbRef:
+#    name: mariadb-prod
+#  characterSet: utf8mb4
+#  collate: utf8mb4_bin
+#  # Delete the resource in the database whenever the CR gets deleted.
+#  # Alternatively, you can specify Skip in order to omit deletion.
+#  cleanupPolicy: Delete
+#  requeueInterval: 10h
+#  retryInterval: 30s
+#---
+#apiVersion: k8s.mariadb.com/v1alpha1
+#kind: User
+#metadata:
+#  name: nextcloud
+#  namespace: mariadb-prod
+#spec:
+#  mariaDbRef:
+#    name: mariadb-prod
+#  passwordSecretKeyRef:
+#    name: user-nextcloud
+#    key: password
+#  maxUserConnections: 20
+#  host: "%"
+#  cleanupPolicy: Delete
+#  requeueInterval: 10h
+#  retryInterval: 30s
+#---
+#apiVersion: k8s.mariadb.com/v1alpha1
+#kind: Grant
+#metadata:
+#  name: nextcloud
+#  namespace: mariadb-prod
+#spec:
+#  mariaDbRef:
+#    name: mariadb-prod
+#  privileges:
+#    - "ALL PRIVILEGES"
+#  database: "nextcloud"
+#  table: "*"
+#  username: nextcloud
+#  grantOption: true
+#  host: "%"
+#  # Delete the resource in the database whenever the CR gets deleted.
+#  # Alternatively, you can specify Skip in order to omit deletion.
+#  cleanupPolicy: Delete
+#  requeueInterval: 10h
+#  retryInterval: 30s
 #
-# forgejo --------------------------
-#
-apiVersion: k8s.mariadb.com/v1alpha1
-kind: Database
-metadata:
-  name: nextcloud
-  namespace: mariadb-prod
-spec:
-  mariaDbRef:
-    name: mariadb-prod
-  characterSet: utf8mb4
-  collate: utf8mb4_bin
-  # Delete the resource in the database whenever the CR gets deleted.
-  # Alternatively, you can specify Skip in order to omit deletion.
-  cleanupPolicy: Delete
-  requeueInterval: 10h
-  retryInterval: 30s
----
-apiVersion: k8s.mariadb.com/v1alpha1
-kind: User
-metadata:
-  name: nextcloud
-  namespace: mariadb-prod
-spec:
-  mariaDbRef:
-    name: mariadb-prod
-  passwordSecretKeyRef:
-    name: user-nextcloud
-    key: password
-  maxUserConnections: 20
-  host: "%"
-  cleanupPolicy: Delete
-  requeueInterval: 10h
-  retryInterval: 30s
----
-apiVersion: k8s.mariadb.com/v1alpha1
-kind: Grant
-metadata:
-  name: nextcloud
-  namespace: mariadb-prod
-spec:
-  mariaDbRef:
-    name: mariadb-prod
-  privileges:
-    - "ALL PRIVILEGES"
-  database: "nextcloud"
-  table: "*"
-  username: nextcloud
-  grantOption: true
-  host: "%"
-  # Delete the resource in the database whenever the CR gets deleted.
-  # Alternatively, you can specify Skip in order to omit deletion.
-  cleanupPolicy: Delete
-  requeueInterval: 10h
-  retryInterval: 30s
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: mariadb-test
----
-apiVersion: k8s.mariadb.com/v1alpha1
-kind: MariaDB
-metadata:
-  name: mariadb-test
-  namespace: mariadb-test
-spec:
-  rootPasswordSecretKeyRef:
-    name: mariadb
-    key: root-password
-    generate: true
-
-  storage:
-    size: 10Gi
-    storageClassName: longhorn-prod
