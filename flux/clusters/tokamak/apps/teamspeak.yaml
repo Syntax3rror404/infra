@@ -33,16 +33,3 @@ spec:
           - 30033
         udp: 9987
       resources: {}
-      podSecurityContext:
-        fsGroup: 1000
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        
-      containerSecurityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop: ["ALL"]
-        readOnlyRootFilesystem: false
-        seccompProfile:
-          type: RuntimeDefault
