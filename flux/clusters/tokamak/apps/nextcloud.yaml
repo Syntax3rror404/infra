@@ -68,7 +68,7 @@ spec:
       enabled: true
       size: 500Gi
       storageClass: "longhorn-prod"
-      accessMode: ReadWriteMany
+      accessMode: ReadWriteOnce
 
     image:
       flavor: fpm
