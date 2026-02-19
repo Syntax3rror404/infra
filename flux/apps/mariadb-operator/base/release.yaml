@@ -24,26 +24,29 @@ spec:
       enabled: true
       podSecurityContext:
         runAsNonRoot: true
-        allowPrivilegeEscalation: false
         seccompProfile:
-          type: RuntimeDefault 
+          type: RuntimeDefault
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
         capabilities:
-          drop:
-            - ALL
+          drop: ["ALL"]
     certController:
       podSecurityContext:
         runAsNonRoot: true
-        allowPrivilegeEscalation: false
         seccompProfile:
-          type: RuntimeDefault 
+          type: RuntimeDefault
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
         capabilities:
-          drop:
-            - ALL
+          drop: ["ALL"]
     podSecurityContext:
       runAsNonRoot: true
-      allowPrivilegeEscalation: false
       seccompProfile:
-        type: RuntimeDefault 
+        type: RuntimeDefault
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
       capabilities:
-        drop:
-            - ALL
+        drop: ["ALL"]
