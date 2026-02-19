@@ -22,3 +22,28 @@ spec:
       enabled: false
     webhook:
       enabled: true
+      podSecurityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault 
+        capabilities:
+          drop:
+            - ALL
+    certController:
+      podSecurityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault 
+        capabilities:
+          drop:
+            - ALL
+    podSecurityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault 
+      capabilities:
+        drop:
+            - ALL
