@@ -15,16 +15,26 @@ spec:
         enabled: false
         ingressClassName: "changeme"
         pathType: Prefix
-    global:
-      securityContext:
-        runAsNonRoot: true
+      containerSecurityContext:
         readOnlyRootFilesystem: true
         allowPrivilegeEscalation: false
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
         seccomProfile:
           type: RuntimeDefault
         capabilities:
           drop:
             - ALL
+    worker:
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        seccomProfile:
+          type: RuntimeDefault
+        capabilities:
+          drop:
+            - ALL
+    global:
+      securityContext:
+        runAsNonRoot: true
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
