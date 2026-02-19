@@ -11,6 +11,17 @@ spec:
       username: admin
       password: ${nextcloud_admin_password}
 
+      securityContext:
+        runAsUser: 33
+        runAsGroup: 101
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault
+
       configs:
         custom-overwrite.config.php: |-
           <?php
