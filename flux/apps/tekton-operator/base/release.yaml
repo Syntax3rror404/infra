@@ -30,3 +30,19 @@ spec:
         kind: GitRepository
         name: tekton-operator
         namespace: tekton-operator
+  values:
+    podSecurityContext:
+      fsGroup: 2000
+      runAsUser: 1000
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+        - ALL
+
+
