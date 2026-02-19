@@ -30,6 +30,7 @@ spec:
   values:
     bpf:
       masquerade: true
+      enableIPv4BIGTCP: true
       datapathMode: netkit
       distributedLRU:
         enabled: true
