@@ -10,10 +10,10 @@ spec:
       enabled: false
     podSecurityContext: 
       fsGroup: 101
-    securityContext: 
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
-      runAsUser: 100
-      runAsGroup: 101
-      seccompProfile:
-        type: RuntimeDefault
+    #securityContext: 
+    #  runAsNonRoot: true
+    #  allowPrivilegeEscalation: false
+    #  runAsUser: 100
+    #  runAsGroup: 101
+    #  seccompProfile:
+    #    type: RuntimeDefault
