@@ -17,5 +17,5 @@ spec:
         storageClass: "longhorn-prod"
         size: 5Gi
 
-    podSecurityContext:
+    SecurityContext:
       allowPrivilegeEscalation: false
