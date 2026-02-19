@@ -91,20 +91,19 @@ spec:
             type: RuntimeDefault
 
           affinity:
-            affinity:
-              podAffinity:
-                requiredDuringSchedulingIgnoredDuringExecution:
-                  - labelSelector:
-                      matchExpressions:
-                        - key: app.kubernetes.io/name
-                          operator: In
-                          values:
-                            - nextcloud
-                        - key: app.kubernetes.io/component
-                          operator: In
-                          values:
-                            - app
-                    topologyKey: kubernetes.io/hostname
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values:
+                          - nextcloud
+                      - key: app.kubernetes.io/component
+                        operator: In
+                        values:
+                          - app
+                  topologyKey: kubernetes.io/hostname
 
 
     nginx:
