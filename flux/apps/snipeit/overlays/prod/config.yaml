@@ -8,12 +8,12 @@ spec:
   values:
     ingress:
       enabled: false
-    #podSecurityContext: 
-    #  fsGroup: 101
-    #securityContext: 
-    #  runAsNonRoot: true
-    #  allowPrivilegeEscalation: false
-    #  runAsUser: 100
-    #  runAsGroup: 101
-    #  seccompProfile:
-    #    type: RuntimeDefault
+    podSecurityContext: 
+      fsGroup: 101
+    securityContext: 
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      runAsUser: 100
+      runAsGroup: 101
+      seccompProfile:
+        type: RuntimeDefault
