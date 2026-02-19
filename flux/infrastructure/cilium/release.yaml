@@ -28,9 +28,9 @@ spec:
     name: cilium
     namespace: kube-system
   values:
+    enableIPv4BIGTCP: true
     bpf:
       masquerade: true
-      enableIPv4BIGTCP: true
       datapathMode: netkit
       distributedLRU:
         enabled: true
