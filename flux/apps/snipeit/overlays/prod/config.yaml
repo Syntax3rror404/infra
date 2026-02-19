@@ -9,11 +9,11 @@ spec:
     ingress:
       enabled: false
     podSecurityContext: 
-      fsGroup: 101
+      fsGroup: 50
     securityContext: 
       runAsNonRoot: true
       allowPrivilegeEscalation: false
-      runAsUser: 100
-      runAsGroup: 101
+      runAsUser: 1000
+      runAsGroup: 50
       seccompProfile:
         type: RuntimeDefault
