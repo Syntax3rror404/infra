@@ -32,7 +32,7 @@ spec:
               effect: NoSchedule
           containers:
             - name: etcd-defrag
-              image: ghcr.io/siderolabs/talosctl:v1.12.4
+              image: docker.io/library/alpine:3.22.0@sha256:8a1f59ffb675680d47db6337b49d22281a139e9d709335b492be023728e11715
               env:
                 - name: ETCD_IPS
                   value: "tokamak-m1 tokamak-m2 tokamak-m3"
@@ -57,13 +57,13 @@ spec:
                   echo "================================================"
                   echo ""
 
-                  #echo "Installing dependencies..."
-                  #apk update
-                  #apk add --no-cache wget
-                  #
-                  #echo "Downloading talosctl ${TALOSCTL_VERSION}..."
-                  #wget https://github.com/siderolabs/talos/releases/download/${TALOSCTL_VERSION}/talosctl-linux-amd64 -O /usr/local/bin/talosctl
-                  #chmod +x /usr/local/bin/talosctl
+                  echo "Installing dependencies..."
+                  apk update
+                  apk add --no-cache wget
+                  
+                  echo "Downloading talosctl ${TALOSCTL_VERSION}..."
+                  wget https://github.com/siderolabs/talos/releases/download/${TALOSCTL_VERSION}/talosctl-linux-amd64 -O /usr/local/bin/talosctl
+                  chmod +x /usr/local/bin/talosctl
 
                   echo ""
                   echo "================================================"
