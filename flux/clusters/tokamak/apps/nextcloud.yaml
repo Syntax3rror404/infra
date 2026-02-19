@@ -81,10 +81,13 @@ spec:
         securityContext:
           runAsUser: 33
           runAsGroup: 101
+          runAsNonRoot: true
           allowPrivilegeEscalation: false
           capabilities:
             drop:
               - ALL
+          seccompProfile:
+            type: RuntimeDefault
 
     nginx:
       enabled: true
@@ -93,10 +96,15 @@ spec:
         tag: alpine
         pullPolicy: IfNotPresent
       securityContext:
-        runAsUser: 101
+        runAsUser: 33
         runAsGroup: 101
         runAsNonRoot: true
-        readOnlyRootFilesystem: false
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        seccompProfile:
+          type: RuntimeDefault
 
     externalDatabase:
       enabled: true
