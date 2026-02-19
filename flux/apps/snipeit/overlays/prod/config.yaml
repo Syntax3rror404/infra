@@ -13,6 +13,7 @@ spec:
     securityContext: 
       runAsNonRoot: true
       allowPrivilegeEscalation: false
+      fsGroupChangePolicy: "Always"
       runAsUser: 100
       runAsGroup: 101
       seccompProfile:
