@@ -16,20 +16,35 @@ spec:
     spec:
       template:
         spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
           containers:
-            - image: docker.io/renovate/renovate:43.28.0
+            - image: ghcr.io/renovatebot/renovate:43.29
               name: renovate-bot
               env:
                 - name: LOG_LEVEL
                   value: debug
+                - name: RENOVATE_CONFIG_FILE
+                  value: /opt/renovate/config.json
               envFrom:
                 - secretRef:
                     name: renovate-env
               volumeMounts:
                 - name: config-volume
-                  mountPath: /opt/renovate/
+                  mountPath: /opt/renovate/config.json
+                  subPath: config.json
+                  readOnly: true
                 - name: work-volume
                   mountPath: /tmp/renovate/
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop: ["ALL"]
           restartPolicy: Never
           volumes:
             - name: config-volume
@@ -38,30 +53,27 @@ spec:
             - name: work-volume
               emptyDir: {}
 ---
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: renovate
-  namespace: renovate
-spec:
-  refreshInterval: 1m
-  secretStoreRef:
-    name: vault-backend-cluster 
-    kind: ClusterSecretStore
-  target:
-    name: renovate-env
-    creationPolicy: Owner
-  dataFrom:
-    - extract:
-        key: flux-tokamak/renovate
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: renovate-config
+  namespace: renovate
 data:
   config.json: |-
     {
-      "repositories": ["orgname/repo","username/repo"],
-      "dryRun" : "full"
+      "repositories": ["Syntax3rror404/infra"],
+      "extends": ["config:recommended"],
+      "dependencyDashboard": true
     }
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: renovate-env
+  namespace: renovate
+type: Opaque
+stringData:
+  RENOVATE_PLATFORM: ${renovate_plattform}
+  RENOVATE_GIT_AUTHOR: ${renovate_git_author}
+  RENOVATE_TOKEN: ${renovate_token}
+  RENOVATE_AUTODISCOVER: ${renovate_autodiscover}
