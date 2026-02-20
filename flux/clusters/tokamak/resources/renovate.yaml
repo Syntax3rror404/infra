@@ -73,7 +73,7 @@ metadata:
   namespace: renovate
 type: Opaque
 stringData:
-  RENOVATE_PLATFORM: ${renovate_plattform}
-  RENOVATE_GIT_AUTHOR: ${renovate_git_author}
-  RENOVATE_TOKEN: ${renovate_token}
-  RENOVATE_AUTODISCOVER: ${renovate_autodiscover}
+  RENOVATE_PLATFORM: "${renovate_plattform}"
+  RENOVATE_GIT_AUTHOR: "${renovate_git_author}"
+  RENOVATE_TOKEN: "${renovate_token}"
+  RENOVATE_AUTODISCOVER: "${renovate_autodiscover}"
