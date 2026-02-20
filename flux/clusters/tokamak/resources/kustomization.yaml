@@ -13,3 +13,4 @@ resources:
   - envoy-gateway.yaml
   - gateway-external.yaml
   - gateway-internal.yaml
+  - renovate.yaml
