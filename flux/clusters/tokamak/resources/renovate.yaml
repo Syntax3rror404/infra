@@ -60,7 +60,7 @@ spec:
                 name: renovate-config
             #- name: ca-cert-volume
             #  configMap:
-            #    name: dbh-ca-cert
+            #    name: custom-ca-cert
             - name: work-volume
               emptyDir: {}
 ---
