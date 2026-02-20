@@ -46,7 +46,7 @@ metadata:
 spec:
   refreshInterval: 1m
   secretStoreRef:
-    name: vault-backend
+    name: vault-backend-cluster 
     kind: SecretStore
   target:
     name: renovate-env
