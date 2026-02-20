@@ -47,7 +47,7 @@ spec:
   refreshInterval: 1m
   secretStoreRef:
     name: vault-backend-cluster 
-    kind: SecretStore
+    kind: ClusterSecretStore
   target:
     name: renovate-env
     creationPolicy: Owner
