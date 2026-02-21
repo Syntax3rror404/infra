@@ -20,7 +20,7 @@ spec:
     # snipeit config
     snipeit:
       entrypointOverride:
-        enabled: false
+        enabled: true
       config:
         url: "https://wms.${nginx_domain}"
         timezone: Europe/Berlin
