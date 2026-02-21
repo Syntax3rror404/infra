@@ -18,3 +18,5 @@ spec:
       runAsGroup: 101
       seccompProfile:
         type: RuntimeDefault
+      capabilities:
+        drop: ["ALL"]
