@@ -42,6 +42,7 @@ spec:
       hostNamespaceOnly: true
     bandwidthManager:
       enabled: true
+      bbr: true
     autoDirectNodeRoutes: true
     cgroup:
       autoMount:
