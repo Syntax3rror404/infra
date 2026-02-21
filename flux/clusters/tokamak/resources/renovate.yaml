@@ -26,7 +26,7 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           containers:
-            - image: ghcr.io/renovatebot/renovate:43.31.0
+            - image: ghcr.io/renovatebot/renovate:43.31.1
               name: renovate-bot
               env:
                 - name: LOG_LEVEL
