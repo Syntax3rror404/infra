@@ -8,15 +8,3 @@ spec:
   values:
     ingress:
       enabled: false
-    podSecurityContext: 
-      runAsUser: 100
-      runAsGroup: 101
-      fsGroup: 101
-      fsGroupChangePolicy: "Always"
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
-    securityContext: 
-      allowPrivilegeEscalation: false
-      capabilities:
-        drop: ["ALL"]
