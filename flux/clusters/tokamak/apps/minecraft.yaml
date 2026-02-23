@@ -17,3 +17,5 @@ spec:
       storageClass: "longhorn-staging"
 
 
+    neoforge:
+      enabled: true
