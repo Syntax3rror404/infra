@@ -20,6 +20,7 @@ spec:
       enabled: true
 
     minecraft:
+      eulaAccepted: true
       serverProperties:
         levelName: "mog-world"
         whiteList: "false"
