@@ -20,4 +20,5 @@ spec:
       enabled: true
 
     minecraft:
+      serverProperties:
         levelName: "mog"
