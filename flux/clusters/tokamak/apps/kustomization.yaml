@@ -10,6 +10,7 @@ resources:
   - ../../../apps/cloudflared/overlays/prod
   - ../../../apps/nextcloud/overlays/prod
   - ../../../apps/snipeit/overlays/prod
+  - ../../../apps/minecraft/base
  # - ../../../apps/ingress-nginx/overlays/prod
   - ../../../apps/rancher/overlays/dev
   - ../../../apps/longhorn/overlays/prod
@@ -131,6 +132,14 @@ patches:
       kind: HelmRelease
       name: harbor
       namespace: harbor
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: minecraft.yaml
+    target:
+      kind: HelmRelease
+      name: minecraft
+      namespace: minecraft
     options:
       allowNameChange: false
       allowKindChange: false

@@ -1,0 +1,19 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: minecraft
+  namespace: minecraft
+spec:
+  values:
+
+    service:
+      port: 25565
+      labels:
+        lb.cilium.io/pool: general
+
+    persistence:
+      enabled: true
+      storageClass: "longhorn-staging"
+
+
