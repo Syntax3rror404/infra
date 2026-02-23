@@ -16,6 +16,8 @@ spec:
       enabled: true
       storageClass: "longhorn-staging"
 
-
     neoforge:
       enabled: true
+
+    minecraft:
+        levelName: "mog"
