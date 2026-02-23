@@ -21,4 +21,4 @@ spec:
 
     minecraft:
       serverProperties:
-        levelName: "mog"
+        levelName: "mog-world"
