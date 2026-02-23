@@ -22,3 +22,4 @@ spec:
     minecraft:
       serverProperties:
         levelName: "mog-world"
+        whiteList: true
