@@ -28,6 +28,8 @@ spec:
     name: cilium
     namespace: kube-system
   values:
+    # Restart pods after configmap changes
+    rollOutCiliumPods: true
     enableIPv4BIGTCP: true
     bpf:
       masquerade: true
