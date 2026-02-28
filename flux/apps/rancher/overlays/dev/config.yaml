@@ -15,7 +15,7 @@ spec:
         operator: Exists
     hostname: rancher.example.com
     ingress:
-      enabled: true
+      enabled: false
       extraAnnotations:
         ingress.cilium.io/loadbalancer-mode: shared
         ingress.cilium.io/websocket: enabled
