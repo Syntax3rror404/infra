@@ -8,3 +8,6 @@ spec:
   values:
     ingress:
       enabled: false
+    extraEnv:
+      - name: PHP_UPLOAD_LIMIT
+        value: "2000"
