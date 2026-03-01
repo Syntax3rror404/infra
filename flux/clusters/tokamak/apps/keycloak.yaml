@@ -1,0 +1,50 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: keycloak
+  namespace: keycloak
+spec:
+  values:
+    podSecurityContext: 
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+
+    httpRoute:
+      enabled: false
+      annotations: {}
+      hostnames:
+        - keycloak.${nginx_domain}
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: envoy-gateway-external
+          namespace: envoy-gateway-system
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+
+    mariadbOperator:
+      enabled: true
+      database: keycloak
+      username: keycloak
+      password: "${keycloak_mariadb_password}"
+      useExisting:
+        enabled: true
+        namespace: mariadb-prod
+        mariaDbRef: mariadb-prod
+
+    admin:
+      username: admin
+      password: "${keycloak_admin_password}"
