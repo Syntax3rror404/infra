@@ -24,6 +24,7 @@ resources:
   - ../../../apps/forgejo/base
   - ../../../apps/garage/base
   - ../../../apps/harbor
+  - ../../../apps/keycloak
   - ../../../apps/envoy-gateway
 
   # include cluster apps instances
@@ -140,6 +141,14 @@ patches:
       kind: HelmRelease
       name: minecraft
       namespace: minecraft
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: keycloak.yaml
+    target:
+      kind: HelmRelease
+      name: keycloak
+      namespace: keycloak
     options:
       allowNameChange: false
       allowKindChange: false
