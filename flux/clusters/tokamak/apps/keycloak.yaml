@@ -22,7 +22,6 @@ spec:
 
     httpRoute:
       enabled: true
-      annotations: {}
       hostnames:
         - keycloak.${nginx_domain}
       parentRefs:
@@ -30,10 +29,6 @@ spec:
           kind: Gateway
           name: envoy-gateway-external
           namespace: envoy-gateway-system
-      matches:
-        - path:
-            type: PathPrefix
-            value: /
 
     mariadbOperator:
       enabled: true
