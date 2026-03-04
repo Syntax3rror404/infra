@@ -23,7 +23,7 @@ spec:
     httpRoute:
       enabled: true
       hostnames:
-        - keycloak.${nginx_domain}
+        - auth.${nginx_domain}
       parentRefs:
         - group: gateway.networking.k8s.io
           kind: Gateway
