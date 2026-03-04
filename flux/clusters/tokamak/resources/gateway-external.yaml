@@ -70,7 +70,7 @@ spec:
       name: snipeit
   oidc:
     provider:
-      issuer: "https://auth.${nginx_domain}/application/o/sso-proxy/"
+      issuer: "https://auth.${nginx_domain}/realms/mog"
     clientID: "${oauth2_proxy_clientID}"
     clientSecret:
       name: sso-oidc-secret
