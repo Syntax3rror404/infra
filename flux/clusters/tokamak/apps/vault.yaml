@@ -11,7 +11,7 @@ spec:
         size: 10Gi
         storageClass: longhorn-staging
       image:
-        tag: 1.21.2
+        tag: 1.21.4
 
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
