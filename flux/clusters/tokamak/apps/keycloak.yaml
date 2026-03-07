@@ -43,11 +43,3 @@ spec:
     admin:
       username: admin
       password: "${keycloak_admin_password}"
-
-    resources:
-      requests:
-        cpu: 1
-        memory: 512Mi
-      limits:
-        cpu: 3
-        memory: 750Mi
