@@ -75,3 +75,11 @@ spec:
     clientSecret:
       name: sso-oidc-secret
     redirectURL: "https://wms.${nginx_domain}/oauth2/callback"
+    forwardAccessToken: true
+    passThroughAuthHeader: true
+  jwt:
+    providers:
+      - name: keycloak
+        issuer: "https://auth.${nginx_domain}/realms/mog"
+        remoteJWKS:
+          uri: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/certs"
