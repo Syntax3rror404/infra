@@ -20,6 +20,10 @@ spec:
         drop:
           - ALL
 
+    keycloak:
+      cache:
+        type: local
+
     httpRoute:
       enabled: true
       hostnames:
