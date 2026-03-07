@@ -78,6 +78,7 @@ spec:
     forwardAccessToken: true
     passThroughAuthHeader: true
   jwt:
+    optional: true
     providers:
       - name: keycloak
         issuer: "https://auth.${nginx_domain}/realms/mog"
