@@ -78,9 +78,9 @@ spec:
     forwardAccessToken: true
     passThroughAuthHeader: true
   jwt:
-    optional: true
     providers:
       - name: keycloak
         issuer: "https://auth.${nginx_domain}/realms/mog"
         remoteJWKS:
           uri: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/certs"
+          cacheDuration: "1h"
