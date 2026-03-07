@@ -77,5 +77,5 @@ spec:
     clientSecret:
       name: sso-oidc-secret
     redirectURL: "https://wms.${nginx_domain}/oauth2/callback"
-    forwardAccessToken: true
+    #forwardAccessToken: true
     refreshToken: true
