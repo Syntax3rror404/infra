@@ -72,8 +72,13 @@ metadata:
 data:
   config.json: |-
     {
-      "repositories": ["Syntax3rror404/infra", "Syntax3rror404/helm-charts"],
-      "extends": ["config:recommended"],
+      "repositories": [
+        "Syntax3rror404/infra",
+        "Syntax3rror404/helm-charts"
+      ],
+      "extends": [
+        "config:recommended"
+      ],
       "dependencyDashboard": true
     }
 ---
