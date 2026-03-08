@@ -73,18 +73,13 @@ data:
   config.json: |-
     {
       "repositories": [
-        "github.com/Syntax3rror404/infra",
-        "github.com/Syntax3rror404/helm-charts"
+        "Syntax3rror404/infra",
+        "Syntax3rror404/helm-charts"
       ],
-      "extends": ["config:recommended"],
-      "dependencyDashboard": true,
-      "hostRules": [
-        {
-          "matchHost": "api.github.com",
-          "token": "{{ .Env.RENOVATE_TOKEN_GITHUB }}",
-          "hostType": "github"
-        }
-      ]
+      "extends": [
+        "config:recommended"
+      ],
+      "dependencyDashboard": true
     }
 ---
 apiVersion: v1
@@ -94,6 +89,7 @@ metadata:
   namespace: renovate
 type: Opaque
 stringData:
+  RENOVATE_PLATFORM: "github"
   RENOVATE_GIT_AUTHOR: "${renovate_git_author}"
+  RENOVATE_TOKEN: "${renovate_github_token}"
   RENOVATE_AUTODISCOVER: "${renovate_autodiscover}"
-  RENOVATE_TOKEN_GITHUB: "${renovate_github_token}"
