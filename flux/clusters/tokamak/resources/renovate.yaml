@@ -80,7 +80,7 @@ data:
       "dependencyDashboard": true,
       "hostRules": [
         {
-          "matchHost": "github.com",
+          "matchHost": "api.github.com",
           "token": "{{ .Env.RENOVATE_TOKEN_GITHUB }}"
         }
       ]
