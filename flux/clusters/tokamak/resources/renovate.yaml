@@ -81,8 +81,7 @@ data:
       "hostRules": [
         {
           "matchHost": "github.com",
-          "token": "{{ .Env.RENOVATE_TOKEN_GITHUB }}",
-          "endpoint": "https://api.github.com/"
+          "token": "{{ .Env.RENOVATE_TOKEN_GITHUB }}"
         }
       ]
     }
