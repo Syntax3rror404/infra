@@ -70,16 +70,22 @@ metadata:
   name: renovate-config
   namespace: renovate
 data:
+data:
   config.json: |-
     {
       "repositories": [
-        "Syntax3rror404/infra",
-        "Syntax3rror404/helm-charts"
+        "github.com/Syntax3rror404/infra",
+        "github.com/Syntax3rror404/helm-charts"
       ],
-      "extends": [
-        "config:recommended"
-      ],
-      "dependencyDashboard": true
+      "extends": ["config:recommended"],
+      "dependencyDashboard": true,
+      "hostRules": [
+        {
+          "matchHost": "github.com",
+          "token": "{{ .Env.RENOVATE_TOKEN_GITHUB }}",
+          "endpoint": "https://api.github.com/"
+        }
+      ]
     }
 ---
 apiVersion: v1
@@ -90,5 +96,5 @@ metadata:
 type: Opaque
 stringData:
   RENOVATE_GIT_AUTHOR: "${renovate_git_author}"
-  RENOVATE_TOKEN: "${renovate_github_token}"
   RENOVATE_AUTODISCOVER: "${renovate_autodiscover}"
+  RENOVATE_TOKEN_GITHUB: "${renovate_github_token}"
