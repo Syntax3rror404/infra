@@ -70,23 +70,17 @@ metadata:
   name: renovate-config
   namespace: renovate
 data:
-data:
-  config.json: |-
-    {
-      "repositories": [
-        "github.com/Syntax3rror404/infra",
-        "github.com/Syntax3rror404/helm-charts"
-      ],
-      "extends": ["config:recommended"],
-      "dependencyDashboard": true,
-      "hostRules": [
-        {
-          "matchHost": "github.com",
-          "token": "{{ .Env.RENOVATE_TOKEN_GITHUB }}",
-          "endpoint": "https://api.github.com/"
-        }
-      ]
-    }
+  config.yaml: |
+    repositories:
+      - github.com/Syntax3rror404/infra
+      - github.com/Syntax3rror404/helm-charts
+    extends:
+      - "config:recommended"
+    dependencyDashboard: true
+    hostRules:
+      - matchHost: github.com
+        token: "{{ .Env.RENOVATE_TOKEN_GITHUB }}"
+        endpoint: https://api.github.com/
 ---
 apiVersion: v1
 kind: Secret
