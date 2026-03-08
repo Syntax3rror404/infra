@@ -73,16 +73,16 @@ data:
   config.json: |-
     {
       "repositories": [
-        "gitlab.com/Syntax3rror404/infra",
-        "gitlab.com/Syntax3rror404/helm-charts"
+        "github.com/Syntax3rror404/infra",
+        "github.com/Syntax3rror404/helm-charts"
       ],
       "extends": ["config:recommended"],
       "dependencyDashboard": true,
       "hostRules": [
         {
-          "matchHost": "gitlab.com",
-          "token": "{{ .Env.RENOVATE_TOKEN_GITLAB_COM }}",
-          "endpoint": "https://gitlab.com/api/v4"
+          "matchHost": "github.com",
+          "token": "{{ .Env.RENOVATE_TOKEN_GITHUB }}",
+          "endpoint": "https://api.github.com/"
         }
       ]
     }
