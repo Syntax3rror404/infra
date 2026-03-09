@@ -71,8 +71,8 @@ spec:
   oidc:
     provider:
       issuer: "https://auth.${nginx_domain}/realms/mog"
-      #authorizationEndpoint: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/auth"
-      #tokenEndpoint: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/token"
+      authorizationEndpoint: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/auth"
+      tokenEndpoint: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/token"
     clientID: "${oauth2_proxy_clientID}"
     clientSecret:
       name: sso-oidc-secret
