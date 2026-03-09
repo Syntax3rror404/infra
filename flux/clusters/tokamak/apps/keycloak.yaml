@@ -47,3 +47,17 @@ spec:
     admin:
       username: admin
       password: "${keycloak_admin_password}"
+
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+            - key: node-role.kubernetes.io/control-plane
+              operator: Exists
+
+    tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
