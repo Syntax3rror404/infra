@@ -10,10 +10,16 @@ metadata:
   name: mariadb-prod
   namespace: mariadb-prod
 spec:
+  # Create a root user with passwort saved in k8s secret
   rootPasswordSecretKeyRef:
     name: mariadb
     key: root-password
     generate: true
+
+  # Allow that the operator updates its mariadbs
+  updateStrategy:
+    autoUpdateDataPlane: true
+    type: ReplicasFirstPrimaryLast
 
   storage:
     size: 10Gi
