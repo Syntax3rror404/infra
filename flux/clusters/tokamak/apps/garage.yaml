@@ -19,3 +19,14 @@ spec:
 
     securityContext:
       allowPrivilegeEscalation: false
+
+    service:
+      type: ClusterIP
+      annotations: {}
+      s3:
+        api:
+          port: 3900
+        web:
+          port: 3902
+        admin:
+          port: 3903
