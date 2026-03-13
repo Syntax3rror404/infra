@@ -32,8 +32,6 @@ metadata:
 spec:
   gatewayClassName: envoy-gateway
   infrastructure:
-    annotations:
-      gateway.envoyproxy.io/service-external-traffic-policy: Cluster
     labels:
       lb.cilium.io/pool: envoy-gateway-internal
   listeners:
@@ -86,8 +84,6 @@ metadata:
 spec:
   gatewayClassName: envoy-gateway
   infrastructure:
-    annotations:
-      gateway.envoyproxy.io/service-external-traffic-policy: Cluster
     labels:
       lb.cilium.io/pool: envoy-gateway-external
   listeners:
@@ -122,17 +118,17 @@ spec:
       name: letsencrypt-prod-private-key
     server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
-    - http01:
-        gatewayHTTPRoute:
-          parentRefs:
-          - kind: Gateway
-            name: envoy-gateway-external
-            namespace: envoy-gateway-system
-    - dns01:
-        cloudflare:
-          apiTokenSecretRef:
-            name: cloudflare-api-token
-            key: api-token
+      - http01:
+          gatewayHTTPRoute:
+            parentRefs:
+              - kind: Gateway
+                name: envoy-gateway-external
+                namespace: envoy-gateway-system
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-api-token
+              key: api-token
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -152,4 +148,4 @@ spec:
     size: 256
   commonName: "*.menofgaming.de"
   dnsNames:
-    - "*.menofgaming.de" 
+    - "*.menofgaming.de"
