@@ -11,7 +11,7 @@ spec:
         endpoint: "http://garage.garage.svc:3900"
         admin_endpoint: "http://garage.garage.svc:3903"
         admin_token: "${garage_admin_token}"
-        region: "labza"
+        region: tokamak
       server:
         port: 8080
         environment: development
