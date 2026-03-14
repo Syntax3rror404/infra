@@ -19,3 +19,18 @@ spec:
 
     securityContext:
       allowPrivilegeEscalation: false
+
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Service
+              name: garage
+            patch: |
+              - op: add
+                path: /spec/ports/-
+                value:
+                  name: admin
+                  port: 3903
+                  targetPort: 3903
+                  protocol: TCP
