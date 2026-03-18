@@ -18,7 +18,7 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "0 days",
-      "requiredStatusChecks": null
+      "ignoreTests": true
     },
     {
       "description": "Infrastructure - critical components, no automerge for major",
@@ -44,7 +44,7 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "7 days",
-      "requiredStatusChecks": null
+      "ignoreTests": true
     },
     {
       "description": "Apps - automerge minor/patch",
@@ -58,7 +58,7 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "3 days",
-      "requiredStatusChecks": null
+      "ignoreTests": true
     },
     {
       "description": "Cloudflared image",
@@ -67,7 +67,7 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "3 days",
-      "requiredStatusChecks": null
+      "ignoreTests": true
     },
     {
       "description": "Alpine image in etcd-defrag cronjob",
@@ -76,7 +76,7 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "3 days",
-      "requiredStatusChecks": null
+      "ignoreTests": true
     },
     {
       "description": "Terraform Talos provider - automerge minor/patch",
@@ -85,7 +85,7 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "5 days",
-      "requiredStatusChecks": null
+      "ignoreTests": true
     },
     {
       "description": "Exclude custom longhorn instance manager fix from updates",
