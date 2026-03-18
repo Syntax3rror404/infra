@@ -13,7 +13,6 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "0 days",
-
       "requiredStatusChecks": null
     }
   ]
