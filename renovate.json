@@ -7,14 +7,95 @@
   "helm-values": {
     "managerFilePatterns": ["/flux/.+\\.yaml$/"]
   },
+  "terraform": {
+    "enabled": true
+  },
   "packageRules": [
     {
+      "description": "Renovate itself - automerge immediately",
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
       "matchUpdateTypes": ["major", "minor", "patch", "digest"],
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "0 days",
       "requiredStatusChecks": null
+    },
+    {
+      "description": "Infrastructure - critical components, no automerge for major",
+      "matchPackageNames": [
+        "quay.io/cilium/charts/cilium",
+        "ghcr.io/coredns/charts/coredns",
+        "ghcr.io/external-secrets/charts/external-secrets",
+        "ghcr.io/controlplaneio-fluxcd/charts/flux-operator",
+        "charts.jetstack.io/cert-manager"
+      ],
+      "automerge": false,
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Infrastructure - automerge minor/patch after waiting period",
+      "matchPackageNames": [
+        "quay.io/cilium/charts/cilium",
+        "ghcr.io/coredns/charts/coredns",
+        "ghcr.io/external-secrets/charts/external-secrets",
+        "ghcr.io/controlplaneio-fluxcd/charts/flux-operator"
+      ],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "branch",
+      "minimumReleaseAge": "7 days",
+      "requiredStatusChecks": null
+    },
+    {
+      "description": "Apps - automerge minor/patch",
+      "matchPackageNames": [
+        "ghcr.io/aquasecurity/helm-charts/trivy-operator",
+        "ghcr.io/oauth2-proxy/charts/oauth2-proxy",
+        "ghcr.io/prometheus-community/charts/prometheus-smartctl-exporter",
+        "ghcr.io/stefanprodan/charts/podinfo"
+      ],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "branch",
+      "minimumReleaseAge": "3 days",
+      "requiredStatusChecks": null
+    },
+    {
+      "description": "Cloudflared image",
+      "matchPackageNames": ["docker.io/cloudflare/cloudflared"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "branch",
+      "minimumReleaseAge": "3 days",
+      "requiredStatusChecks": null
+    },
+    {
+      "description": "Alpine image in etcd-defrag cronjob",
+      "matchPackageNames": ["docker.io/library/alpine"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true,
+      "automergeType": "branch",
+      "minimumReleaseAge": "3 days",
+      "requiredStatusChecks": null
+    },
+    {
+      "description": "Terraform Talos provider - automerge minor/patch",
+      "matchPackageNames": ["siderolabs/talos"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "branch",
+      "minimumReleaseAge": "5 days",
+      "requiredStatusChecks": null
+    },
+    {
+      "description": "Exclude custom longhorn instance manager fix from updates",
+      "matchPackageNames": ["derekbit/longhorn-instance-manager"],
+      "enabled": false
+    },
+    {
+      "description": "Never automerge major updates",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     }
   ]
 }
