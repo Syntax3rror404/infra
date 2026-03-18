@@ -10,6 +10,7 @@
   "packageRules": [
     {
       "matchPackageNames": ["ghcr.io/renovatebot/renovate"],
+      "matchUpdateTypes": ["major", "minor", "patch", "digest"],
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "0 days",
