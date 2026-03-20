@@ -6,6 +6,8 @@ metadata:
   namespace: harbor
 spec:
   values:
+    updateStrategy:
+      type: Recreate
 
     expose:
       type: route
