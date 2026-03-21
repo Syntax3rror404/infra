@@ -1,11 +1,11 @@
 # terraform apply -var-file=terraform.tfvars
 
-cluster_name             = "ich-talos"
-default_gateway          = "192.168.35.1"
-nameserver               = "192.168.33.1"
-endpoint_vip             = "192.168.35.40"
-talos_version            = "1.12.5"
-kubernetes_version       = "1.34.5"
+cluster_name       = "ich-talos"
+default_gateway    = "192.168.35.1"
+nameserver         = "192.168.33.1"
+endpoint_vip       = "192.168.35.40"
+talos_version      = "1.12.6"
+kubernetes_version = "1.34.6"
 
 talos_extensions = [
   "siderolabs/amd-ucode",

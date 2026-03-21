@@ -59,4 +59,3 @@ variable "controlplanes" {
     data_diskSelector    = string
   }))
 }
-

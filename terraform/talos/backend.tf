@@ -8,8 +8,8 @@
 # k9s backend use after installation migrate local done with "terraform init -migrate-state"
 terraform {
   backend "kubernetes" {
-    secret_suffix     = "talos-install"
-    config_path       = "~/.kube/config"
-    namespace         = "kube-system"
+    secret_suffix = "talos-install"
+    config_path   = "~/.kube/config"
+    namespace     = "kube-system"
   }
 }

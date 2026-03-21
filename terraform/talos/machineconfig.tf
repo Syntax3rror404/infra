@@ -2,11 +2,11 @@ resource "talos_machine_secrets" "this" {
 }
 
 data "talos_machine_configuration" "controlplane" {
-  cluster_name     = var.cluster_name
-  machine_type     = "controlplane"
-  cluster_endpoint = "https://${var.endpoint_vip}:6443"
-  machine_secrets  = talos_machine_secrets.this.machine_secrets
-  talos_version    = var.talos_version
+  cluster_name       = var.cluster_name
+  machine_type       = "controlplane"
+  cluster_endpoint   = "https://${var.endpoint_vip}:6443"
+  machine_secrets    = talos_machine_secrets.this.machine_secrets
+  talos_version      = var.talos_version
   kubernetes_version = var.kubernetes_version
   config_patches = [
     <<-EOT
@@ -56,11 +56,11 @@ data "talos_machine_configuration" "controlplane" {
 }
 
 data "talos_machine_configuration" "worker" {
-  cluster_name     = var.cluster_name
-  machine_type     = "worker"
-  cluster_endpoint = "https://${var.endpoint_vip}:6443"
-  machine_secrets  = talos_machine_secrets.this.machine_secrets
-  talos_version    = var.talos_version
+  cluster_name       = var.cluster_name
+  machine_type       = "worker"
+  cluster_endpoint   = "https://${var.endpoint_vip}:6443"
+  machine_secrets    = talos_machine_secrets.this.machine_secrets
+  talos_version      = var.talos_version
   kubernetes_version = var.kubernetes_version
   config_patches = [
     <<-EOT
@@ -100,8 +100,8 @@ data "talos_machine_configuration" "worker" {
 resource "talos_machine_configuration_apply" "controlplanes" {
   for_each = { for m in var.controlplanes : m.hostname => m }
 
-  node                  = each.value.ip
-  client_configuration  = talos_machine_secrets.this.client_configuration
+  node                        = each.value.ip
+  client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
 
   config_patches = [
@@ -149,8 +149,8 @@ resource "talos_machine_configuration_apply" "workers" {
   ]
   for_each = { for w in var.workers : w.hostname => w }
 
-  node                  = each.value.ip
-  client_configuration  = talos_machine_secrets.this.client_configuration
+  node                        = each.value.ip
+  client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
 
   config_patches = [

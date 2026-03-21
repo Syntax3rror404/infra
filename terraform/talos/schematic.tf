@@ -15,4 +15,3 @@ data "talos_image_factory_urls" "this" {
   schematic_id  = talos_image_factory_schematic.this.id
   platform      = "metal"
 }
-
