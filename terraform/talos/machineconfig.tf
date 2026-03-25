@@ -108,7 +108,6 @@ resource "talos_machine_configuration_apply" "controlplanes" {
     <<-EOT
     machine:
       network:
-        hostname: ${each.value.hostname}
         nameservers:
           - ${var.nameserver}
         interfaces:
@@ -128,6 +127,12 @@ resource "talos_machine_configuration_apply" "controlplanes" {
         wipe: true
         diskSelector:
           model: "${each.value.install_diskSelector}"
+
+    ---
+    apiVersion: v1alpha1
+    kind: HostnameConfig
+    auto: off
+    hostname: ${each.value.hostname}
 
     ---
     apiVersion: v1alpha1
@@ -157,7 +162,6 @@ resource "talos_machine_configuration_apply" "workers" {
     <<-EOT
     machine:
       network:
-        hostname: ${each.value.hostname}
         nameservers:
           - ${var.nameserver}
         interfaces:
@@ -175,6 +179,12 @@ resource "talos_machine_configuration_apply" "workers" {
         wipe: true
         diskSelector:
           model: "${each.value.install_diskSelector}"
+
+    ---
+    apiVersion: v1alpha1
+    kind: HostnameConfig
+    auto: off
+    hostname: ${each.value.hostname}
 
     ---
     apiVersion: v1alpha1
