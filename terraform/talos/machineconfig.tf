@@ -107,22 +107,6 @@ resource "talos_machine_configuration_apply" "controlplanes" {
   config_patches = [
     <<-EOT
     machine:
-      network:
-        nameservers:
-          - ${var.nameserver}
-        interfaces:
-          - interface: enp2s0
-            addresses:
-              - ${each.value.ip}/24
-            routes:
-              - network: 0.0.0.0/0
-                gateway: ${var.default_gateway}
-            dhcp: false
-            vip:
-              ip: ${var.endpoint_vip}
-          - interface: lo
-            addresses:
-              - 169.254.116.108/32
       install:
         wipe: true
         diskSelector:
@@ -133,6 +117,34 @@ resource "talos_machine_configuration_apply" "controlplanes" {
     kind: HostnameConfig
     auto: off
     hostname: ${each.value.hostname}
+
+    ---
+    apiVersion: v1alpha1
+    kind: ResolverConfig
+    nameservers:
+      - address: ${var.nameserver}
+
+    ---
+    apiVersion: v1alpha1
+    kind: LinkConfig
+    name: enp2s0
+    addresses:
+      - address: ${each.value.ip}/24
+    routes:
+      - gateway: ${var.default_gateway}
+
+    ---
+    apiVersion: v1alpha1
+    kind: LinkConfig
+    name: lo
+    addresses:
+      - address: 169.254.116.108/32
+
+    ---
+    apiVersion: v1alpha1
+    kind: Layer2VIPConfig
+    name: ${var.endpoint_vip}
+    link: enp2s0
 
     ---
     apiVersion: v1alpha1
@@ -161,20 +173,6 @@ resource "talos_machine_configuration_apply" "workers" {
   config_patches = [
     <<-EOT
     machine:
-      network:
-        nameservers:
-          - ${var.nameserver}
-        interfaces:
-          - interface: enp2s0
-            addresses:
-              - ${each.value.ip}/24
-            routes:
-              - network: 0.0.0.0/0
-                gateway: ${var.default_gateway}
-            dhcp: false
-          - interface: lo
-            addresses:
-              - 169.254.116.108/32
       install:
         wipe: true
         diskSelector:
@@ -185,6 +183,28 @@ resource "talos_machine_configuration_apply" "workers" {
     kind: HostnameConfig
     auto: off
     hostname: ${each.value.hostname}
+
+    ---
+    apiVersion: v1alpha1
+    kind: ResolverConfig
+    nameservers:
+      - address: ${var.nameserver}
+
+    ---
+    apiVersion: v1alpha1
+    kind: LinkConfig
+    name: enp2s0
+    addresses:
+      - address: ${each.value.ip}/24
+    routes:
+      - gateway: ${var.default_gateway}
+
+    ---
+    apiVersion: v1alpha1
+    kind: LinkConfig
+    name: lo
+    addresses:
+      - address: 169.254.116.108/32
 
     ---
     apiVersion: v1alpha1
