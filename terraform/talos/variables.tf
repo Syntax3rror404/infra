@@ -61,6 +61,7 @@ variable "controlplanes" {
 }
 
 variable "oidc" {
+  default = null
   type = object({
     issuer_url      = string
     client_id       = string
@@ -69,6 +70,4 @@ variable "oidc" {
     groups_claim    = optional(string, "groups")
     groups_prefix   = optional(string, "oidc:")
   })
-  default   = null
-  sensitive = true
 }
