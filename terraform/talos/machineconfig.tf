@@ -58,7 +58,7 @@ data "talos_machine_configuration" "controlplane" {
         machine:
           files:
             - path: /var/etc/kubernetes/oidc/auth-config.yaml
-              permissions: 0o600
+              permissions: 0o644
               op: create
               content: |
                 apiVersion: apiserver.config.k8s.io/v1
