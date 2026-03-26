@@ -70,6 +70,7 @@ data "talos_machine_configuration" "controlplane" {
                         url: "${var.oidc.issuer_url}"
                         audiences:
                           - "${var.oidc.client_id}"
+                        audienceMatchPolicy: MatchAny
                       claimMappings:
                         username:
                           claim: "${var.oidc.username_claim}"

@@ -55,3 +55,13 @@ workers = [
     data_diskSelector    = "disk.transport == 'nvme' && disk.model == 'WD_BLACK SN770 2TB' && !system_disk"
   }
 ]
+
+oidc = {
+  issuer_url = "https://auth.menofgaming.de/realms/mog"
+  client_id  = "kubernetes"
+  # Optional Overrides:
+  # username_claim  = "preferred_username"
+  # username_prefix = "oidc:"
+  # groups_claim    = "groups"
+  # groups_prefix   = "oidc:"
+}
