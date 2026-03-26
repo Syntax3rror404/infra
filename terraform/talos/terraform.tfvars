@@ -56,12 +56,12 @@ workers = [
   }
 ]
 
-#oidc = {
-#  issuer_url = "https://auth.menofgaming.de/realms/mog"
-#  client_id  = "kubernetes"
-# Optional Overrides:
-# username_claim  = "preferred_username"
-# username_prefix = "oidc:"
-# groups_claim    = "groups"
-# groups_prefix   = "oidc:"
-#}
+oidc = {
+  issuer_url = "https://auth.menofgaming.de/realms/mog"
+  client_id  = "kubernetes"
+  # Optional Overrides:
+  # username_claim  = "preferred_username"
+  # username_prefix = "oidc:"
+  # groups_claim    = "groups"
+  # groups_prefix   = "oidc:"
+}
