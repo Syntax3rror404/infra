@@ -55,29 +55,31 @@ data "talos_machine_configuration" "controlplane" {
     ],
     var.oidc != null ? [
       <<-EOT
+        machine:
+          files:
+            - path: /etc/kubernetes/auth-config.yaml
+              permissions: 0o600
+              op: create
+              content: |
+                apiVersion: apiserver.config.k8s.io/v1
+                kind: AuthenticationConfiguration
+                jwt:
+                  - issuer:
+                      url: "${var.oidc.issuer_url}"
+                      audiences:
+                        - "${var.oidc.client_id}"
+                      audienceMatchPolicy: MatchAny
+                    claimMappings:
+                      username:
+                        claim: "${var.oidc.username_claim}"
+                        prefix: "${var.oidc.username_prefix}"
+                      groups:
+                        claim: "${var.oidc.groups_claim}"
+                        prefix: "${var.oidc.groups_prefix}"
         cluster:
           apiServer:
             extraArgs:
               authentication-config: /etc/kubernetes/auth-config.yaml
-            extraFiles:
-              - path: /etc/kubernetes/auth-config.yaml
-                permissions: 0o600
-                content: |
-                  apiVersion: apiserver.config.k8s.io/v1
-                  kind: AuthenticationConfiguration
-                  jwt:
-                    - issuer:
-                        url: "${var.oidc.issuer_url}"
-                        audiences:
-                          - "${var.oidc.client_id}"
-                        audienceMatchPolicy: MatchAny
-                      claimMappings:
-                        username:
-                          claim: "${var.oidc.username_claim}"
-                          prefix: "${var.oidc.username_prefix}"
-                        groups:
-                          claim: "${var.oidc.groups_claim}"
-                          prefix: "${var.oidc.groups_prefix}"
       EOT
     ] : []
   )
