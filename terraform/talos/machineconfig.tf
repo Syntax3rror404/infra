@@ -57,7 +57,7 @@ data "talos_machine_configuration" "controlplane" {
       <<-EOT
         machine:
           files:
-            - path: /etc/kubernetes/auth-config.yaml
+            - path: /var/etc/kubernetes/auth-config.yaml
               permissions: 0o600
               op: create
               content: |
@@ -79,7 +79,7 @@ data "talos_machine_configuration" "controlplane" {
         cluster:
           apiServer:
             extraArgs:
-              authentication-config: /etc/kubernetes/auth-config.yaml
+              authentication-config: /var/etc/kubernetes/auth-config.yaml
       EOT
     ] : []
   )
