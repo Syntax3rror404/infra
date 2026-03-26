@@ -8,51 +8,78 @@ data "talos_machine_configuration" "controlplane" {
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
   kubernetes_version = var.kubernetes_version
-  config_patches = [
-    <<-EOT
-      machine:
-        kubelet:
-          extraArgs:
-            rotate-server-certificates: true
-        files:
-          - path: /etc/cri/conf.d/20-customization.part
-            op: create
-            content: |
-              [plugins."io.containerd.cri.v1.images"]
-                discard_unpacked_layers = false
-        install:
-          image: ${data.talos_image_factory_urls.this.urls.installer}
-          wipe: true
-        features:
-          kubernetesTalosAPIAccess:
-            enabled: true
-            allowedRoles:
-              - os:reader
-              - os:operator
-            allowedKubernetesNamespaces:
-              - kube-system
-          hostDNS:
-            enabled: true
-            forwardKubeDNSToHost: true
-            resolveMemberNames: true
-      cluster:
-        allowSchedulingOnControlPlanes: false
-        proxy:
-          disabled: true
-        discovery:
-          enabled: false
-        coreDNS:
-          disabled: true
-        network:
-          dnsDomain: cluster.local
-          podSubnets:
-            - ${var.pod_subnet}
-          serviceSubnets:
-            - ${var.service_subnet}
-          cni:
-            name: none
-    EOT
-  ]
+  config_patches = concat(
+    [
+      <<-EOT
+        machine:
+          kubelet:
+            extraArgs:
+              rotate-server-certificates: true
+          files:
+            - path: /etc/cri/conf.d/20-customization.part
+              op: create
+              content: |
+                [plugins."io.containerd.cri.v1.images"]
+                  discard_unpacked_layers = false
+          install:
+            image: ${data.talos_image_factory_urls.this.urls.installer}
+          features:
+            kubernetesTalosAPIAccess:
+              enabled: true
+              allowedRoles:
+                - os:reader
+                - os:operator
+              allowedKubernetesNamespaces:
+                - kube-system
+            hostDNS:
+              enabled: true
+              forwardKubeDNSToHost: true
+              resolveMemberNames: true
+        cluster:
+          allowSchedulingOnControlPlanes: false
+          proxy:
+            disabled: true
+          discovery:
+            enabled: false
+          coreDNS:
+            disabled: true
+          network:
+            dnsDomain: cluster.local
+            podSubnets:
+              - ${var.pod_subnet}
+            serviceSubnets:
+              - ${var.service_subnet}
+            cni:
+              name: none
+      EOT
+    ],
+    var.oidc != null ? [
+      <<-EOT
+        cluster:
+          apiServer:
+            extraArgs:
+              authentication-config: /etc/kubernetes/auth-config.yaml
+            extraFiles:
+              - path: /etc/kubernetes/auth-config.yaml
+                permissions: 0o600
+                content: |
+                  apiVersion: apiserver.config.k8s.io/v1
+                  kind: AuthenticationConfiguration
+                  jwt:
+                    - issuer:
+                        url: "${var.oidc.issuer_url}"
+                        audiences:
+                          - "${var.oidc.client_id}"
+                      claimMappings:
+                        username:
+                          claim: "${var.oidc.username_claim}"
+                          prefix: "${var.oidc.username_prefix}"
+                        groups:
+                          claim: "${var.oidc.groups_claim}"
+                          prefix: "${var.oidc.groups_prefix}"
+      EOT
+    ] : []
+  )
 }
 
 data "talos_machine_configuration" "worker" {
@@ -76,7 +103,6 @@ data "talos_machine_configuration" "worker" {
                 discard_unpacked_layers = false
         install:
           image: ${data.talos_image_factory_urls.this.urls.installer}
-          wipe: true
         features:
           hostDNS:
             enabled: true

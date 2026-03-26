@@ -59,3 +59,16 @@ variable "controlplanes" {
     data_diskSelector    = string
   }))
 }
+
+variable "oidc" {
+  type = object({
+    issuer_url      = string
+    client_id       = string
+    username_claim  = optional(string, "preferred_username")
+    username_prefix = optional(string, "oidc:")
+    groups_claim    = optional(string, "groups")
+    groups_prefix   = optional(string, "oidc:")
+  })
+  default   = null
+  sensitive = true
+}
