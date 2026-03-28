@@ -18,7 +18,8 @@
       "automerge": true,
       "automergeType": "branch",
       "minimumReleaseAge": "0 days",
-      "ignoreTests": true
+      "ignoreTests": true,
+      "schedule": ["before 6am on monday"]
     },
     {
       "description": "Infrastructure - critical components, no automerge for major",
