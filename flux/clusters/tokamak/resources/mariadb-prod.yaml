@@ -16,9 +16,21 @@ spec:
     key: root-password
     generate: true
 
-  innodbBufferPool:
-    automaticTunning: true
-    size: "80%"
+  myCnf: |
+    [mariadb]
+    bind-address=*
+    default_storage_engine=InnoDB
+    binlog_format=row
+    innodb_autoinc_lock_mode=2
+    innodb_buffer_pool_size=3000M
+    max_allowed_packet=256M
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      memory: 4Gi
 
   # Allow that the operator updates its mariadbs
   updateStrategy:
