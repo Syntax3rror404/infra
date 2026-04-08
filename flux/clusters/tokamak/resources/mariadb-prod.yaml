@@ -16,6 +16,10 @@ spec:
     key: root-password
     generate: true
 
+  innodbBufferPool:
+    automaticTunning: true
+    size: "80%"
+
   # Allow that the operator updates its mariadbs
   updateStrategy:
     autoUpdateDataPlane: true
