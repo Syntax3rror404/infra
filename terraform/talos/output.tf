@@ -11,12 +11,12 @@ output "talosconfig" {
   sensitive = true
 }
 
-output "controlplane_machineconfigs" {
+output "machineconfigs_controlplane" {
   value     = { for k, v in talos_machine_configuration_apply.controlplanes : k => v.machine_configuration }
   sensitive = true
 }
 
-output "worker_machineconfigs" {
+output "machineconfigs_worker" {
   value     = { for k, v in talos_machine_configuration_apply.workers : k => v.machine_configuration }
   sensitive = true
 }
