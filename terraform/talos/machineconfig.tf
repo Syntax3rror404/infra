@@ -2,6 +2,8 @@ resource "talos_machine_secrets" "this" {
 }
 
 data "talos_machine_configuration" "controlplane" {
+  for_each = { for m in var.controlplanes : m.hostname => m }
+
   cluster_name       = var.cluster_name
   machine_type       = "controlplane"
   cluster_endpoint   = "https://${var.endpoint_vip}:6443"
@@ -23,6 +25,9 @@ data "talos_machine_configuration" "controlplane" {
                   discard_unpacked_layers = false
           install:
             image: ${data.talos_image_factory_urls.this.urls.installer}
+            wipe: true
+            diskSelector:
+              model: "${each.value.install_diskSelector}"
           features:
             kubernetesTalosAPIAccess:
               enabled: true
@@ -51,6 +56,53 @@ data "talos_machine_configuration" "controlplane" {
               - ${var.service_subnet}
             cni:
               name: none
+      EOT
+      ,
+      <<-EOT
+        ---
+        apiVersion: v1alpha1
+        kind: HostnameConfig
+        auto: off
+        hostname: ${each.value.hostname}
+
+        ---
+        apiVersion: v1alpha1
+        kind: ResolverConfig
+        nameservers:
+          - address: ${var.nameserver}
+
+        ---
+        apiVersion: v1alpha1
+        kind: LinkConfig
+        name: enp2s0
+        addresses:
+          - address: ${each.value.ip}/24
+        routes:
+          - gateway: ${var.default_gateway}
+
+        ---
+        apiVersion: v1alpha1
+        kind: LinkConfig
+        name: lo
+        addresses:
+          - address: 169.254.116.108/32
+
+        ---
+        apiVersion: v1alpha1
+        kind: Layer2VIPConfig
+        name: ${var.endpoint_vip}
+        link: enp2s0
+
+        ---
+        apiVersion: v1alpha1
+        kind: UserVolumeConfig
+        name: longhorn
+        provisioning:
+          diskSelector:
+            match: "${each.value.data_diskSelector}"
+          maxSize: 1800GB
+        filesystem:
+          type: xfs
       EOT
     ],
     var.oidc != null ? [
@@ -90,6 +142,8 @@ data "talos_machine_configuration" "controlplane" {
 }
 
 data "talos_machine_configuration" "worker" {
+  for_each = { for w in var.workers : w.hostname => w }
+
   cluster_name       = var.cluster_name
   machine_type       = "worker"
   cluster_endpoint   = "https://${var.endpoint_vip}:6443"
@@ -110,6 +164,9 @@ data "talos_machine_configuration" "worker" {
                 discard_unpacked_layers = false
         install:
           image: ${data.talos_image_factory_urls.this.urls.installer}
+          wipe: true
+          diskSelector:
+            model: "${each.value.install_diskSelector}"
         features:
           hostDNS:
             enabled: true
@@ -127,6 +184,47 @@ data "talos_machine_configuration" "worker" {
           cni:
             name: none
     EOT
+    ,
+    <<-EOT
+      ---
+      apiVersion: v1alpha1
+      kind: HostnameConfig
+      auto: off
+      hostname: ${each.value.hostname}
+
+      ---
+      apiVersion: v1alpha1
+      kind: ResolverConfig
+      nameservers:
+        - address: ${var.nameserver}
+
+      ---
+      apiVersion: v1alpha1
+      kind: LinkConfig
+      name: enp2s0
+      addresses:
+        - address: ${each.value.ip}/24
+      routes:
+        - gateway: ${var.default_gateway}
+
+      ---
+      apiVersion: v1alpha1
+      kind: LinkConfig
+      name: lo
+      addresses:
+        - address: 169.254.116.108/32
+
+      ---
+      apiVersion: v1alpha1
+      kind: UserVolumeConfig
+      name: longhorn
+      provisioning:
+        diskSelector:
+          match: "${each.value.data_diskSelector}"
+        maxSize: 1800GB
+      filesystem:
+        type: xfs
+    EOT
   ]
 }
 
@@ -135,62 +233,7 @@ resource "talos_machine_configuration_apply" "controlplanes" {
 
   node                        = each.value.ip
   client_configuration        = talos_machine_secrets.this.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
-
-  config_patches = [
-    <<-EOT
-    machine:
-      install:
-        wipe: true
-        diskSelector:
-          model: "${each.value.install_diskSelector}"
-
-    ---
-    apiVersion: v1alpha1
-    kind: HostnameConfig
-    auto: off
-    hostname: ${each.value.hostname}
-
-    ---
-    apiVersion: v1alpha1
-    kind: ResolverConfig
-    nameservers:
-      - address: ${var.nameserver}
-
-    ---
-    apiVersion: v1alpha1
-    kind: LinkConfig
-    name: enp2s0
-    addresses:
-      - address: ${each.value.ip}/24
-    routes:
-      - gateway: ${var.default_gateway}
-
-    ---
-    apiVersion: v1alpha1
-    kind: LinkConfig
-    name: lo
-    addresses:
-      - address: 169.254.116.108/32
-
-    ---
-    apiVersion: v1alpha1
-    kind: Layer2VIPConfig
-    name: ${var.endpoint_vip}
-    link: enp2s0
-
-    ---
-    apiVersion: v1alpha1
-    kind: UserVolumeConfig
-    name: longhorn
-    provisioning:
-      diskSelector:
-        match: "${each.value.data_diskSelector}"
-      maxSize: 1800GB
-    filesystem:
-      type: xfs
-    EOT
-  ]
+  machine_configuration_input = data.talos_machine_configuration.controlplane[each.key].machine_configuration
 }
 
 resource "talos_machine_configuration_apply" "workers" {
@@ -201,56 +244,7 @@ resource "talos_machine_configuration_apply" "workers" {
 
   node                        = each.value.ip
   client_configuration        = talos_machine_secrets.this.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
-
-  config_patches = [
-    <<-EOT
-    machine:
-      install:
-        wipe: true
-        diskSelector:
-          model: "${each.value.install_diskSelector}"
-
-    ---
-    apiVersion: v1alpha1
-    kind: HostnameConfig
-    auto: off
-    hostname: ${each.value.hostname}
-
-    ---
-    apiVersion: v1alpha1
-    kind: ResolverConfig
-    nameservers:
-      - address: ${var.nameserver}
-
-    ---
-    apiVersion: v1alpha1
-    kind: LinkConfig
-    name: enp2s0
-    addresses:
-      - address: ${each.value.ip}/24
-    routes:
-      - gateway: ${var.default_gateway}
-
-    ---
-    apiVersion: v1alpha1
-    kind: LinkConfig
-    name: lo
-    addresses:
-      - address: 169.254.116.108/32
-
-    ---
-    apiVersion: v1alpha1
-    kind: UserVolumeConfig
-    name: longhorn
-    provisioning:
-      diskSelector:
-        match: "${each.value.data_diskSelector}"
-      maxSize: 1800GB
-    filesystem:
-      type: xfs
-    EOT
-  ]
+  machine_configuration_input = data.talos_machine_configuration.worker[each.key].machine_configuration
 }
 
 resource "talos_machine_bootstrap" "this" {

@@ -11,13 +11,13 @@ output "talosconfig" {
   sensitive = true
 }
 
-output "machineconfig_controlplane" {
-  value     = data.talos_machine_configuration.controlplane
+output "controlplane_machineconfigs" {
+  value     = { for k, v in talos_machine_configuration_apply.controlplanes : k => v.machine_configuration }
   sensitive = true
 }
 
-output "machineconfig_worker" {
-  value     = data.talos_machine_configuration.worker
+output "worker_machineconfigs" {
+  value     = { for k, v in talos_machine_configuration_apply.workers : k => v.machine_configuration }
   sensitive = true
 }
 
