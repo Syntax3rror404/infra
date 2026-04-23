@@ -94,12 +94,19 @@ variable "sysctls_patch" {
         net.ipv4.tcp_rmem: 4096 87380 33554432  # TCP read buffer: min / default / max (32 MB max)
         net.ipv4.tcp_wmem: 4096 65536 33554432  # TCP write buffer: min / default / max (32 MB max)
         net.ipv4.tcp_window_scaling: 1  # Enable TCP window scaling (needed for >64KB throughput)
+        # --- BBR companion tuning (critical for BBR to actually work well) ---
+        net.ipv4.tcp_slow_start_after_idle: 0  # Prevents BBR from resetting to slow-start after idle (huge for long-lived gRPC/HTTP2)
+        net.ipv4.tcp_notsent_lowat: 131072  # Caps send buffer bloat; lets BBR react to RTT changes quickly
+        net.ipv4.tcp_no_metrics_save: 1  # Don't cache old CUBIC metrics that would handicap BBR reconnects
         # --- Memory management ---
         vm.nr_hugepages: 2048  # Preallocate 2048x 2MB hugepages (Longhorn, OpenEBS, PostgreSQL)
         vm.max_map_count: 262144  # Required by OpenSearch/Elasticsearch for mmap() usage
+        vm.min_free_kbytes: 262144  # 256 MB reserve; protects atomic allocations in the network RX path under memory pressure
         # --- Connection queue / backlog ---
         net.core.somaxconn: 65535  # Max number of connections in listen() backlog
         net.core.netdev_max_backlog: 4096  # Max number of packets queued on interface input
+        net.ipv4.tcp_max_syn_backlog: 8192  # SYN queue must scale with somaxconn, otherwise it drops first
+        net.ipv4.tcp_max_tw_buckets: 1440000  # Prevents "time wait bucket table overflow" under load with tcp_tw_reuse=1
         # --- TCP keepalive & timeouts ---
         net.ipv4.tcp_keepalive_intvl: 60  # Interval (s) between keepalive probes
         net.ipv4.tcp_keepalive_time: 600  # Time (s) before sending keepalive probes
