@@ -1,12 +1,16 @@
 resource "talos_machine_secrets" "this" {
 }
 
+locals {
+  cluster_endpoint = "https://${var.endpoint_vip}:6443"
+}
+
 data "talos_machine_configuration" "controlplane" {
   for_each = { for m in var.controlplanes : m.hostname => m }
 
   cluster_name       = var.cluster_name
   machine_type       = "controlplane"
-  cluster_endpoint   = "https://${var.endpoint_vip}:6443"
+  cluster_endpoint   = local.cluster_endpoint
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
   kubernetes_version = var.kubernetes_version
@@ -147,7 +151,7 @@ data "talos_machine_configuration" "worker" {
 
   cluster_name       = var.cluster_name
   machine_type       = "worker"
-  cluster_endpoint   = "https://${var.endpoint_vip}:6443"
+  cluster_endpoint   = local.cluster_endpoint
   machine_secrets    = talos_machine_secrets.this.machine_secrets
   talos_version      = var.talos_version
   kubernetes_version = var.kubernetes_version
