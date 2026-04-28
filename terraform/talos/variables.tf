@@ -30,7 +30,7 @@ variable "pod_subnet" {
 
 variable "talos_version" {
   type    = string
-  default = "1.12.7"
+  default = "1.13.0"
 }
 
 variable "kubernetes_version" {
