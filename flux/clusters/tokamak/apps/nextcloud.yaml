@@ -31,6 +31,25 @@ spec:
           pm.min_spare_servers = 32
           pm.max_spare_servers = 96
 
+        zz-php.ini: |
+          memory_limit = 1024M
+          upload_max_filesize = 16G
+          post_max_size = 16G
+          max_execution_time = 3600
+          max_input_time = 3600
+          output_buffering = Off
+          opcache.enable = 1
+          opcache.enable_cli = 1
+          opcache.interned_strings_buffer = 32
+          opcache.max_accelerated_files = 20000
+          opcache.memory_consumption = 256
+          opcache.save_comments = 1
+          opcache.revalidate_freq = 60
+          opcache.jit = 1255
+          opcache.jit_buffer_size = 128M
+          apc.enable_cli = 1
+          apc.shm_size = 256M
+
       configs:
         custom-overwrite.config.php: |-
           <?php
