@@ -22,6 +22,15 @@ spec:
         seccompProfile:
           type: RuntimeDefault
 
+      phpConfigs:
+        zz-pm.conf: |
+          [www]
+          pm = dynamic
+          pm.max_children = 128
+          pm.start_servers = 32
+          pm.min_spare_servers = 32
+          pm.max_spare_servers = 96
+
       configs:
         custom-overwrite.config.php: |-
           <?php
@@ -73,8 +82,6 @@ spec:
           <?php
           $CONFIG['dbhost'] = 'mariadb-prod-internal.mariadb-prod.svc';
 
-
-
     persistence:
       enabled: true
       size: 500Gi
@@ -87,7 +94,7 @@ spec:
     cronjob:
       enabled: true
       type: cronjob
-      cronjob: 
+      cronjob:
         successfulJobsHistoryLimit: 1
         failedJobsHistoryLimit: 1
         securityContext:
@@ -115,7 +122,6 @@ spec:
                       values:
                         - app
                 topologyKey: kubernetes.io/hostname
-
 
     nginx:
       enabled: true
@@ -149,7 +155,7 @@ spec:
     #  user: nextcloud
     #  password: "${nextcloud_mariadb_password}"
     #  database: nextcloud
-#
+    #
     mariadb:
       enabled: false
       primary:
