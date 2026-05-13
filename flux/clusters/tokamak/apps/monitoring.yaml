@@ -27,3 +27,11 @@ spec:
       securityContext:
         seccompProfile:
           type: RuntimeDefault
+      route:
+        main:
+          enabled: true
+          hostnames:
+            - monitoring.${cilium_domain}
+          parentRefs:
+            - name: envoy-gateway-internal
+              namespace: envoy-gateway-system
