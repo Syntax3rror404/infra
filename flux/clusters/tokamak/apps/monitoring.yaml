@@ -15,6 +15,10 @@ spec:
             requests:
               storage: 50Gi
 
+    victoria-metrics-operator:
+      operator:
+        disable_prometheus_converter: true
+
     grafana:
       persistence:
         enabled: true
