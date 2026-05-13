@@ -15,14 +15,6 @@ spec:
             requests:
               storage: 50Gi
 
-    vmagent:
-      spec:
-        scrapeInterval: 30s
-
-    vmalert:
-      spec:
-        evaluationInterval: 30s
-
     victoria-metrics-operator:
       operator:
         disable_prometheus_converter: true
