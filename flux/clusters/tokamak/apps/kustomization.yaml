@@ -27,6 +27,7 @@ resources:
   - ../../../apps/harbor
   - ../../../apps/keycloak
   - ../../../apps/envoy-gateway
+  - ../../../apps/monitoring
 
   # include cluster apps instances
   # - instances only includes mariadb-prod which is archived
@@ -158,6 +159,14 @@ patches:
       kind: HelmRelease
       name: keycloak
       namespace: keycloak
+    options:
+      allowNameChange: false
+      allowKindChange: false
+  - path: monitoring.yaml
+    target:
+      kind: HelmRelease
+      name: victoria-metrics-k8s-stack
+      namespace: monitoring
     options:
       allowNameChange: false
       allowKindChange: false

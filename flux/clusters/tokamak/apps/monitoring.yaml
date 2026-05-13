@@ -1,0 +1,25 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: victoria-metrics-k8s-stack
+  namespace: monitoring
+spec:
+  values:
+    vmsingle:
+      spec:
+        retentionPeriod: "2" # in months
+        storage:
+          storageClassName: "${default_storage_class}"
+          resources:
+            requests:
+              storage: 50Gi
+
+    grafana:
+      persistence:
+        enabled: true
+        storageClassName: "${default_storage_class}"
+        size: 5Gi
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
