@@ -28,8 +28,14 @@ spec:
     name: envoy-gateway
     namespace: envoy-gateway-system
   values:
+    crds:
+      gatewayAPI:
+        enabled: true
+        channel: standard
+      envoyGateway:
+        enabled: true
     deployment:
-      pod: 
+      pod:
         nodeSelector:
           kubernetes.io/os: linux
           node-role.kubernetes.io/control-plane: ""
