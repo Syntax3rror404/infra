@@ -107,6 +107,7 @@ variable "sysctls_patch" {
         net.core.netdev_max_backlog: 4096  # Max number of packets queued on interface input
         net.ipv4.tcp_max_syn_backlog: 8192  # SYN queue must scale with somaxconn, otherwise it drops first
         net.ipv4.tcp_max_tw_buckets: 1440000  # Prevents "time wait bucket table overflow" under load with tcp_tw_reuse=1
+        net.core.rps_sock_flow_entries: 32768  # Global RFS flow hash table; pairs with per-queue rps_flow_cnt in sysfs (RFS = Receive Flow Steering)
         # --- TCP keepalive & timeouts ---
         net.ipv4.tcp_keepalive_intvl: 60  # Interval (s) between keepalive probes
         net.ipv4.tcp_keepalive_time: 600  # Time (s) before sending keepalive probes
@@ -115,5 +116,11 @@ variable "sysctls_patch" {
         # --- NFS / RPC performance tuning ---
         sunrpc.tcp_slot_table_entries: 128  # Number of concurrent RPC requests per TCP connection (higher = better throughput for NFS)
         sunrpc.tcp_max_slot_table_entries: 128  # Maximum allowed RPC slots (caps dynamic scaling, improves stability under load)
+      sysfs:
+        # --- RPS/RFS: Use all cores for NET_RX-Softirq ---
+        class/net/enp2s0/queues/rx-0/rps_cpus: "ffff"
+        class/net/enp2s0/queues/rx-0/rps_flow_cnt: "4096"
+        class/net/enp1s0/queues/rx-0/rps_cpus: "ffff"
+        class/net/enp1s0/queues/rx-0/rps_flow_cnt: "4096"
   EOT
 }
