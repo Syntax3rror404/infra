@@ -20,6 +20,8 @@ spec:
         disable_prometheus_converter: true
 
     grafana:
+      deploymentStrategy:
+        type: Recreate
       persistence:
         enabled: true
         storageClassName: "${default_storage_class}"
