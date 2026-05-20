@@ -22,7 +22,6 @@ spec:
     grafana:
       deploymentStrategy:
         type: Recreate
-        rollingUpdate: {}
       persistence:
         enabled: true
         storageClassName: "${default_storage_class}"
