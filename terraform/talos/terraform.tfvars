@@ -4,7 +4,7 @@ cluster_name       = "ich-talos"
 default_gateway    = "192.168.35.1"
 nameserver         = "192.168.33.1"
 endpoint_vip       = "192.168.35.40"
-talos_version      = "1.13.0"
+talos_version      = "1.13.3"
 kubernetes_version = "1.35.5"
 
 talos_extensions = [
@@ -12,6 +12,7 @@ talos_extensions = [
   "siderolabs/amdgpu",
   "siderolabs/iscsi-tools",
   "siderolabs/util-linux-tools",
+  "siderolabs/realtek-firmware",
 ]
 
 controlplanes = [
