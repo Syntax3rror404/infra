@@ -1,22 +1,35 @@
 ---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: mariadb-operator
+  namespace: mariadb-operator
+spec:
+  interval: 12h
+  timeout: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  #verify:
+  #  provider: cosign
+  ref:
+    semver: ">=26.0.0 <30.0.0"
+  url: oci://ghcr.io/mariadb-operator/charts/mariadb-operator
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: mariadb-operator
   namespace: mariadb-operator
 spec:
-  interval: 24h
+  interval: 1h
   dependsOn:
     - name: mariadb-operator-crds
       namespace: mariadb-operator
-  chart:
-    spec:
-      chart: mariadb-operator
-      version: ">=25.8.0 <30.0.0"
-      sourceRef:
-        kind: HelmRepository
-        name: mariadb-operator
-        namespace: mariadb-operator
+  chartRef:
+    kind: OCIRepository
+    name: mariadb-operator
+    namespace: mariadb-operator
   values:
     metrics:
       enabled: false
@@ -31,11 +44,11 @@ spec:
         readOnlyRootFilesystem: true
         capabilities:
           drop: ["ALL"]
-      tolerations: 
+      tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
           effect: "NoSchedule"
-      nodeSelector: 
+      nodeSelector:
         node-role.kubernetes.io/control-plane: ""
     certController:
       podSecurityContext:
@@ -47,11 +60,11 @@ spec:
         readOnlyRootFilesystem: true
         capabilities:
           drop: ["ALL"]
-      tolerations: 
+      tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
           effect: "NoSchedule"
-      nodeSelector: 
+      nodeSelector:
         node-role.kubernetes.io/control-plane: ""
     podSecurityContext:
       runAsNonRoot: true
@@ -63,9 +76,9 @@ spec:
       capabilities:
         drop: ["ALL"]
 
-    tolerations: 
+    tolerations:
       - key: "node-role.kubernetes.io/control-plane"
         operator: "Exists"
         effect: "NoSchedule"
-    nodeSelector: 
+    nodeSelector:
       node-role.kubernetes.io/control-plane: ""
