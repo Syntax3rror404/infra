@@ -18,7 +18,7 @@ spec:
   chart:
     spec:
       chart: vault
-      version: "0.32.x"
+      version: "0.33.x"
       sourceRef:
         kind: HelmRepository
         name: vault
