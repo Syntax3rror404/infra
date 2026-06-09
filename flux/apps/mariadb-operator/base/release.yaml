@@ -30,55 +30,56 @@ spec:
     kind: OCIRepository
     name: mariadb-operator
     namespace: mariadb-operator
-  values:
-    metrics:
-      enabled: false
-    webhook:
-      enabled: true
-      podSecurityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-      securityContext:
-        allowPrivilegeEscalation: false
-        readOnlyRootFilesystem: true
-        capabilities:
-          drop: ["ALL"]
-      tolerations:
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
-          effect: "NoSchedule"
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
-    certController:
-      podSecurityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-      securityContext:
-        allowPrivilegeEscalation: false
-        readOnlyRootFilesystem: true
-        capabilities:
-          drop: ["ALL"]
-      tolerations:
-        - key: "node-role.kubernetes.io/control-plane"
-          operator: "Exists"
-          effect: "NoSchedule"
-      nodeSelector:
-        node-role.kubernetes.io/control-plane: ""
-    podSecurityContext:
-      runAsNonRoot: true
-      seccompProfile:
-        type: RuntimeDefault
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop: ["ALL"]
-
-    tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        operator: "Exists"
-        effect: "NoSchedule"
-    nodeSelector:
-      node-role.kubernetes.io/control-plane: ""
+  #values:
+  #  metrics:
+  #    enabled: false
+  #  webhook:
+  #    enabled: true
+  #    podSecurityContext:
+  #      runAsNonRoot: true
+  #      seccompProfile:
+  #        type: RuntimeDefault
+  #    securityContext:
+  #      allowPrivilegeEscalation: false
+  #      readOnlyRootFilesystem: true
+  #      capabilities:
+  #        drop: ["ALL"]
+  #    tolerations:
+  #      - key: "node-role.kubernetes.io/control-plane"
+  #        operator: "Exists"
+  #        effect: "NoSchedule"
+  #    nodeSelector:
+  #      node-role.kubernetes.io/control-plane: ""
+  #  certController:
+  #    podSecurityContext:
+  #      runAsNonRoot: true
+  #      seccompProfile:
+  #        type: RuntimeDefault
+  #    securityContext:
+  #      allowPrivilegeEscalation: false
+  #      readOnlyRootFilesystem: true
+  #      capabilities:
+  #        drop: ["ALL"]
+  #    tolerations:
+  #      - key: "node-role.kubernetes.io/control-plane"
+  #        operator: "Exists"
+  #        effect: "NoSchedule"
+  #    nodeSelector:
+  #      node-role.kubernetes.io/control-plane: ""
+  #  podSecurityContext:
+  #    runAsNonRoot: true
+  #    seccompProfile:
+  #      type: RuntimeDefault
+  #  securityContext:
+  #    allowPrivilegeEscalation: false
+  #    readOnlyRootFilesystem: true
+  #    capabilities:
+  #      drop: ["ALL"]
+  #
+  #  tolerations:
+  #    - key: "node-role.kubernetes.io/control-plane"
+  #      operator: "Exists"
+  #      effect: "NoSchedule"
+  #  nodeSelector:
+  #    node-role.kubernetes.io/control-plane: ""
+  #
