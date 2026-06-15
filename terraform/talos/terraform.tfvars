@@ -4,8 +4,8 @@ cluster_name       = "ich-talos"
 default_gateway    = "192.168.35.1"
 nameserver         = "192.168.33.1"
 endpoint_vip       = "192.168.35.40"
-talos_version      = "1.13.3"
-kubernetes_version = "1.35.5"
+talos_version      = "1.13.4"
+kubernetes_version = "1.35.6"
 
 talos_extensions = [
   "siderolabs/amd-ucode",
