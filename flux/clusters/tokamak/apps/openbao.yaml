@@ -7,30 +7,30 @@ metadata:
 spec:
   values:
     server:
-  gateway:
-    # Configures a TLSRoute for the OpenBao server. This can be enabled independently of the ingress configuration to allow for side-by-side scenarios for migration.
-    tlsRoute:
-      enabled: true
-      labels: {}
-      # traffic: external
-      annotations: {}
-      # external-dns.alpha.kubernetes.io/hostname: chart-example.local
+      gateway:
+        # Configures a TLSRoute for the OpenBao server. This can be enabled independently of the ingress configuration to allow for side-by-side scenarios for migration.
+        tlsRoute:
+          enabled: true
+          labels: {}
+          # traffic: external
+          annotations: {}
+          # external-dns.alpha.kubernetes.io/hostname: chart-example.local
 
-      hosts:
-        - openbao.${nginx_domain}
+          hosts:
+            - openbao.${nginx_domain}
 
-      # Allows overriding the TLSRoutes apiVersion in case a different version of Gateway API is installed on the cluster.
-      apiVersion: gateway.networking.k8s.io/v1alpha3
+          # Allows overriding the TLSRoutes apiVersion in case a different version of Gateway API is installed on the cluster.
+          apiVersion: gateway.networking.k8s.io/v1alpha3
 
-      # When HA mode is enabled and K8s service registration is being used,
-      # configure the ingress to point to the OpenBao active service.
-      activeService: true
+          # When HA mode is enabled and K8s service registration is being used,
+          # configure the ingress to point to the OpenBao active service.
+          activeService: true
 
-      parentRefs:
-        - group: gateway.networking.k8s.io
-          kind: Gateway
-          name: envoy-gateway-external
-          namespace: envoy-gateway-system
+          parentRefs:
+            - group: gateway.networking.k8s.io
+              kind: Gateway
+              name: envoy-gateway-external
+              namespace: envoy-gateway-system
 
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
