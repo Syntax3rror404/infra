@@ -9,7 +9,7 @@ spec:
     server:
       gateway:
         # Configures a TLSRoute for the OpenBao server. This can be enabled independently of the ingress configuration to allow for side-by-side scenarios for migration.
-        tlsRoute:
+        httpRoute:
           enabled: true
           labels: {}
           # traffic: external
