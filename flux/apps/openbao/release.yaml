@@ -1,0 +1,95 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: openbao
+  namespace: openbao
+spec:
+  interval: 12h
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    semver: ">=0.28.0 <1.00.0"
+  url: oci://ghcr.io/openbao/charts/openbao
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: openbao
+  namespace: openbao
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: openbao
+    namespace: openbao
+  values:
+    server:
+      dataStorage:
+        enabled: true
+        size: 10Gi
+        storageClass: changeme
+        accessMode: ReadWriteOnce
+        # OpenBao mountet die Daten unter /openbao/data (statt /vault/data)
+        mountPath: "/openbao/data"
+ 
+      # Leer lassen, um mehrere Instanzen auf einem Node zuzulassen
+      # (OpenBao setzt hier per Default eine podAntiAffinity)
+      affinity: {}
+        # podAntiAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #     - labelSelector:
+        #         matchLabels:
+        #           app.kubernetes.io/name: openbao
+        #           app.kubernetes.io/instance: openbao
+        #           component: server
+        #       topologyKey: kubernetes.io/hostname
+ 
+      ingress:
+        enabled: false
+        ingressClassName: cilium
+        labels: {}
+          # traffic: external
+        pathType: Prefix
+        activeService: true
+        annotations:
+          cert-manager.io/cluster-issuer: changeme
+        hosts:
+          - host: openbao.example.com
+            paths: []
+        tls:
+          - hosts:
+              - openbao.example.com
+            secretName: openbao-ingress-cert
+ 
+      ha:
+        apiAddr: null
+        disruptionBudget:
+          enabled: false
+          maxUnavailable: null
+        enabled: true
+        replicas: 3
+        raft:
+          enabled: true
+          setNodeId: true
+          config: |
+            ui = true
+            listener "tcp" {
+              tls_disable = 1
+              address = "[::]:8200"
+              cluster_address = "[::]:8201"
+            }
+            storage "raft" {
+              path = "/openbao/data"
+              retry_join {
+                leader_api_addr = "http://openbao-0.openbao-internal.openbao.svc:8200"
+              }
+              retry_join {
+                leader_api_addr = "http://openbao-1.openbao-internal.openbao.svc:8200"
+              }
+              retry_join {
+                leader_api_addr = "http://openbao-2.openbao-internal.openbao.svc:8200"
+              }
+            }
+            service_registration "kubernetes" {}
