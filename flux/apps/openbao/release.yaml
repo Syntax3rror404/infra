@@ -25,6 +25,8 @@ spec:
     name: openbao
     namespace: openbao
   values:
+    injector:
+      enabled: "false"
     server:
       dataStorage:
         enabled: true
