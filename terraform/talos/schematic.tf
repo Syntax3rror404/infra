@@ -5,6 +5,7 @@ resource "talos_image_factory_schematic" "this" {
         systemExtensions = {
           officialExtensions = var.talos_extensions
         }
+        extraKernelArgs = ["-selinux", "selinux=0"]
       }
     }
   )

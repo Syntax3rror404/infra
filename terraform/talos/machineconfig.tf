@@ -34,8 +34,6 @@ data "talos_machine_configuration" "controlplane" {
             wipe: true
             diskSelector:
               model: "${each.value.install_diskSelector}"
-            extraKernelArgs:
-              - selinux=0
           features:
             kubernetesTalosAPIAccess:
               enabled: true
@@ -177,8 +175,6 @@ data "talos_machine_configuration" "worker" {
           wipe: true
           diskSelector:
             model: "${each.value.install_diskSelector}"
-          extraKernelArgs:
-            - selinux=0
         features:
           hostDNS:
             enabled: true
