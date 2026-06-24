@@ -115,6 +115,14 @@ variable "sysctls_patch" {
         # --- NFS / RPC performance tuning ---
         sunrpc.tcp_slot_table_entries: 128  # Number of concurrent RPC requests per TCP connection (higher = better throughput for NFS)
         sunrpc.tcp_max_slot_table_entries: 128  # Maximum allowed RPC slots (caps dynamic scaling, improves stability under load)
+        # --- Memory / NVMe write behavior ---
+        vm.dirty_background_ratio: "5"   # Start async writeback at 5% dirty RAM (~3 GB) instead of 10% default
+        vm.dirty_ratio: "10"             # Block writes at 10% dirty RAM (~6 GB) instead of 20% — prevents large NVMe write bursts
+        # --- Ephemeral ports ---
+        net.ipv4.ip_local_port_range: 1024 65535  # ~64k ports available instead of ~28k default
+        # --- NAPI poll budget ---
+        net.core.netdev_budget: "600"        # Packets per NAPI poll (default 300) — reduces interrupt overhead
+        net.core.netdev_budget_usecs: "8000" # Max time per NAPI poll in µs
   EOT
 }
 
