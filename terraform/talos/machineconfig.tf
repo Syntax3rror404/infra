@@ -64,52 +64,7 @@ data "talos_machine_configuration" "controlplane" {
               name: none
       EOT
       ,
-      <<-EOT
-        ---
-        apiVersion: v1alpha1
-        kind: HostnameConfig
-        auto: off
-        hostname: ${each.value.hostname}
-
-        ---
-        apiVersion: v1alpha1
-        kind: ResolverConfig
-        nameservers:
-          - address: ${var.nameserver}
-
-        ---
-        apiVersion: v1alpha1
-        kind: LinkConfig
-        name: enp2s0
-        addresses:
-          - address: ${each.value.ip}/24
-        routes:
-          - gateway: ${var.default_gateway}
-
-        ---
-        apiVersion: v1alpha1
-        kind: LinkConfig
-        name: lo
-        addresses:
-          - address: 169.254.116.108/32
-
-        ---
-        apiVersion: v1alpha1
-        kind: Layer2VIPConfig
-        name: ${var.endpoint_vip}
-        link: enp2s0
-
-        ---
-        apiVersion: v1alpha1
-        kind: UserVolumeConfig
-        name: longhorn
-        provisioning:
-          diskSelector:
-            match: "${each.value.data_diskSelector}"
-          maxSize: 1800GB
-        filesystem:
-          type: xfs
-      EOT
+      local.controlplane_network_patch[each.key],
     ],
     var.oidc != null ? [
       <<-EOT
@@ -193,46 +148,7 @@ data "talos_machine_configuration" "worker" {
             name: none
     EOT
     ,
-    <<-EOT
-      ---
-      apiVersion: v1alpha1
-      kind: HostnameConfig
-      auto: off
-      hostname: ${each.value.hostname}
-
-      ---
-      apiVersion: v1alpha1
-      kind: ResolverConfig
-      nameservers:
-        - address: ${var.nameserver}
-
-      ---
-      apiVersion: v1alpha1
-      kind: LinkConfig
-      name: enp2s0
-      addresses:
-        - address: ${each.value.ip}/24
-      routes:
-        - gateway: ${var.default_gateway}
-
-      ---
-      apiVersion: v1alpha1
-      kind: LinkConfig
-      name: lo
-      addresses:
-        - address: 169.254.116.108/32
-
-      ---
-      apiVersion: v1alpha1
-      kind: UserVolumeConfig
-      name: longhorn
-      provisioning:
-        diskSelector:
-          match: "${each.value.data_diskSelector}"
-        maxSize: 1800GB
-      filesystem:
-        type: xfs
-    EOT
+    local.worker_network_patch[each.key],
   ]
 }
 
