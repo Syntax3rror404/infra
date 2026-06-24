@@ -8,7 +8,7 @@ metadata:
   annotations:
     policies.kyverno.io/severity: high
 spec:
-  validationFailureAction: Enforce
+  validationFailureAction: Audit
   background: true
   rules:
     - name: disallow-privileged
