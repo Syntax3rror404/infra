@@ -99,7 +99,6 @@ variable "sysctls_patch" {
         net.ipv4.tcp_notsent_lowat: 131072  # Caps send buffer bloat; lets BBR react to RTT changes quickly
         net.ipv4.tcp_no_metrics_save: 1  # Don't cache old CUBIC metrics that would handicap BBR reconnects
         # --- Memory management ---
-        vm.nr_hugepages: 2048  # Preallocate 2048x 2MB hugepages (Longhorn, OpenEBS, PostgreSQL)
         vm.max_map_count: 262144  # Required by OpenSearch/Elasticsearch for mmap() usage
         vm.min_free_kbytes: 262144  # 256 MB reserve; protects atomic allocations in the network RX path under memory pressure
         # --- Connection queue / backlog ---
@@ -116,6 +115,14 @@ variable "sysctls_patch" {
         # --- NFS / RPC performance tuning ---
         sunrpc.tcp_slot_table_entries: 128  # Number of concurrent RPC requests per TCP connection (higher = better throughput for NFS)
         sunrpc.tcp_max_slot_table_entries: 128  # Maximum allowed RPC slots (caps dynamic scaling, improves stability under load)
+  EOT
+}
+
+variable "sysfs_patch" {
+  type        = string
+  description = "Machine-level sysfs settings applied to both controlplane and worker nodes as a Talos config patch."
+  default     = <<-EOT
+    machine:
       sysfs:
         # --- RPS/RFS: Use all cores for NET_RX-Softirq ---
         class/net/enp2s0/queues/rx-0/rps_cpus: "ffff"

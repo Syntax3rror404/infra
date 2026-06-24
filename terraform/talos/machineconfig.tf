@@ -17,6 +17,7 @@ data "talos_machine_configuration" "controlplane" {
   config_patches = concat(
     [
       var.sysctls_patch,
+      var.sysfs_patch,
       <<-EOT
         machine:
           kubelet:
@@ -157,6 +158,7 @@ data "talos_machine_configuration" "worker" {
   kubernetes_version = var.kubernetes_version
   config_patches = [
     var.sysctls_patch,
+    var.sysfs_patch,
     <<-EOT
       machine:
         kubelet:
