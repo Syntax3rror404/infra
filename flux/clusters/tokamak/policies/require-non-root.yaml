@@ -1,0 +1,41 @@
+---
+# AUDIT: Reports containers running as root (runAsUser: 0 or runAsNonRoot: false).
+# Known violation: nextcloud namespace (cronjob sets runAsUser: 0 / runAsNonRoot: false).
+# Fix: update nextcloud cronjob securityContext before switching to Enforce.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-run-as-non-root
+  annotations:
+    policies.kyverno.io/severity: medium
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: check-runasnonroot
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kube-system
+                - spegel
+                - longhorn-system
+      validate:
+        message: "Containers must not run as root. Set runAsNonRoot: true or runAsUser > 0."
+        pattern:
+          spec:
+            =(securityContext):
+              =(runAsNonRoot): "true"
+              =(runAsUser): ">0"
+            containers:
+              - =(securityContext):
+                  =(runAsNonRoot): "true"
+                  =(runAsUser): ">0"
+            =(initContainers):
+              - =(securityContext):
+                  =(runAsNonRoot): "true"
+                  =(runAsUser): ">0"

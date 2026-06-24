@@ -1,0 +1,39 @@
+---
+# AUDIT: Reports pods missing CPU/memory requests and memory limits.
+# Many apps currently lack resource definitions — fix incrementally before enforcing.
+# Exceptions: system namespaces where Helm charts manage resources internally.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-resource-limits
+  annotations:
+    policies.kyverno.io/severity: low
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: require-resources
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kube-system
+                - flux-system
+                - kyverno
+                - longhorn-system
+                - spegel
+      validate:
+        message: "Containers must define resources.requests (cpu, memory) and resources.limits (memory)."
+        pattern:
+          spec:
+            containers:
+              - resources:
+                  requests:
+                    memory: "?*"
+                    cpu: "?*"
+                  limits:
+                    memory: "?*"

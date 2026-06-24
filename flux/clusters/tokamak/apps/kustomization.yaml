@@ -29,6 +29,7 @@ resources:
   - ../../../apps/keycloak
   - ../../../apps/envoy-gateway
   - ../../../apps/monitoring
+  - ../../../apps/kyverno/base
 
   # include cluster apps instances
   # - instances only includes mariadb-prod which is archived

@@ -1,0 +1,31 @@
+---
+# Blocks hostPID, hostIPC, hostNetwork on all pods outside system namespaces.
+# No current violations in this repo — safe to enforce immediately.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-host-namespaces
+  annotations:
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: disallow-host-namespaces
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+      exclude:
+        any:
+          - resources:
+              namespaces:
+                - kube-system
+                - flux-system
+      validate:
+        message: "Host namespaces (hostPID, hostIPC, hostNetwork) are not allowed."
+        pattern:
+          spec:
+            =(hostPID): "false"
+            =(hostIPC): "false"
+            =(hostNetwork): "false"
