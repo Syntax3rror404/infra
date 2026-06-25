@@ -22,6 +22,7 @@ spec:
                 - kube-system
                 - flux-system
                 - monitoring
+                - longhorn-system
       validate:
         message: "Host namespaces (hostPID, hostIPC, hostNetwork) are not allowed."
         pattern:
