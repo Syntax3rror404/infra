@@ -20,8 +20,6 @@ spec:
           service: http://rancher.cattle-system.svc
         - hostname: hubble.mzapf.de
           service: http://hubble-ui.kube-system.svc
-        - hostname: vault.mzapf.de
-          service: http://vault-active.vault.svc:8200
         - hostname: vodafone.mzapf.de
           service: http://192.168.100.1
         - hostname: opnsense.mzapf.de

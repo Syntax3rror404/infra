@@ -44,14 +44,6 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
-  - path: vault.yaml
-    target:
-      kind: HelmRelease
-      name: vault
-      namespace: vault
-    options:
-      allowNameChange: false
-      allowKindChange: false
   - path: openbao.yaml
     target:
       kind: HelmRelease
