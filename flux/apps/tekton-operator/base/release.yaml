@@ -1,20 +1,34 @@
+# ---
+# apiVersion: source.toolkit.fluxcd.io/v1
+# kind: GitRepository
+# metadata:
+#   name: tekton-operator
+#   namespace: tekton-operator
+# spec:
+#   interval: 24h
+#   url: https://github.com/tektoncd/operator
+#   ref:
+#     # semver uses tag
+#     semver: ">=0.77.0 <1.0.0"
+#   ignore: |
+#     # exclude all
+#     /*
+#     # include charts directory
+#     !/charts
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
+kind: OCIRepository
 metadata:
   name: tekton-operator
   namespace: tekton-operator
 spec:
   interval: 24h
-  url: https://github.com/tektoncd/operator
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  url: oci://ghcr.io/tektoncd/operator/charts/tekton-operator
   ref:
-    # semver uses tag
-    semver: ">=0.77.0 <1.0.0"
-  ignore: |
-    # exclude all
-    /*
-    # include charts directory
-    !/charts
+    semver: ">=0.80.0 <1.0.0"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -23,13 +37,10 @@ metadata:
   namespace: tekton-operator
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: charts/tekton-operator
-      sourceRef:
-        kind: GitRepository
-        name: tekton-operator
-        namespace: tekton-operator
+  chartRef:
+    kind: OCIRepository
+    name: tekton-operator
+    namespace: tekton-operator
   values:
     podSecurityContext:
       fsGroup: 2000
