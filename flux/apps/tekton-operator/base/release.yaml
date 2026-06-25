@@ -42,6 +42,20 @@ spec:
     name: tekton-operator
     namespace: tekton-operator
   values:
+    operator:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+    webhook:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
     podSecurityContext:
       fsGroup: 2000
       runAsUser: 1000

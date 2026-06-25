@@ -23,6 +23,14 @@ spec:
     kubernetes:
       envoyService:
         externalTrafficPolicy: Cluster
+      envoyDeployment:
+        container:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway

@@ -9,13 +9,68 @@ spec:
     vmsingle:
       spec:
         retentionPeriod: "2" # in months
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            memory: 768Mi
         storage:
           storageClassName: "${default_storage_class}"
           resources:
             requests:
               storage: 50Gi
 
+    vmagent:
+      spec:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
+
+    vmalert:
+      spec:
+        resources:
+          requests:
+            cpu: 20m
+            memory: 64Mi
+          limits:
+            memory: 128Mi
+
+    alertmanager:
+      spec:
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            memory: 64Mi
+
+    kube-state-metrics:
+      resources:
+        requests:
+          cpu: 20m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+
+    prometheus-node-exporter:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+
     victoria-metrics-operator:
+      resources:
+        requests:
+          cpu: 20m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
       operator:
         disable_prometheus_converter: true
 

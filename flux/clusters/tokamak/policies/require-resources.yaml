@@ -26,6 +26,7 @@ spec:
                 - kyverno
                 - longhorn-system
                 - spegel
+                - tekton-pipelines
       validate:
         message: "Containers must define resources.requests (cpu, memory) and resources.limits (memory)."
         pattern:
