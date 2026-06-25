@@ -24,6 +24,7 @@ spec:
                 - kube-system
                 - spegel
                 - longhorn-system
+                - monitoring
       validate:
         message: "Containers must not run as root. Set runAsNonRoot: true or runAsUser > 0."
         pattern:

@@ -31,10 +31,22 @@ spec:
     name: mariadb-operator
     namespace: mariadb-operator
   values:
+    resources:
+      requests:
+        cpu: 20m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
     metrics:
       enabled: false
     webhook:
       enabled: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
       podSecurityContext:
         runAsNonRoot: true
         seccompProfile:
@@ -51,6 +63,12 @@ spec:
       nodeSelector:
         node-role.kubernetes.io/control-plane: ""
     certController:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
       podSecurityContext:
         runAsNonRoot: true
         seccompProfile:

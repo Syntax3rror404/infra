@@ -34,6 +34,13 @@ spec:
       hostnames:
         - git.${nginx_domain}
 
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+
     containerSecurityContext: 
       allowPrivilegeEscalation: false
       capabilities:

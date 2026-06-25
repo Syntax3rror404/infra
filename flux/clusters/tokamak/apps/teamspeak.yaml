@@ -32,4 +32,9 @@ spec:
           - 10011
           - 30033
         udp: 9987
-      resources: {}
+      resources:
+        requests:
+          cpu: 20m
+          memory: 32Mi
+        limits:
+          memory: 128Mi

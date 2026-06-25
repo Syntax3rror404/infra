@@ -6,6 +6,12 @@ metadata:
   namespace: cloudflared
 spec:
   values:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        memory: 128Mi
     cloudflare:
       ingress:
         - hostname: argo.mzapf.de

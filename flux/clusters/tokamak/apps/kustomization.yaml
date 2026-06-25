@@ -180,6 +180,14 @@ patches:
     options:
       allowNameChange: false
       allowKindChange: false
+  - path: wg-portal.yaml
+    target:
+      kind: HelmRelease
+      name: wg-portal
+      namespace: wg-portal
+    options:
+      allowNameChange: false
+      allowKindChange: false
 # # Cluster-specific patches
 # patches:
 #   # Update podinfo ingress with cluster domain
