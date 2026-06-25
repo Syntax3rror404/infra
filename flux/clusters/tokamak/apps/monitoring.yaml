@@ -20,6 +20,12 @@ spec:
         disable_prometheus_converter: true
 
     grafana:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
       deploymentStrategy:
         type: Recreate
         rollingUpdate: null
