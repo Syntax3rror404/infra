@@ -1,12 +1,17 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
   name: snipeit
   namespace: snipeit
 spec:
   interval: 12h
-  url: "https://syntax3rror404.github.io/helm-charts/charts"
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    semver: ">=2.0.0 <3.0.0"
+  url: oci://ghcr.io/syntax3rror404/helm-charts/snipeit
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -15,11 +20,7 @@ metadata:
   namespace: snipeit
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: snipeit
-      version: "2.x.x"
-      sourceRef:
-        kind: HelmRepository
-        name: snipeit
-        namespace: snipeit
+  chartRef:
+    kind: OCIRepository
+    name: snipeit
+    namespace: snipeit
