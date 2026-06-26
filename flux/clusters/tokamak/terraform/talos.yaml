@@ -1,0 +1,57 @@
+---
+# RBAC: allow tf-runner in flux-system to read/write the tofu state secret in kube-system
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: tofu-state-talos
+  namespace: kube-system
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["tfstate-default-talos"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tofu-state-talos
+  namespace: kube-system
+subjects:
+  - kind: ServiceAccount
+    name: tf-runner
+    namespace: flux-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tofu-state-talos
+---
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: talos
+  namespace: flux-system
+spec:
+  interval: 10m
+  # Plan only — apply manually via annotation:
+  # kubectl annotate terraform talos -n flux-system reconcile.fluxcd.io/requestedAt=$(date +%s) approve=plan-hash
+  approvePlan: disable
+  path: ./terraform/talos
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  backendConfig:
+    customConfiguration: |
+      backend "kubernetes" {
+        secret_suffix     = "talos"
+        in_cluster_config = true
+        namespace         = "kube-system"
+      }
+  runnerPodTemplate:
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule

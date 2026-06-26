@@ -30,6 +30,7 @@ resources:
   - ../../../apps/envoy-gateway
   - ../../../apps/monitoring
   - ../../../apps/kyverno/base
+  - ../../../apps/tofu-controller/base
 
   # include cluster apps instances
   # - instances only includes mariadb-prod which is archived

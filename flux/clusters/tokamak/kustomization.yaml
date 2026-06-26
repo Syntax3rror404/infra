@@ -36,3 +36,13 @@ patches:
       kind: Kustomization
       name: cluster-resources
       namespace: flux-system
+
+  # Patch cluster-terraform to use correct tokamak path
+  - patch: |
+      - op: replace
+        path: /spec/path
+        value: flux/clusters/tokamak/terraform
+    target:
+      kind: Kustomization
+      name: cluster-terraform
+      namespace: flux-system
