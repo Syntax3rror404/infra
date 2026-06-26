@@ -25,6 +25,8 @@ spec:
         namespace: kyverno
   values:
     features:
+      admissionReports:
+        enabled: false
       omitEvents:
         eventTypes:
           - PolicyApplied
