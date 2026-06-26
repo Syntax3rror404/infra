@@ -24,6 +24,13 @@ spec:
         name: kyverno
         namespace: kyverno
   values:
+    config:
+      omitEvents:
+        eventTypes:
+          - PolicyApplied
+          - PolicySkipped
+          - PolicyViolation
+          - PolicyError
     admissionController:
       nodeSelector:
         node-role.kubernetes.io/control-plane: ""
