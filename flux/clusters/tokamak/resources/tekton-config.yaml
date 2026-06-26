@@ -35,6 +35,9 @@ spec:
     options: {}
   platforms:
     openshift: {}
+    kubernetes:
+      pipelinesAsCode:
+        enable: false
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
