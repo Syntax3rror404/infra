@@ -38,6 +38,12 @@ spec:
             memory: 64Mi
           limits:
             memory: 128Mi
+        configReloaderResources:
+          requests:
+            cpu: 10m
+            memory: 25Mi
+          limits:
+            memory: 64Mi
 
     alertmanager:
       spec:
@@ -45,6 +51,12 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+          limits:
+            memory: 64Mi
+        configReloaderResources:
+          requests:
+            cpu: 10m
+            memory: 25Mi
           limits:
             memory: 64Mi
 
