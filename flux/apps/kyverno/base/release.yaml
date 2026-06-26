@@ -24,7 +24,7 @@ spec:
         name: kyverno
         namespace: kyverno
   values:
-    config:
+    features:
       omitEvents:
         eventTypes:
           - PolicyApplied
