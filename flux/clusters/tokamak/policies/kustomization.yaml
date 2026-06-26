@@ -7,3 +7,4 @@ resources:
   - disallow-latest-tag.yaml
   - require-non-root.yaml
   - require-resources.yaml
+  - set-revision-history-limit.yaml

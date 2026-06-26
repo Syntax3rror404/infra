@@ -1,0 +1,18 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: set-revision-history-limit
+  annotations:
+    policies.kyverno.io/severity: low
+spec:
+  rules:
+    - name: set-revision-history-limit
+      match:
+        any:
+          - resources:
+              kinds: [Deployment]
+      mutate:
+        patchStrategicMerge:
+          spec:
+            revisionHistoryLimit: 3
