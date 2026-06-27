@@ -1,7 +1,8 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-dashboard-talos-hardware
+  name: grafana-dashboard-talos
   namespace: monitoring
   labels:
     grafana_dashboard: "1"
@@ -1632,6 +1633,110 @@ data:
                   "serial": 3,
                   "firmware_revision": 4,
                   "state": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": 33,
+          "title": "Hardware Info",
+          "type": "row",
+          "collapsed": false,
+          "gridPos": {
+            "x": 0,
+            "y": 79,
+            "w": 24,
+            "h": 1
+          },
+          "panels": []
+        },
+        {
+          "id": 34,
+          "title": "System Information (DMI)",
+          "type": "table",
+          "datasource": {
+            "type": "datasource",
+            "uid": "VictoriaMetrics"
+          },
+          "gridPos": {
+            "x": 0,
+            "y": 80,
+            "w": 24,
+            "h": 6
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "datasource",
+                "uid": "VictoriaMetrics"
+              },
+              "expr": "label_replace(\n  node_dmi_info,\n  \"internal_ip\", \"$1\", \"instance\", \"([^:]+):.*\"\n) * on(internal_ip) group_left(node)\nkube_node_info",
+              "legendFormat": "",
+              "refId": "A",
+              "instant": true,
+              "format": "table"
+            }
+          ],
+          "options": {
+            "footer": {
+              "show": false
+            },
+            "sortBy": [
+              {
+                "displayName": "Node"
+              }
+            ]
+          },
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "Value #A": true,
+                  "Value": true,
+                  "container": true,
+                  "endpoint": true,
+                  "job": true,
+                  "namespace": true,
+                  "pod": true,
+                  "prometheus": true,
+                  "service": true,
+                  "internal_ip": true,
+                  "instance": true,
+                  "__name__": true,
+                  "board_asset_tag": true,
+                  "board_version": true,
+                  "chassis_asset_tag": true,
+                  "chassis_vendor": true,
+                  "chassis_version": true,
+                  "product_family": true,
+                  "product_sku": true,
+                  "product_version": true,
+                  "board_vendor": true
+                },
+                "renameByName": {
+                  "node": "Node",
+                  "product_name": "Model",
+                  "system_vendor": "Vendor",
+                  "board_name": "Board",
+                  "bios_version": "BIOS Version",
+                  "bios_date": "BIOS Date",
+                  "bios_release": "BIOS Release"
+                },
+                "indexByName": {
+                  "node": 0,
+                  "product_name": 1,
+                  "system_vendor": 2,
+                  "board_name": 3,
+                  "bios_version": 4,
+                  "bios_date": 5,
+                  "bios_release": 6
                 }
               }
             }
