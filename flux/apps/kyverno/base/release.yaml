@@ -28,6 +28,8 @@ spec:
     features:
       admissionReports:
         enabled: false
+      backgroundScan:
+        enabled: false
       omitEvents:
         eventTypes:
           - PolicyApplied

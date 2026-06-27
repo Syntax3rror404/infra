@@ -11,7 +11,7 @@ spec:
       match:
         any:
           - resources:
-              kinds: [Deployment]
+              kinds: [Deployment, StatefulSet, DaemonSet]
       mutate:
         patchStrategicMerge:
           spec:
