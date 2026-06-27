@@ -23,6 +23,7 @@ metadata:
   namespace: mariadb-operator
 spec:
   interval: 1h
+  historyMax: 3
   chartRef:
     kind: OCIRepository
     name: mariadb-operator-crds

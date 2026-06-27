@@ -23,6 +23,7 @@ metadata:
   namespace: podinfo
 spec:
   interval: 1h
+  historyMax: 3
   chartRef:
     kind: OCIRepository
     name: podinfo

@@ -23,6 +23,7 @@ metadata:
   namespace: mariadb-operator
 spec:
   interval: 1h
+  historyMax: 3
   dependsOn:
     - name: mariadb-operator-crds
       namespace: mariadb-operator

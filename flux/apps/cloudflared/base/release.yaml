@@ -15,6 +15,7 @@ metadata:
   namespace: cloudflared
 spec:
   interval: 1h
+  historyMax: 3
   chart:
     spec:
       chart: cloudflare-tunnel

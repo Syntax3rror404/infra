@@ -20,6 +20,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1h
+  historyMax: 3
   chartRef:
     kind: OCIRepository
     name: tofu-controller

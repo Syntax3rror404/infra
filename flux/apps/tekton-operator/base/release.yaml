@@ -37,6 +37,7 @@ metadata:
   namespace: tekton-operator
 spec:
   interval: 1h
+  historyMax: 3
   chartRef:
     kind: OCIRepository
     name: tekton-operator

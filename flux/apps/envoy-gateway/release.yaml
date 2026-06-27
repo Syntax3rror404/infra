@@ -23,6 +23,7 @@ metadata:
   namespace: envoy-gateway-system
 spec:
   interval: 1h
+  historyMax: 3
   chartRef:
     kind: OCIRepository
     name: envoy-gateway

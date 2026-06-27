@@ -15,6 +15,7 @@ metadata:
   namespace: kube-system
 spec:
   interval: 1h
+  historyMax: 3
   chart:
     spec:
       chart: descheduler

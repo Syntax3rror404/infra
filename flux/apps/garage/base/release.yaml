@@ -23,6 +23,7 @@ metadata:
   namespace: garage
 spec:
   interval: 1h
+  historyMax: 3
   chart:
     spec:
       chart: script/helm/garage
