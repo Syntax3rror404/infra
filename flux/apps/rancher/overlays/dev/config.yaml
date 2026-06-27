@@ -37,7 +37,6 @@ spec:
             values:
               - "true"
     replicas: 1
-    features: "continuous-delivery=false,fleet=false"
     resources:
       requests:
         cpu: 200m
