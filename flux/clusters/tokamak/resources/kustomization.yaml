@@ -14,5 +14,6 @@ resources:
   - envoy-gateway.yaml
   - gateway-external.yaml
   - gateway-internal.yaml
+  - gateway-kubernetes-api.yaml
   - renovate.yaml
   - rbac.yaml

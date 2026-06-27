@@ -1,0 +1,73 @@
+---
+# Allow HTTPRoute in kube-system to reference the kubernetes Service in default
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: kube-apiserver-gateway
+  namespace: default
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    namespace: kube-system
+  to:
+  - group: ""
+    kind: Service
+    name: kubernetes
+---
+# Trust the cluster CA when Envoy connects to the kube-apiserver backend
+apiVersion: gateway.networking.k8s.io/v1
+kind: BackendTLSPolicy
+metadata:
+  name: kube-apiserver
+  namespace: default
+spec:
+  targetRefs:
+  - group: ""
+    kind: Service
+    name: kubernetes
+    sectionName: https
+  validation:
+    caCertificateRefs:
+    - group: ""
+      kind: ConfigMap
+      name: kube-root-ca.crt
+    hostname: kubernetes.default.svc.cluster.local
+---
+# Route k8s.menofgaming.de to the kube-apiserver
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  parentRefs:
+  - name: envoy-gateway-external
+    namespace: envoy-gateway-system
+  hostnames:
+  - k8s.menofgaming.de
+  rules:
+  - backendRefs:
+    - name: kubernetes
+      namespace: default
+      port: 443
+---
+# Block all requests without a valid Keycloak JWT — unauthenticated traffic never reaches the apiserver
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: kube-apiserver
+  namespace: kube-system
+spec:
+  targetRefs:
+  - group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: kube-apiserver
+  jwt:
+    providers:
+    - name: keycloak
+      issuer: "https://auth.menofgaming.de/realms/mog"
+      audiences:
+      - kubernetes
+      remoteJWKS:
+        uri: "https://auth.menofgaming.de/realms/mog/protocol/openid-connect/certs"
