@@ -28,7 +28,7 @@ data:
       "panels": [
         {
           "id": 2,
-          "title": "Nodes Ready",
+          "title": "Nodes",
           "type": "stat",
           "datasource": {
             "type": "datasource",
@@ -37,7 +37,7 @@ data:
           "gridPos": {
             "x": 0,
             "y": 0,
-            "w": 2,
+            "w": 4,
             "h": 4
           },
           "targets": [
@@ -49,6 +49,15 @@ data:
               "expr": "count(kube_node_status_condition{condition=\"Ready\",status=\"true\"})",
               "legendFormat": "Ready",
               "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "datasource",
+                "uid": "VictoriaMetrics"
+              },
+              "expr": "count(kube_node_info)",
+              "legendFormat": "Total",
+              "refId": "B"
             }
           ],
           "options": {
@@ -76,64 +85,12 @@ data:
                   }
                 ]
               }
-            }
+            },
+            "overrides": []
           }
         },
         {
           "id": 3,
-          "title": "Nodes Total",
-          "type": "stat",
-          "datasource": {
-            "type": "datasource",
-            "uid": "VictoriaMetrics"
-          },
-          "gridPos": {
-            "x": 2,
-            "y": 0,
-            "w": 2,
-            "h": 4
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "datasource",
-                "uid": "VictoriaMetrics"
-              },
-              "expr": "count(kube_node_info)",
-              "legendFormat": "Total",
-              "refId": "A"
-            }
-          ],
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "colorMode": "value",
-            "graphMode": "none",
-            "orientation": "auto",
-            "textMode": "auto"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "short",
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "text",
-                    "value": null
-                  }
-                ]
-              }
-            }
-          }
-        },
-        {
-          "id": 4,
           "title": "Avg CPU Usage",
           "type": "stat",
           "datasource": {
@@ -190,12 +147,13 @@ data:
                   }
                 ]
               }
-            }
+            },
+            "overrides": []
           }
         },
         {
-          "id": 5,
-          "title": "Total Memory",
+          "id": 4,
+          "title": "Memory",
           "type": "stat",
           "datasource": {
             "type": "datasource",
@@ -213,62 +171,18 @@ data:
                 "type": "datasource",
                 "uid": "VictoriaMetrics"
               },
-              "expr": "sum(node_memory_MemTotal_bytes)",
-              "legendFormat": "Total",
+              "expr": "sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)",
+              "legendFormat": "Used",
               "refId": "A"
-            }
-          ],
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
             },
-            "colorMode": "value",
-            "graphMode": "none",
-            "orientation": "auto",
-            "textMode": "auto"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "bytes",
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "text",
-                    "value": null
-                  }
-                ]
-              }
-            }
-          }
-        },
-        {
-          "id": 6,
-          "title": "Memory Used",
-          "type": "stat",
-          "datasource": {
-            "type": "datasource",
-            "uid": "VictoriaMetrics"
-          },
-          "gridPos": {
-            "x": 11,
-            "y": 0,
-            "w": 4,
-            "h": 4
-          },
-          "targets": [
             {
               "datasource": {
                 "type": "datasource",
                 "uid": "VictoriaMetrics"
               },
-              "expr": "sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)",
-              "legendFormat": "Used",
-              "refId": "A"
+              "expr": "sum(node_memory_MemTotal_bytes)",
+              "legendFormat": "Total",
+              "refId": "B"
             }
           ],
           "options": {
@@ -304,11 +218,28 @@ data:
                   }
                 ]
               }
-            }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Total"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "fixed",
+                      "fixedColor": "text"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         },
         {
-          "id": 7,
+          "id": 5,
           "title": "Total Cluster Power",
           "type": "stat",
           "datasource": {
@@ -316,9 +247,9 @@ data:
             "uid": "VictoriaMetrics"
           },
           "gridPos": {
-            "x": 15,
+            "x": 11,
             "y": 0,
-            "w": 3,
+            "w": 4,
             "h": 4
           },
           "targets": [
@@ -365,11 +296,12 @@ data:
                   }
                 ]
               }
-            }
+            },
+            "overrides": []
           }
         },
         {
-          "id": 8,
+          "id": 6,
           "title": "Avg CPU Temp",
           "type": "stat",
           "datasource": {
@@ -377,7 +309,7 @@ data:
             "uid": "VictoriaMetrics"
           },
           "gridPos": {
-            "x": 18,
+            "x": 15,
             "y": 0,
             "w": 3,
             "h": 4
@@ -426,11 +358,12 @@ data:
                   }
                 ]
               }
-            }
+            },
+            "overrides": []
           }
         },
         {
-          "id": 9,
+          "id": 7,
           "title": "Max NVMe Temp",
           "type": "stat",
           "datasource": {
@@ -438,7 +371,7 @@ data:
             "uid": "VictoriaMetrics"
           },
           "gridPos": {
-            "x": 21,
+            "x": 18,
             "y": 0,
             "w": 3,
             "h": 4
@@ -487,11 +420,66 @@ data:
                   }
                 ]
               }
-            }
+            },
+            "overrides": []
           }
         },
         {
-          "id": 10,
+          "id": 8,
+          "title": "Cluster Uptime",
+          "type": "stat",
+          "datasource": {
+            "type": "datasource",
+            "uid": "VictoriaMetrics"
+          },
+          "gridPos": {
+            "x": 21,
+            "y": 0,
+            "w": 3,
+            "h": 4
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "datasource",
+                "uid": "VictoriaMetrics"
+              },
+              "expr": "min(node_time_seconds - node_boot_time_seconds)",
+              "legendFormat": "Up",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "value",
+            "graphMode": "none",
+            "orientation": "auto",
+            "textMode": "auto"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 9,
           "title": "Node Uptime",
           "type": "stat",
           "datasource": {
@@ -510,8 +498,8 @@ data:
                 "type": "datasource",
                 "uid": "VictoriaMetrics"
               },
-              "expr": "label_replace(\n  node_time_seconds - node_boot_time_seconds,\n  \"internal_ip\", \"$1\", \"instance\", \"([^:]+):.*\"\n) * on(internal_ip) group_left(node)\nkube_node_info",
-              "legendFormat": "{{node}}",
+              "expr": "label_replace(\n  node_time_seconds - node_boot_time_seconds,\n  \"internal_ip\", \"$1\", \"instance\", \"([^:]+):.*\"\n) * on(internal_ip) group_left(node, os_image)\nkube_node_info",
+              "legendFormat": "{{node}}  |  {{os_image}}",
               "refId": "A"
             }
           ],
@@ -540,11 +528,12 @@ data:
                   }
                 ]
               }
-            }
+            },
+            "overrides": []
           }
         },
         {
-          "id": 11,
+          "id": 10,
           "title": "System",
           "type": "row",
           "collapsed": false,
@@ -557,7 +546,7 @@ data:
           "panels": []
         },
         {
-          "id": 12,
+          "id": 11,
           "title": "CPU Utilization per Node",
           "type": "timeseries",
           "datasource": {
@@ -630,7 +619,7 @@ data:
           }
         },
         {
-          "id": 13,
+          "id": 12,
           "title": "Load Average per Node",
           "type": "timeseries",
           "datasource": {
@@ -692,7 +681,7 @@ data:
           }
         },
         {
-          "id": 14,
+          "id": 13,
           "title": "Memory",
           "type": "row",
           "collapsed": false,
@@ -705,7 +694,7 @@ data:
           "panels": []
         },
         {
-          "id": 15,
+          "id": 14,
           "title": "Memory Usage % per Node",
           "type": "timeseries",
           "datasource": {
@@ -778,7 +767,7 @@ data:
           }
         },
         {
-          "id": 16,
+          "id": 15,
           "title": "Memory Used per Node",
           "type": "timeseries",
           "datasource": {
@@ -840,7 +829,7 @@ data:
           }
         },
         {
-          "id": 17,
+          "id": 16,
           "title": "Hardware Temperatures",
           "type": "row",
           "collapsed": false,
@@ -853,7 +842,7 @@ data:
           "panels": []
         },
         {
-          "id": 18,
+          "id": 17,
           "title": "CPU Temperature per Node",
           "type": "timeseries",
           "datasource": {
@@ -926,7 +915,7 @@ data:
           }
         },
         {
-          "id": 19,
+          "id": 18,
           "title": "NVMe Temperature",
           "type": "timeseries",
           "datasource": {
@@ -999,7 +988,7 @@ data:
           }
         },
         {
-          "id": 20,
+          "id": 19,
           "title": "CPU Temp",
           "type": "gauge",
           "datasource": {
@@ -1062,7 +1051,7 @@ data:
           }
         },
         {
-          "id": 21,
+          "id": 20,
           "title": "GPU Temp",
           "type": "gauge",
           "datasource": {
@@ -1125,7 +1114,7 @@ data:
           }
         },
         {
-          "id": 22,
+          "id": 21,
           "title": "CPU Package Power per Node",
           "type": "bargauge",
           "datasource": {
@@ -1184,7 +1173,7 @@ data:
           }
         },
         {
-          "id": 23,
+          "id": 22,
           "title": "Power",
           "type": "row",
           "collapsed": false,
@@ -1197,7 +1186,7 @@ data:
           "panels": []
         },
         {
-          "id": 24,
+          "id": 23,
           "title": "Cluster Power Consumption",
           "type": "timeseries",
           "datasource": {
@@ -1259,7 +1248,7 @@ data:
           }
         },
         {
-          "id": 25,
+          "id": 24,
           "title": "Current Total Power",
           "type": "gauge",
           "datasource": {
@@ -1318,7 +1307,7 @@ data:
           }
         },
         {
-          "id": 26,
+          "id": 25,
           "title": "Network",
           "type": "row",
           "collapsed": false,
@@ -1331,7 +1320,7 @@ data:
           "panels": []
         },
         {
-          "id": 27,
+          "id": 26,
           "title": "Network Receive per Node (enp2s0)",
           "type": "timeseries",
           "datasource": {
@@ -1384,7 +1373,7 @@ data:
           }
         },
         {
-          "id": 28,
+          "id": 27,
           "title": "Network Transmit per Node (enp2s0)",
           "type": "timeseries",
           "datasource": {
@@ -1437,7 +1426,7 @@ data:
           }
         },
         {
-          "id": 29,
+          "id": 28,
           "title": "NVMe Storage I/O",
           "type": "row",
           "collapsed": false,
@@ -1450,7 +1439,7 @@ data:
           "panels": []
         },
         {
-          "id": 30,
+          "id": 29,
           "title": "NVMe Read Throughput (per Device)",
           "type": "timeseries",
           "datasource": {
@@ -1503,7 +1492,7 @@ data:
           }
         },
         {
-          "id": 31,
+          "id": 30,
           "title": "NVMe Write Throughput (per Device)",
           "type": "timeseries",
           "datasource": {
@@ -1556,7 +1545,7 @@ data:
           }
         },
         {
-          "id": 32,
+          "id": 31,
           "title": "Disk Info",
           "type": "row",
           "collapsed": false,
@@ -1569,7 +1558,7 @@ data:
           "panels": []
         },
         {
-          "id": 33,
+          "id": 32,
           "title": "NVMe Information",
           "type": "table",
           "datasource": {
@@ -1591,7 +1580,8 @@ data:
               "expr": "label_replace(\n  node_nvme_info,\n  \"internal_ip\", \"$1\", \"instance\", \"([^:]+):.*\"\n) * on(internal_ip) group_left(node)\nkube_node_info",
               "legendFormat": "{{node}} / {{device}}",
               "refId": "A",
-              "instant": true
+              "instant": true,
+              "format": "table"
             }
           ],
           "options": {
@@ -1615,6 +1605,7 @@ data:
                 "excludeByName": {
                   "Time": true,
                   "Value #A": true,
+                  "Value": true,
                   "container": true,
                   "endpoint": true,
                   "job": true,
