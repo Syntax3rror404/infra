@@ -13,7 +13,7 @@ resources:
   - ../../../apps/snipeit/overlays/prod
   - ../../../apps/minecraft
   # - ../../../apps/ingress-nginx/overlays/prod
-  - ../../../apps/rancher/overlays/dev
+  #- ../../../apps/rancher/overlays/dev
   - ../../../apps/longhorn/overlays/prod
   - ../../../apps/tekton-operator/overlays/prod
   - ../../../apps/teamspeak/overlays/prod
