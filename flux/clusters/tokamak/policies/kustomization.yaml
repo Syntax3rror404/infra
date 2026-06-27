@@ -10,3 +10,4 @@ resources:
   - set-revision-history-limit.yaml
   - set-helm-max-history.yaml
   - cleanup-policy-reports.yaml
+  - cleanup-policy-reports-rbac.yaml
