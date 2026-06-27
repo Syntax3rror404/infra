@@ -15,5 +15,6 @@ resources:
   - gateway-external.yaml
   - gateway-internal.yaml
   - gateway-kubernetes-api.yaml
+  - grafana-dashboard-talos.yaml
   - renovate.yaml
   - rbac.yaml
