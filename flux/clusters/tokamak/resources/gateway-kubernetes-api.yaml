@@ -34,7 +34,7 @@ spec:
       name: kube-root-ca.crt
     hostname: kubernetes.default.svc.cluster.local
 ---
-# Route k8s.menofgaming.de to the kube-apiserver
+# Route to the kube-apiserver
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -45,7 +45,7 @@ spec:
   - name: envoy-gateway-external
     namespace: envoy-gateway-system
   hostnames:
-  - k8s.menofgaming.de
+  - k8s.${nginx_domain}
   rules:
   - backendRefs:
     - name: kubernetes
@@ -66,8 +66,8 @@ spec:
   jwt:
     providers:
     - name: keycloak
-      issuer: "https://auth.menofgaming.de/realms/mog"
+      issuer: "https://auth.${nginx_domain}/realms/mog"
       audiences:
       - kubernetes
       remoteJWKS:
-        uri: "https://auth.menofgaming.de/realms/mog/protocol/openid-connect/certs"
+        uri: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/certs"
