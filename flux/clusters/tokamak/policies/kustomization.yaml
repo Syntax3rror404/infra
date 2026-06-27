@@ -8,3 +8,5 @@ resources:
   - require-non-root.yaml
   - require-resources.yaml
   - set-revision-history-limit.yaml
+  - set-helm-max-history.yaml
+  - cleanup-policy-reports.yaml

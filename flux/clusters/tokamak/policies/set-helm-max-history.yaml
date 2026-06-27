@@ -1,0 +1,19 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: set-helm-max-history
+  annotations:
+    policies.kyverno.io/severity: low
+spec:
+  rules:
+    - name: set-helm-max-history
+      match:
+        any:
+          - resources:
+              kinds: [HelmRelease]
+              namespaces: ["*"]
+      mutate:
+        patchStrategicMerge:
+          spec:
+            +(maxHistory): 3

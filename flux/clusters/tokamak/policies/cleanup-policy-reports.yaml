@@ -1,0 +1,36 @@
+---
+apiVersion: kyverno.io/v2
+kind: ClusterCleanupPolicy
+metadata:
+  name: cleanup-policy-reports
+  annotations:
+    policies.kyverno.io/severity: low
+spec:
+  match:
+    any:
+      - resources:
+          kinds: [PolicyReport]
+  conditions:
+    any:
+      - key: "{{ target.metadata.creationTimestamp }}"
+        operator: LessThan
+        value: "{{ time_add(time_now_utc(), '-168h') }}"
+  schedule: "0 3 * * *"
+---
+apiVersion: kyverno.io/v2
+kind: ClusterCleanupPolicy
+metadata:
+  name: cleanup-ephemeral-reports
+  annotations:
+    policies.kyverno.io/severity: low
+spec:
+  match:
+    any:
+      - resources:
+          kinds: [EphemeralReport]
+  conditions:
+    any:
+      - key: "{{ target.metadata.creationTimestamp }}"
+        operator: LessThan
+        value: "{{ time_add(time_now_utc(), '-168h') }}"
+  schedule: "0 3 * * *"
