@@ -14,7 +14,7 @@ spec:
             cpu: 100m
             memory: 512Mi
           limits:
-            memory: 1028Mi
+            memory: 2Gi
         storage:
           storageClassName: "${default_storage_class}"
           resources:
@@ -92,7 +92,10 @@ spec:
           cpu: 50m
           memory: 128Mi
         limits:
-          memory: 256Mi
+          memory: 512Mi
+      grafana.ini:
+        plugins:
+          plugin_admin_enabled: false
       deploymentStrategy:
         type: Recreate
         rollingUpdate: null
