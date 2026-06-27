@@ -20,7 +20,7 @@ metadata:
   namespace: trivy-system
 spec:
   interval: 1h
-  historyMax: 3
+  maxHistory: 3
   chartRef:
     kind: OCIRepository
     name: trivy-operator

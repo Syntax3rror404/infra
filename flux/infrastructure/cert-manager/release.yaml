@@ -32,7 +32,7 @@ metadata:
   namespace: cert-manager
 spec:
   interval: 1h
-  historyMax: 3
+  maxHistory: 3
   # chartRef:
   #   kind: OCIRepository
   #   name: cert-manager

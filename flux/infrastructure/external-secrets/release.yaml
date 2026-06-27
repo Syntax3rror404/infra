@@ -23,7 +23,7 @@ metadata:
   namespace: external-secrets
 spec:
   interval: 1h
-  historyMax: 3
+  maxHistory: 3
   chartRef:
     kind: OCIRepository
     name: external-secrets
