@@ -89,9 +89,9 @@ spec:
     kubeProxyReplacement: true
     l2announcements:
       enabled: true
-      leaseDuration: 15s
-      leaseRenewDeadline: 10s
-      leaseRetryPeriod: 2s
+      leaseDuration: 30s
+      leaseRenewDeadline: 15s
+      leaseRetryPeriod: 10s
     loadBalancer:
       mode: dsr
       # hybrid only uses dsr for tcp traffic
