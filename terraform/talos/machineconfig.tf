@@ -54,6 +54,9 @@ data "talos_machine_configuration" "controlplane" {
             enabled: false
           coreDNS:
             disabled: true
+          apiServer:
+            extraArgs:
+              event-ttl: 15m
           network:
             dnsDomain: cluster.local
             podSubnets:
