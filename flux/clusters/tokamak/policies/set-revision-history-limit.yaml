@@ -6,6 +6,7 @@ metadata:
   annotations:
     policies.kyverno.io/severity: low
 spec:
+  mutateExistingOnPolicyUpdate: true
   rules:
     - name: set-revision-history-limit
       match:
