@@ -553,7 +553,7 @@ data:
                 "type": "datasource",
                 "uid": "VictoriaMetrics"
               },
-              "expr": "kubernetes_build_info",
+              "expr": "group(kubernetes_build_info) by (git_version)",
               "legendFormat": "{{git_version}}",
               "refId": "A"
             }
