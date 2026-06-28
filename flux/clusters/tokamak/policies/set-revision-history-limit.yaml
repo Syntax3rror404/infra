@@ -6,7 +6,6 @@ metadata:
   annotations:
     policies.kyverno.io/severity: low
 spec:
-  mutateExistingOnPolicyUpdate: true
   rules:
     - name: set-revision-history-limit
       match:
@@ -14,13 +13,6 @@ spec:
           - resources:
               kinds: [Deployment, StatefulSet, DaemonSet]
       mutate:
-        targets:
-          - apiVersion: apps/v1
-            kind: Deployment
-          - apiVersion: apps/v1
-            kind: StatefulSet
-          - apiVersion: apps/v1
-            kind: DaemonSet
         patchStrategicMerge:
           spec:
             revisionHistoryLimit: 3
