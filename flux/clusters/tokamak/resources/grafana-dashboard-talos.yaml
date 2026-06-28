@@ -14,7 +14,7 @@ data:
       "description": "Hardware monitoring for the tokamak bare metal cluster",
       "refresh": "30s",
       "schemaVersion": 42,
-      "version": 1,
+      "version": 2,
       "time": {
         "from": "now-1h",
         "to": "now"
@@ -490,7 +490,7 @@ data:
           "gridPos": {
             "x": 0,
             "y": 4,
-            "w": 24,
+            "w": 18,
             "h": 4
           },
           "targets": [
@@ -520,6 +520,57 @@ data:
           "fieldConfig": {
             "defaults": {
               "unit": "s",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": null
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          }
+        },
+        {
+          "id": 38,
+          "title": "Kubernetes Version",
+          "type": "stat",
+          "datasource": {
+            "type": "datasource",
+            "uid": "VictoriaMetrics"
+          },
+          "gridPos": {
+            "x": 18,
+            "y": 4,
+            "w": 6,
+            "h": 4
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "datasource",
+                "uid": "VictoriaMetrics"
+              },
+              "expr": "kubernetes_build_info",
+              "legendFormat": "{{git_version}}",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "reduceOptions": {
+              "calcs": ["lastNotNull"],
+              "fields": "",
+              "values": false
+            },
+            "colorMode": "none",
+            "graphMode": "none",
+            "orientation": "auto",
+            "textMode": "name"
+          },
+          "fieldConfig": {
+            "defaults": {
               "thresholds": {
                 "mode": "absolute",
                 "steps": [
