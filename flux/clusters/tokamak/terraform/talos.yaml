@@ -32,9 +32,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  # Plan only — apply manually via annotation:
-  # kubectl annotate terraform talos -n flux-system reconcile.fluxcd.io/requestedAt=$(date +%s) approve=plan-hash
-  approvePlan: disable
+  approvePlan: auto
   path: ./terraform/talos
   sourceRef:
     kind: GitRepository
