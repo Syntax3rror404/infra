@@ -23,6 +23,10 @@ data:
   # TLS Configuration
   cluster_issuer: "letsencrypt-prod"
 
+  # Helm Intervals
+  helm_source_interval: "4h"
+  helm_release_interval: "4h"
+
   # Databases
   mariadb_prod: mariadb-prod-internal.mariadb-prod.svc
   pgsql_prod_rw: pgsql-prod-rw.pgsql-prod.svc

@@ -5,7 +5,7 @@ metadata:
   name: snipeit
   namespace: snipeit
 spec:
-  interval: 12h
+  interval: ${helm_source_interval}
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
@@ -19,7 +19,7 @@ metadata:
   name: snipe-it
   namespace: snipeit
 spec:
-  interval: 1h
+  interval: ${helm_release_interval}
   maxHistory: 3
   chartRef:
     kind: OCIRepository

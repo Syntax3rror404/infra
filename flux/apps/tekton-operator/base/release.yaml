@@ -22,7 +22,7 @@ metadata:
   name: tekton-operator
   namespace: tekton-operator
 spec:
-  interval: 24h
+  interval: ${helm_source_interval}
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
@@ -36,7 +36,7 @@ metadata:
   name: tekton-operator
   namespace: tekton-operator
 spec:
-  interval: 1h
+  interval: ${helm_release_interval}
   maxHistory: 3
   chartRef:
     kind: OCIRepository

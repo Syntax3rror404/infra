@@ -10,7 +10,7 @@ metadata:
   name: flux-operator
   namespace: flux-system
 spec:
-  interval: 12h
+  interval: ${helm_source_interval}
   ref:
     semver: ">=0.28.0"
   url: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
@@ -21,7 +21,7 @@ metadata:
   name: flux-operator
   namespace: flux-system
 spec:
-  interval: 12h
+  interval: ${helm_release_interval}
   maxHistory: 3
   chartRef:
     kind: OCIRepository
