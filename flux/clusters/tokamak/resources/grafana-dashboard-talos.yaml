@@ -1958,7 +1958,7 @@ data:
                   "bios_version": "BIOS Version",
                   "bios_date": "BIOS Date",
                   "bios_release": "BIOS Release",
-                  "bios_vendor": "BIOS Vendor",
+                  "bios_vendor": "BIOS Vendor"
                 },
                 "indexByName": {
                   "node": 0,
