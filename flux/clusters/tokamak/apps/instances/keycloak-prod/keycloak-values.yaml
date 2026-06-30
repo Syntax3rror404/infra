@@ -12,6 +12,6 @@ spec:
           env:
             # Production specific settings
             - name: KC_HOSTNAME
-              value: "keycloak.${nginx_domain}"
+              value: "keycloak.${external_domain}"
             - name: KC_HOSTNAME_STRICT
               value: "true"

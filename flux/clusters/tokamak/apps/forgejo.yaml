@@ -22,9 +22,9 @@ spec:
           USER: forgejo
           PASSWD: "${forgejo_mariadb_password}"
         server:
-          ROOT_URL: https://git.${cilium_domain}
-          SSH_DOMAIN: git.${cilium_domain}
-          DOMAIN: git.${cilium_domain}
+          ROOT_URL: https://git.${internal_domain}
+          SSH_DOMAIN: git.${internal_domain}
+          DOMAIN: git.${internal_domain}
 
     httpRoute:
       enabled: false
@@ -32,7 +32,7 @@ spec:
         - name: envoy-gateway-external
           namespace: envoy-gateway-system
       hostnames:
-        - git.${nginx_domain}
+        - git.${external_domain}
 
     resources:
       requests:

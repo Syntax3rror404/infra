@@ -29,7 +29,7 @@ spec:
       entrypointOverride:
         enabled: true
       config:
-        url: "https://wms.${nginx_domain}"
+        url: "https://wms.${external_domain}"
         timezone: Europe/Berlin
         locale: en
       persistence:

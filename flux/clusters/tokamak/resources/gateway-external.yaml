@@ -9,7 +9,7 @@ spec:
     - name: envoy-gateway-external
       namespace: envoy-gateway-system
   hostnames:
-    - nextcloud.${nginx_domain}
+    - nextcloud.${external_domain}
   rules:
     - matches:
         - path:
@@ -48,7 +48,7 @@ spec:
     - name: envoy-gateway-external
       namespace: envoy-gateway-system
   hostnames:
-    - wms.${nginx_domain}
+    - wms.${external_domain}
   rules:
     - matches:
         - path:
@@ -70,12 +70,12 @@ spec:
       name: snipeit
   oidc:
     provider:
-      issuer: "https://auth.${nginx_domain}/realms/mog"
-      authorizationEndpoint: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/auth"
-      tokenEndpoint: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/token"
+      issuer: "https://auth.${external_domain}/realms/mog"
+      authorizationEndpoint: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/auth"
+      tokenEndpoint: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/token"
     clientID: "${oauth2_proxy_clientID}"
     clientSecret:
       name: sso-oidc-secret
-    redirectURL: "https://wms.${nginx_domain}/oauth2/callback"
+    redirectURL: "https://wms.${external_domain}/oauth2/callback"
     #forwardAccessToken: true
     refreshToken: true

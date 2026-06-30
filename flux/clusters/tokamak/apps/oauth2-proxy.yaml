@@ -18,8 +18,8 @@ spec:
         # Provider config
         provider="oidc"
         provider_display_name="Authentik"
-        redirect_url="https://sso-proxy.${cilium_domain}/oauth2/callback"
-        oidc_issuer_url="https://auth.${nginx_domain}/application/o/sso-proxy/"
+        redirect_url="https://sso-proxy.${internal_domain}/oauth2/callback"
+        oidc_issuer_url="https://auth.${external_domain}/application/o/sso-proxy/"
         code_challenge_method="S256"
         scope="openid email profile"
         ssl_insecure_skip_verify=true
@@ -27,8 +27,8 @@ spec:
         # Upstream config
         http_address="0.0.0.0:4180"
         upstreams="file:///dev/null"
-        cookie_domains=[".${cilium_domain}"]
-        whitelist_domains=[".${cilium_domain}"]
+        cookie_domains=[".${internal_domain}"]
+        whitelist_domains=[".${internal_domain}"]
         cookie_secure=false
         email_domains=["*"]
         insecure_oidc_allow_unverified_email=true
@@ -48,8 +48,8 @@ spec:
         cert-manager.io/private-key-algorithm: ECDSA
         cert-manager.io/private-key-size: "256"
       hosts:
-        - sso-proxy.${cilium_domain}
+        - sso-proxy.${internal_domain}
       tls:
         - hosts:
-            - sso-proxy.${cilium_domain}
+            - sso-proxy.${internal_domain}
           secretName: sso-proxy-ingress-cert

@@ -15,8 +15,8 @@ data:
   git_branch: "main"
 
   # Ingress Configuration
-  nginx_domain: "REPLACE_ME"
-  cilium_domain: "REPLACE_ME"
+  external_domain: "REPLACE_ME"
+  internal_domain: "REPLACE_ME"
 
   # Storage Configuration
   default_storage_class: "REPLACE_ME"

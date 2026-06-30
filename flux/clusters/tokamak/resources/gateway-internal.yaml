@@ -9,7 +9,7 @@ spec:
     - name: envoy-gateway-internal
       namespace: envoy-gateway-system
   hostnames:
-    - hubble.${cilium_domain}
+    - hubble.${internal_domain}
   rules:
     - matches:
         - path:
@@ -29,7 +29,7 @@ spec:
 #    - name: envoy-gateway-internal
 #      namespace: envoy-gateway-system
 #  hostnames:
-#    - rancher.${cilium_domain}
+#    - rancher.${internal_domain}
 #  rules:
 #    - matches:
 #        - path:
@@ -49,7 +49,7 @@ spec:
     - name: envoy-gateway-internal
       namespace: envoy-gateway-system
   hostnames:
-    - git.${cilium_domain}
+    - git.${internal_domain}
   rules:
     - matches:
         - path:
@@ -69,7 +69,7 @@ spec:
     - name: envoy-gateway-internal
       namespace: envoy-gateway-system
   hostnames:
-    - s3-api.${cilium_domain}
+    - s3-api.${internal_domain}
   rules:
     - matches:
         - path:
@@ -89,7 +89,7 @@ spec:
     - name: envoy-gateway-internal
       namespace: envoy-gateway-system
   hostnames:
-    - s3-web.${cilium_domain}
+    - s3-web.${internal_domain}
   rules:
     - matches:
         - path:
@@ -109,7 +109,7 @@ spec:
     - name: envoy-gateway-internal
       namespace: envoy-gateway-system
   hostnames:
-    - garage-ui.${cilium_domain}
+    - garage-ui.${internal_domain}
   rules:
     - matches:
         - path:

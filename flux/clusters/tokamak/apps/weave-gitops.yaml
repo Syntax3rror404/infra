@@ -20,11 +20,11 @@ spec:
         cert-manager.io/private-key-algorithm: ECDSA
         cert-manager.io/private-key-size: "256"
       hosts:
-        - host: gitops.${cilium_domain}
+        - host: gitops.${internal_domain}
           paths:
             - path: /
               pathType: Prefix
       tls:
         - secretName: weave-gitops-tls
           hosts:
-            - gitops.${cilium_domain}
+            - gitops.${internal_domain}

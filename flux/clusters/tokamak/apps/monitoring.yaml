@@ -110,7 +110,7 @@ spec:
         main:
           enabled: true
           hostnames:
-            - monitoring.${cilium_domain}
+            - monitoring.${internal_domain}
           parentRefs:
             - name: envoy-gateway-internal
               namespace: envoy-gateway-system

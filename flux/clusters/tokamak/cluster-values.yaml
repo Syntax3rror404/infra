@@ -14,8 +14,8 @@ data:
   git_branch: "main"
 
   # Ingress Configuration
-  nginx_domain: "menofgaming.de"
-  cilium_domain: "tokamak.labza"
+  external_domain: "menofgaming.de"
+  internal_domain: "tokamak.labza"
 
   # Storage Configuration
   default_storage_class: "longhorn"

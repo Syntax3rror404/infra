@@ -58,7 +58,7 @@ spec:
   - name: envoy-gateway-external
     namespace: envoy-gateway-system
   hostnames:
-  - k8s.${nginx_domain}
+  - k8s.${external_domain}
   rules:
   - backendRefs:
     - name: kubernetes
@@ -79,8 +79,8 @@ spec:
   jwt:
     providers:
     - name: keycloak
-      issuer: "https://auth.${nginx_domain}/realms/mog"
+      issuer: "https://auth.${external_domain}/realms/mog"
       audiences:
       - kubernetes
       remoteJWKS:
-        uri: "https://auth.${nginx_domain}/realms/mog/protocol/openid-connect/certs"
+        uri: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/certs"

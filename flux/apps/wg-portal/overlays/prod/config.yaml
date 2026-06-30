@@ -11,7 +11,7 @@ spec:
       className: cilium
     #config: 
     #  web:
-    #    external_url: wg.${cilium_domain}
+    #    external_url: wg.${internal_domain}
   postRenderers:
     - kustomize:
         patches:

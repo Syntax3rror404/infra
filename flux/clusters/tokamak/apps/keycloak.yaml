@@ -27,7 +27,7 @@ spec:
     httpRoute:
       enabled: true
       hostnames:
-        - auth.${nginx_domain}
+        - auth.${external_domain}
       parentRefs:
         - group: gateway.networking.k8s.io
           kind: Gateway

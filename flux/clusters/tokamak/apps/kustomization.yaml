@@ -187,7 +187,7 @@ patches:
 #   - patch: |
 #       - op: replace
 #         path: /spec/rules/0/host
-#         value: podinfo.${cilium_domain}
+#         value: podinfo.${internal_domain}
 #     target:
 #       kind: Ingress
 #       name: podinfo-cilium
@@ -197,7 +197,7 @@ patches:
 #   - patch: |
 #       - op: replace
 #         path: /spec/rules/0/host
-#         value: gitops.${cilium_domain}
+#         value: gitops.${internal_domain}
 #     target:
 #       kind: Ingress
 #       name: weave-gitops-cilium

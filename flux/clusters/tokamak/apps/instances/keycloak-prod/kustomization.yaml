@@ -14,10 +14,10 @@ patches:
   - patch: |-
       - op: replace
         path: /spec/rules/0/host
-        value: keycloak.${nginx_domain}
+        value: keycloak.${external_domain}
       - op: replace
         path: /spec/tls/0/hosts/0
-        value: keycloak.${nginx_domain}
+        value: keycloak.${external_domain}
     target:
       kind: Ingress
       name: prod-keycloak
