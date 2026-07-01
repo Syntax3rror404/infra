@@ -57,6 +57,9 @@ data "talos_machine_configuration" "controlplane" {
           apiServer:
             extraArgs:
               event-ttl: 15m
+            env:
+              GOMEMLIMIT: 1536MiB
+              GOGC: "75"
           network:
             dnsDomain: cluster.local
             podSubnets:
