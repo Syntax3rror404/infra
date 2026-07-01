@@ -1,0 +1,56 @@
+---
+# Envoy Gateway Backend with TLS skip-verify for Proxmox self-signed cert
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: Backend
+metadata:
+  name: proxmox
+  namespace: envoy-gateway-system
+spec:
+  endpoints:
+    - ip:
+        address: "192.168.33.99"
+        port: 8006
+  tls:
+    insecureSkipVerify: true
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: pve
+  namespace: envoy-gateway-system
+spec:
+  parentRefs:
+    - name: envoy-gateway-external
+      namespace: envoy-gateway-system
+  hostnames:
+    - pve.${external_domain}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - group: gateway.envoyproxy.io
+          kind: Backend
+          name: proxmox
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: pve
+  namespace: envoy-gateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: pve
+  oidc:
+    provider:
+      issuer: "https://auth.${external_domain}/realms/mog"
+      authorizationEndpoint: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/auth"
+      tokenEndpoint: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/token"
+    clientID: "${oauth2_proxy_clientID}"
+    clientSecret:
+      name: sso-oidc-secret
+    redirectURL: "https://pve.${external_domain}/oauth2/callback"
+    refreshToken: true
