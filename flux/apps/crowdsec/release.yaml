@@ -79,10 +79,11 @@ spec:
         - namespace: envoy-gateway-system
           podName: envoy-*
           program: envoy
+          poll_without_inotify: true
       env:
         - name: COLLECTIONS
           value: >-
-            crowdsecurity/base-http-scenarios
+            yanis-kouidri/envoy
             crowdsecurity/http-cve
             crowdsecurity/http-dos
       resources:
@@ -91,35 +92,3 @@ spec:
           memory: 100Mi
         limits:
           memory: 200Mi
-
-    # ---------------------------------------------------------------
-    # Custom parser: Envoy Gateway JSON access log -> CrowdSec fields.
-    # Chart injects files under config.parsers.s01-parse.<filename>.
-    # NOTE: CrowdSec has no first-party Envoy parser; this maps the JSON
-    # fields seen in live logs. Needs one validation pass against real
-    # traffic. The community blocklist works independently of this parser.
-    # ---------------------------------------------------------------
-    config:
-      parsers:
-        s01-parse:
-          envoy-access-logs.yaml: |
-            onsuccess: next_stage
-            filter: "evt.Parsed.program == 'envoy'"
-            name: local/envoy-access-logs
-            description: "Parse Envoy Gateway JSON access logs"
-            nodes:
-              - filter: "evt.Line.Raw startsWith '{'"
-                onsuccess: next_stage
-                statics:
-                  - meta: log_type
-                    value: http_access-log
-                  - meta: source_ip
-                    expression: JsonExtract(evt.Line.Raw, "downstream_remote_address")
-                  - meta: http_verb
-                    expression: JsonExtract(evt.Line.Raw, "method")
-                  - meta: http_path
-                    expression: JsonExtract(evt.Line.Raw, "x-envoy-origin-path")
-                  - meta: http_status
-                    expression: JsonExtract(evt.Line.Raw, "response_code")
-                  - meta: http_user_agent
-                    expression: JsonExtract(evt.Line.Raw, "user-agent")

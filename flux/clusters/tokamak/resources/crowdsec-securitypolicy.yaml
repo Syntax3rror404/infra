@@ -6,11 +6,10 @@
 # failOpen: true  -> if the bouncer is down, requests PASS (fail-safe).
 #                    Prevents CrowdSec from taking down all external services.
 #
-# NOTE: this attaches at the GATEWAY level, so it also covers
-# k8s.menofgaming.de (kube-apiserver). That is intentional (block bad IPs
-# everywhere) and safe thanks to failOpen, but if you'd rather keep the API
-# server out of the ext_authz path, switch targetRefs to the individual
-# HTTPRoutes (nextcloud / snipeit / keycloak) instead of the Gateway.
+# NOTE: this attaches at the GATEWAY level so routes without a dedicated
+# OAuth/JWT SecurityPolicy still get CrowdSec remediation. Routes that do have
+# their own SecurityPolicy must set mergeType: StrategicMerge so those auth
+# policies are combined with this gateway-level ext_authz policy.
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
 metadata:
