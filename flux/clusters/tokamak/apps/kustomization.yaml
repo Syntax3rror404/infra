@@ -31,6 +31,7 @@ resources:
   - ../../../apps/monitoring
   - ../../../apps/kyverno/base
   - ../../../apps/tofu-controller/base
+  - ../../../apps/crowdsec
 
   # include cluster apps instances
   # - instances only includes mariadb-prod which is archived

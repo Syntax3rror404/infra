@@ -1,0 +1,53 @@
+---
+# Community Envoy remediation component (NOT first-party CrowdSec).
+# Acts as a gRPC ext_authz service: Envoy asks it per request whether the
+# client IP has an active CrowdSec ban. Referenced from the SecurityPolicy
+# in flux/clusters/tokamak/resources/crowdsec-securitypolicy.yaml.
+# Docs: https://docs.crowdsec.net/u/bouncers/envoy/
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: envoy-proxy-bouncer
+  namespace: crowdsec
+spec:
+  interval: ${helm_source_interval}
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    semver: ">=0.6.0 <1.0.0"
+  url: oci://ghcr.io/kdwils/charts/envoy-proxy-bouncer
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: crowdsec-envoy-bouncer
+  namespace: crowdsec
+spec:
+  interval: ${helm_release_interval}
+  maxHistory: 3
+  chartRef:
+    kind: OCIRepository
+    name: envoy-proxy-bouncer
+    namespace: crowdsec
+  values:
+    # Pin the Service name so it matches the SecurityPolicy backendRef.
+    # (Without this, Helm would name it crowdsec-envoy-bouncer-envoy-proxy-bouncer.)
+    fullnameOverride: crowdsec-envoy-bouncer
+    config:
+      bouncer:
+        # LAPI service is created by the crowdsec chart in this namespace.
+        lapiURL: http://crowdsec-service.crowdsec.svc.cluster.local:8080
+        apiKeySecretRef:
+          name: crowdsec-bouncer
+          key: api-key
+    service:
+      type: ClusterIP
+      grpcPort: 8080
+      httpPort: 8081
+    resources:
+      requests:
+        cpu: 25m
+        memory: 64Mi
+      limits:
+        memory: 128Mi

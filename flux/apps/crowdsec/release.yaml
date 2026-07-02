@@ -1,0 +1,125 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: crowdsec
+  namespace: crowdsec
+spec:
+  interval: ${helm_source_interval}
+  url: https://crowdsecurity.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: crowdsec
+  namespace: crowdsec
+spec:
+  interval: ${helm_release_interval}
+  maxHistory: 3
+  chart:
+    spec:
+      chart: crowdsec
+      version: ">=0.19.0 <1.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: crowdsec
+        namespace: crowdsec
+  values:
+    # Talos uses containerd (default is docker)
+    container_runtime: containerd
+
+    # ---------------------------------------------------------------
+    # Local API: stores decisions, serves them to the Envoy bouncer.
+    # ---------------------------------------------------------------
+    lapi:
+      env:
+        # Pull the community blocklist (known-bad IPs) — free, no console needed.
+        - name: DISABLE_ONLINE_API
+          value: "false"
+        # Register the Envoy bouncer on startup with a predefined key.
+        # BOUNCER_KEY_<name> is honoured by the crowdsec image entrypoint.
+        - name: BOUNCER_KEY_envoybouncer
+          valueFrom:
+            secretKeyRef:
+              name: crowdsec-bouncer
+              key: api-key
+        # Enroll this Security Engine into the CrowdSec Console dashboard.
+        - name: ENROLL_KEY
+          valueFrom:
+            secretKeyRef:
+              name: crowdsec-bouncer
+              key: enroll-key
+        - name: ENROLL_INSTANCE_NAME
+          value: "tokamak"
+        - name: ENROLL_TAGS
+          value: "k8s tokamak envoy"
+      persistentVolume:
+        config:
+          enabled: true
+          storageClassName: ${default_storage_class}
+          size: 100Mi
+        data:
+          enabled: true
+          storageClassName: ${default_storage_class}
+          size: 1Gi
+      resources:
+        requests:
+          cpu: 50m
+          memory: 100Mi
+        limits:
+          memory: 200Mi
+      nodeSelector:
+        kubernetes.io/os: linux
+
+    # ---------------------------------------------------------------
+    # Agent: DaemonSet, parses Envoy access logs -> alerts -> decisions.
+    # ---------------------------------------------------------------
+    agent:
+      acquisition:
+        - namespace: envoy-gateway-system
+          podName: envoy-*
+          program: envoy
+      env:
+        - name: COLLECTIONS
+          value: >-
+            crowdsecurity/base-http-scenarios
+            crowdsecurity/http-cve
+            crowdsecurity/http-dos
+      resources:
+        requests:
+          cpu: 50m
+          memory: 100Mi
+        limits:
+          memory: 200Mi
+
+    # ---------------------------------------------------------------
+    # Custom parser: Envoy Gateway JSON access log -> CrowdSec fields.
+    # Chart injects files under config.parsers.s01-parse.<filename>.
+    # NOTE: CrowdSec has no first-party Envoy parser; this maps the JSON
+    # fields seen in live logs. Needs one validation pass against real
+    # traffic. The community blocklist works independently of this parser.
+    # ---------------------------------------------------------------
+    config:
+      parsers:
+        s01-parse:
+          envoy-access-logs.yaml: |
+            onsuccess: next_stage
+            filter: "evt.Parsed.program == 'envoy'"
+            name: local/envoy-access-logs
+            description: "Parse Envoy Gateway JSON access logs"
+            nodes:
+              - filter: "evt.Line.Raw startsWith '{'"
+                onsuccess: next_stage
+                statics:
+                  - meta: log_type
+                    value: http_access-log
+                  - meta: source_ip
+                    expression: JsonExtract(evt.Line.Raw, "downstream_remote_address")
+                  - meta: http_verb
+                    expression: JsonExtract(evt.Line.Raw, "method")
+                  - meta: http_path
+                    expression: JsonExtract(evt.Line.Raw, "x-envoy-origin-path")
+                  - meta: http_status
+                    expression: JsonExtract(evt.Line.Raw, "response_code")
+                  - meta: http_user_agent
+                    expression: JsonExtract(evt.Line.Raw, "user-agent")

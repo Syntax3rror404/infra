@@ -1,0 +1,48 @@
+---
+# Wires the CrowdSec Envoy bouncer into the EXTERNAL gateway as an
+# ext_authz check. Every request entering envoy-gateway-external is checked
+# against the bouncer's cached CrowdSec decisions before it reaches an app.
+#
+# failOpen: true  -> if the bouncer is down, requests PASS (fail-safe).
+#                    Prevents CrowdSec from taking down all external services.
+#
+# NOTE: this attaches at the GATEWAY level, so it also covers
+# k8s.menofgaming.de (kube-apiserver). That is intentional (block bad IPs
+# everywhere) and safe thanks to failOpen, but if you'd rather keep the API
+# server out of the ext_authz path, switch targetRefs to the individual
+# HTTPRoutes (nextcloud / snipeit / keycloak) instead of the Gateway.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: crowdsec
+  namespace: envoy-gateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-gateway-external
+  extAuth:
+    failOpen: true
+    grpc:
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: crowdsec-envoy-bouncer
+          namespace: crowdsec
+          port: 8080
+---
+# Allow the SecurityPolicy (envoy-gateway-system) to reference the bouncer
+# Service in the crowdsec namespace.
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: crowdsec-bouncer-from-envoy
+  namespace: crowdsec
+spec:
+  from:
+    - group: gateway.envoyproxy.io
+      kind: SecurityPolicy
+      namespace: envoy-gateway-system
+  to:
+    - group: ""
+      kind: Service

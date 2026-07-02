@@ -18,6 +18,7 @@ resources:
   - pve-proxy.yaml
   - gateway-internal.yaml
   - gateway-kubernetes-api.yaml
+  - crowdsec-securitypolicy.yaml
   - grafana-dashboard-talos.yaml
   - renovate.yaml
   - rbac.yaml
