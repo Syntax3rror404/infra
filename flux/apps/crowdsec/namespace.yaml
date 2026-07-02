@@ -3,3 +3,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: crowdsec
+  labels:
+    # CrowdSec agent (DaemonSet) needs hostPath /var/log to tail node logs,
+    # which requires the privileged Pod Security level.
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged

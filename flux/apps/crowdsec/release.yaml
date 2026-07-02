@@ -57,7 +57,7 @@ spec:
         config:
           enabled: true
           storageClassName: ${default_storage_class}
-          size: 100Mi
+          size: 500Mi
         data:
           enabled: true
           storageClassName: ${default_storage_class}
