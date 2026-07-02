@@ -47,7 +47,12 @@ spec:
       httpPort: 8081
     resources:
       requests:
-        cpu: 25m
+        cpu: 100m
         memory: 64Mi
       limits:
-        memory: 128Mi
+        # Generous CPU limit (not "none") because the Kyverno
+        # require-resource-limits policy mandates a limit. 1 core is far
+        # above real load, so the on-request-path bouncer is never
+        # CPU-throttled -> no added latency on page/asset requests.
+        cpu: "1"
+        memory: 256Mi
