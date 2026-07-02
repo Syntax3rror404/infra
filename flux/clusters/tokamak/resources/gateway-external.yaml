@@ -64,6 +64,7 @@ metadata:
   name: snipeit
   namespace: snipeit
 spec:
+  mergeType: StrategicMerge
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
