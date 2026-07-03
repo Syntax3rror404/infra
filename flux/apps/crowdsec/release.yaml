@@ -115,3 +115,39 @@ spec:
           memory: 100Mi
         limits:
           memory: 200Mi
+      # Data dir as a volume (image expects this; docker_start.sh symlinks geoip
+      # & collection data from /staging non-destructively, only for missing files).
+      extraVolumes:
+        - name: varlibcrowdsecdata
+          emptyDir: {}
+      extraVolumeMounts:
+        - name: varlibcrowdsecdata
+          mountPath: /var/lib/crowdsec/data
+      # Pre-seed the AI user-agent list before the agent starts: local scenarios
+      # don't auto-download their data:, so custom/http-ai-user-agent would break
+      # without this. Init container writes it into the shared data volume.
+      extraInitContainers:
+        - name: download-ai-user-agents
+          image: docker.io/curlimages/curl:8.21.0@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
+          command: ["sh", "-ec"]
+          args:
+            - |
+              curl -fsSL \
+                https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/haproxy-block-ai-bots.txt \
+                -o /var/lib/crowdsec/data/ai_user_agents.txt
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: varlibcrowdsecdata
+              mountPath: /var/lib/crowdsec/data
