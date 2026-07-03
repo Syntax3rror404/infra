@@ -51,9 +51,9 @@ spec:
               name: crowdsec-bouncer
               key: enroll-key
         - name: ENROLL_INSTANCE_NAME
-          value: "tokamak"
+          value: "${cluster_name}"
         - name: ENROLL_TAGS
-          value: "k8s tokamak envoy"
+          value: "k8s ${cluster_name} envoy"
       persistentVolume:
         config:
           enabled: true
