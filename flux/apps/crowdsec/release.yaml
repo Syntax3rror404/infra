@@ -29,6 +29,28 @@ spec:
     # Talos uses containerd (default is docker)
     container_runtime: containerd
 
+    config:
+      scenarios:
+        custom-http-ai-user-agent.yaml: |
+          name: custom/http-ai-user-agent
+          description: Detect usage of AI User Agent
+          type: trigger
+          filter: evt.Meta.log_type in ["http_access-log", "http_error-log"] and any(File("ai_user_agents.txt"), {Upper(evt.Meta.http_user_agent) contains Upper(#)})
+          data:
+            - source_url: https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/haproxy-block-ai-bots.txt
+              dest_file: ai_user_agents.txt
+              type: string
+          labels:
+            confidence: 2
+            spoofable: 1
+            type: scan
+            classification:
+              - attack.T1595
+            behavior: http:scan
+            label: AI User Agent
+            service: http
+            remediation: true
+
     # ---------------------------------------------------------------
     # Local API: stores decisions, serves them to the Envoy bouncer.
     # ---------------------------------------------------------------
