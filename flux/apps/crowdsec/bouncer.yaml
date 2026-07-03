@@ -36,8 +36,10 @@ spec:
     fullnameOverride: crowdsec-envoy-bouncer
     config:
       bouncer:
-        # LAPI service is created by the crowdsec chart in this namespace.
-        lapiURL: http://crowdsec-service.crowdsec.svc.cluster.local:8080
+        # lapiURL defaults to http://crowdsec-service:8080 — the LAPI service
+        # created by the crowdsec chart in THIS namespace, daher weggelassen.
+        # Läuft die LAPI in einem ANDEREN Namespace, wieder explizit setzen:
+        #   lapiURL: http://crowdsec-service.<lapi-namespace>.svc.cluster.local:8080
         apiKeySecretRef:
           name: crowdsec-bouncer
           key: api-key
@@ -50,9 +52,5 @@ spec:
         cpu: 100m
         memory: 64Mi
       limits:
-        # Generous CPU limit (not "none") because the Kyverno
-        # require-resource-limits policy mandates a limit. 1 core is far
-        # above real load, so the on-request-path bouncer is never
-        # CPU-throttled -> no added latency on page/asset requests.
         cpu: "1"
         memory: 256Mi
