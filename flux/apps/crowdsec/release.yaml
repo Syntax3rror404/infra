@@ -60,7 +60,6 @@ spec:
         - name: DISABLE_ONLINE_API
           value: "false"
         # Register the Envoy bouncer on startup with a predefined key.
-        # BOUNCER_KEY_<name> is honoured by the crowdsec image entrypoint.
         - name: BOUNCER_KEY_envoybouncer
           valueFrom:
             secretKeyRef:
@@ -115,17 +114,13 @@ spec:
           memory: 100Mi
         limits:
           memory: 200Mi
-      # Data dir as a volume (image expects this; docker_start.sh symlinks geoip
-      # & collection data from /staging non-destructively, only for missing files).
       extraVolumes:
         - name: varlibcrowdsecdata
           emptyDir: {}
       extraVolumeMounts:
         - name: varlibcrowdsecdata
           mountPath: /var/lib/crowdsec/data
-      # Pre-seed the AI user-agent list before the agent starts: local scenarios
-      # don't auto-download their data:, so custom/http-ai-user-agent would break
-      # without this. Init container writes it into the shared data volume.
+      # Download lists
       extraInitContainers:
         - name: download-ai-user-agents
           image: docker.io/curlimages/curl:8.21.0@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
