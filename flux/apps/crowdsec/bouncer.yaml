@@ -36,10 +36,7 @@ spec:
     fullnameOverride: crowdsec-envoy-bouncer
     config:
       bouncer:
-        # lapiURL defaults to http://crowdsec-service:8080 — the LAPI service
-        # created by the crowdsec chart in THIS namespace, daher weggelassen.
-        # Läuft die LAPI in einem ANDEREN Namespace, wieder explizit setzen:
-        #   lapiURL: http://crowdsec-service.<lapi-namespace>.svc.cluster.local:8080
+        lapiURL: http://crowdsec-service:8080
         apiKeySecretRef:
           name: crowdsec-bouncer
           key: api-key
@@ -50,7 +47,7 @@ spec:
     resources:
       requests:
         cpu: 100m
-        memory: 64Mi
+        memory: 128Mi
       limits:
         cpu: "1"
         memory: 256Mi
