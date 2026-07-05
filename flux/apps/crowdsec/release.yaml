@@ -50,6 +50,15 @@ spec:
             label: AI User Agent
             service: http
             remediation: true
+      # Mirrors current `cscli console status` (manual/custom/tainted/context
+      # were already enabled imperatively) + turns on console_management so
+      # decisions assigned to this instance via the console get pulled too.
+      console.yaml: |
+        share_manual_decisions: true
+        share_custom: true
+        share_tainted: true
+        share_context: true
+        console_management: true
 
     # ---------------------------------------------------------------
     # Local API: stores decisions, serves them to the Envoy bouncer.
