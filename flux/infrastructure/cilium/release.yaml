@@ -87,6 +87,7 @@ spec:
     k8sServiceHost: localhost
     k8sServicePort: 7445
     kubeProxyReplacement: true
+    l7Proxy: false
     l2announcements:
       enabled: true
       leaseDuration: 30s
