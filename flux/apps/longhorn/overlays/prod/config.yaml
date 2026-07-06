@@ -15,6 +15,13 @@ spec:
           operator: "Exists"
           effect: "NoSchedule"
 
+    longhornUI:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+    longhornDriver:
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+
     persistence:
       defaultClass: false
       defaultFsType: xfs
