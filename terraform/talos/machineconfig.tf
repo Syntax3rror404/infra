@@ -58,7 +58,6 @@ data "talos_machine_configuration" "controlplane" {
             extraArgs:
               event-ttl: 15m
             env:
-              GOMEMLIMIT: 1536MiB
               GOGC: "75"
           network:
             dnsDomain: cluster.local
