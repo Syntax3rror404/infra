@@ -35,7 +35,12 @@ spec:
           name: custom/http-ai-user-agent
           description: Detect usage of AI User Agent
           type: trigger
-          filter: evt.Meta.log_type in ["http_access-log", "http_error-log"] and any(File("ai_user_agents.txt"), {Upper(evt.Meta.http_user_agent) contains Upper(#)})
+          # len(#) > 4 excludes overly generic single-word list entries (e.g. "Code")
+          # that would false-positive on unrelated user agents via the "contains" match.
+          # auth.${external_domain} (Keycloak) is excluded: it's auth infrastructure,
+          # not crawlable content, so blocking AI-labeled UAs there has no anti-scraping
+          # value but risks locking out legitimate OIDC clients (e.g. kubectl).
+          filter: evt.Meta.log_type in ["http_access-log", "http_error-log"] and evt.Meta.target_fqdn != "auth.${external_domain}" and any(File("ai_user_agents.txt"), {len(#) > 4 and Upper(evt.Meta.http_user_agent) contains Upper(#)})
           data:
             - source_url: https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/haproxy-block-ai-bots.txt
               dest_file: ai_user_agents.txt
@@ -59,6 +64,36 @@ spec:
         share_tainted: true
         share_context: true
         console_management: true
+      # Overrides the chart image's baked-in default profiles.yaml, so the two
+      # stock catch-all profiles are reproduced below our custom one.
+      profiles.yaml: |
+        name: ai_user_agent_short_ban
+        # Fallback safety net, not the primary fix (see the auth.${external_domain}
+        # exclusion on the scenario itself). Confidence is low (spoofable UA header,
+        # single trigger event), so if this ever misfires on another host it should
+        # self-heal in minutes instead of requiring a manual `cscli decisions delete`.
+        filters:
+          - Alert.GetScenario() == "custom/http-ai-user-agent"
+        decisions:
+          - type: ban
+            duration: 5m
+        on_success: break
+        ---
+        name: default_ip_remediation
+        filters:
+          - Alert.Remediation == true && Alert.GetScope() == "Ip"
+        decisions:
+          - type: ban
+            duration: 4h
+        on_success: break
+        ---
+        name: default_range_remediation
+        filters:
+          - Alert.Remediation == true && Alert.GetScope() == "Range"
+        decisions:
+          - type: ban
+            duration: 4h
+        on_success: break
 
     # ---------------------------------------------------------------
     # Local API: stores decisions, serves them to the Envoy bouncer.
