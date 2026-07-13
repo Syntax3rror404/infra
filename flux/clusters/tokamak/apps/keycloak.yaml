@@ -38,6 +38,16 @@ spec:
           name: envoy-gateway-external
           namespace: envoy-gateway-system
 
+    adminHttpRoute:
+      enabled: true
+      hostnames:
+        - auth-admin.${internal_domain}
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: envoy-gateway-internal
+          namespace: envoy-gateway-system
+
     mariadbOperator:
       enabled: true
       database: keycloak
