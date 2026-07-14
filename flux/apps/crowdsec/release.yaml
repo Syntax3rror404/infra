@@ -152,6 +152,16 @@ spec:
             yanis-kouidri/envoy
             crowdsecurity/http-cve
             crowdsecurity/http-dos
+        # Official maintained whitelist for legitimate Nextcloud client traffic.
+        # Nextcloud apps (iOS/Android/desktop) generate bursts of 404s on
+        # preview/thumbnail endpoints (/index.php/core/preview?fileId=…&x=…&y=…)
+        # and many distinct URIs via WebDAV sync — patterns that otherwise trip
+        # the generic crowdsecurity/http-probing and http-crawl-non_statics
+        # scenarios and ban the user's own dynamic IP. This parser exempts only
+        # those specific benign patterns (scoped by status+verb+path+args), so
+        # real probing/CVE scanning of the Nextcloud host is still detected.
+        - name: PARSERS
+          value: crowdsecurity/nextcloud-whitelist
       resources:
         requests:
           cpu: 50m
