@@ -55,6 +55,28 @@ spec:
             label: AI User Agent
             service: http
             remediation: true
+      # Custom parser whitelist: exempt SUCCESSFUL kube-apiserver traffic from the
+      # generic behavioral scan scenarios (http-probing, http-crawl-non_statics, …).
+      # The k8s.${external_domain} HTTPRoute is hard-gated by a mandatory Keycloak
+      # JWT SecurityPolicy (see resources/gateway-kubernetes-api.yaml) + apiserver
+      # RBAC — unauthenticated traffic never reaches the backend — so CrowdSec's
+      # HTTP scan detection there is redundant, while a burst of legitimate
+      # authenticated kubectl/Lens/k9s/flux requests can trip http-crawl-non_statics
+      # and self-ban the admin's dynamic IP.
+      # Only 1xx/2xx/3xx (authenticated, successful) is whitelisted, so an
+      # unauthenticated attacker hammering the endpoint (401 bursts) can STILL be
+      # detected. The community IP blocklist stays active regardless (IP decisions
+      # are independent of this parse-time whitelist).
+      parsers:
+        s02-enrich:
+          custom-kube-apiserver-whitelist.yaml: |
+            name: custom/kube-apiserver-whitelist
+            description: "Whitelist authenticated kube-apiserver traffic (JWT-gated route)"
+            filter: "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log'] && evt.Meta.target_fqdn == 'k8s.${external_domain}'"
+            whitelist:
+              reason: "kube-apiserver protected by mandatory Keycloak JWT + RBAC; exempt successful admin traffic from behavioral scan scenarios"
+              expression:
+                - evt.Meta.http_status matches '^[123]'
       # Mirrors current `cscli console status` (manual/custom/tainted/context
       # were already enabled imperatively) + turns on console_management so
       # decisions assigned to this instance via the console get pulled too.
