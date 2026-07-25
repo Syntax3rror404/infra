@@ -38,6 +38,23 @@ spec:
         - name: nextcloud
           port: 8080
 ---
+# Envoy's default per-request timeout is 15s when no BackendTrafficPolicy
+# overrides it - too short for large video up/downloads over the external
+# gateway, which then get killed mid-transfer regardless of direction.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: nextcloud
+  timeout:
+    http:
+      requestTimeout: 3600s
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
