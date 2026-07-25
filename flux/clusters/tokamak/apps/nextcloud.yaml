@@ -148,6 +148,15 @@ spec:
         repository: nginxinc/nginx-unprivileged
         tag: alpine
         pullPolicy: IfNotPresent
+      config:
+        default: true
+        serverBlockCustom: |
+          # set max upload size - match php upload_max_filesize/post_max_size (zz-php.ini)
+          # explicit override: chart default (512M) is well below what video files need
+          client_max_body_size 16G;
+          client_body_timeout 300s;
+          fastcgi_buffers 64 4K;
+          fastcgi_read_timeout 3600s;
       resources:
         requests:
           cpu: 10m
