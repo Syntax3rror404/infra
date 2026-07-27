@@ -3,6 +3,7 @@
 cluster_name       = "ich-talos"
 default_gateway    = "192.168.35.1"
 nameserver         = "192.168.33.1"
+search_domain      = "labza"
 endpoint_vip       = "192.168.35.40"
 talos_version      = "1.13.7"
 kubernetes_version = "1.36.3"

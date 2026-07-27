@@ -14,6 +14,9 @@ locals {
       kind: ResolverConfig
       nameservers:
         - address: ${var.nameserver}
+      searchDomains:
+        domains:
+          - ${var.search_domain}
 
       ---
       apiVersion: v1alpha1
@@ -61,6 +64,9 @@ locals {
       kind: ResolverConfig
       nameservers:
         - address: ${var.nameserver}
+      searchDomains:
+        domains:
+          - ${var.search_domain}
 
       ---
       apiVersion: v1alpha1

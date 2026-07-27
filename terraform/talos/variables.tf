@@ -13,6 +13,12 @@ variable "nameserver" {
   default = "192.168.33.1"
 }
 
+variable "search_domain" {
+  type        = string
+  description = "DNS search domain for the nodes; lets short hostnames (e.g. tokamak-m1) resolve to their FQDN."
+  default     = "labza"
+}
+
 variable "endpoint_vip" {
   type    = string
   default = "192.168.35.40"
