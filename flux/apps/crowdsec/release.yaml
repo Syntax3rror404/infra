@@ -233,12 +233,34 @@ spec:
       extraInitContainers:
         - name: download-ai-user-agents
           image: docker.io/curlimages/curl:8.21.0@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
-          command: ["sh", "-ec"]
+          command: ["sh", "-c"]
           args:
+            # This list is re-fetched on every pod start (the target is an
+            # emptyDir), so a DaemonSet rollout means three requests to
+            # raw.githubusercontent.com in quick succession. GitHub answers 429
+            # under rate limiting, plain `curl -fsSL` exits 22, and the init
+            # container fails — which with maxUnavailable=1 wedges the whole
+            # rollout: the updated node never becomes ready, so the remaining
+            # agents are never updated either. Observed exactly that.
+            #
+            # Retry transient failures, and if the download still fails, start
+            # with an empty list rather than blocking the agent from running.
+            # The scenario evaluates `any(File("ai_user_agents.txt"), …)`, which
+            # is simply false for an empty file — AI-UA detection is then
+            # inactive until a later restart succeeds, but log parsing, the
+            # whitelists and every other scenario keep working. A degraded
+            # agent beats an agent that will not start.
             - |
-              curl -fsSL \
-                https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/haproxy-block-ai-bots.txt \
-                -o /var/lib/crowdsec/data/ai_user_agents.txt
+              set -u
+              DEST=/var/lib/crowdsec/data/ai_user_agents.txt
+              if curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors --max-time 60 \
+                   https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/haproxy-block-ai-bots.txt \
+                   -o "$DEST"; then
+                echo "ai_user_agents.txt: $(wc -l < "$DEST") entries"
+              else
+                echo "WARNING: download failed (rate limited?), starting with an empty list"
+                : > "$DEST"
+              fi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
