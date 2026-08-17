@@ -18,6 +18,14 @@ metadata:
   name: envoy
   namespace: envoy-gateway-system
 spec:
+  # Unset, Envoy starts one worker thread per cpuset thread — 16 on these
+  # nodes. That was already pure overhead (the external proxy idles at ~8m CPU
+  # / 34Mi), but it becomes a real hazard with the Coraza WASM filter in
+  # resources/coraza-waf.yaml: proxy-wasm instantiates one VM per worker
+  # thread, so the compiled OWASP CRS ruleset would be held 16 times over and
+  # could push the proxy past its 512Mi limit. An OOMKill there takes down the
+  # whole external gateway, not just the route the WAF is attached to.
+  concurrency: 4
   provider:
     type: Kubernetes
     kubernetes:
@@ -30,7 +38,8 @@ spec:
               cpu: 50m
               memory: 128Mi
             limits:
-              memory: 512Mi
+              # Headroom for 4 WASM VMs each holding the CRS ruleset.
+              memory: 1Gi
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway

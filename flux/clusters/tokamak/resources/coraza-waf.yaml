@@ -1,0 +1,79 @@
+---
+# Coraza (ModSecurity-compatible) WAF as an Envoy WASM filter.
+#
+# WHY HERE AND NOT IN CROWDSEC: CrowdSec's ext_authz bouncer already inspects
+# every request for IP-based decisions, but its AppSec/WAF mode is all-or-
+# nothing — the bouncer has no host/path/route scoping, so enabling it would
+# put full inline inspection in front of *every* service behind the external
+# gateway, including Nextcloud's WebDAV traffic. Coraza runs inside the Envoy
+# process instead (no extra network hop, no extra pod) and attaches to a single
+# HTTPRoute, so the WAF can be introduced one application at a time.
+#
+# SCOPE: auth.${external_domain} (Keycloak) only. It is the highest-value
+# target on the gateway — login endpoint, credential stuffing, injection — and
+# generates far less rule noise than a file-sync backend.
+#
+# failOpen: true is NOT optional here. Keycloak is the OIDC issuer for the
+# kubectl context; if this filter ever fails to initialise and we failed
+# closed, we would lose both web logins AND cluster access at once.
+#
+# DETECTION ONLY FOR NOW: SecRuleEngine is DetectionOnly, so rules evaluate and
+# log but never block. OWASP CRS is generic heuristics and is well known to
+# false-positive on real applications until tuned — see the upstream warning:
+# "a WAF is not a plug-and-play security solution. It requires a configuration
+# and tuning tailored to the environment". Switch to `SecRuleEngine On` only
+# after the log stream has been reviewed and any FP-triggering rules excluded.
+#
+# CRS is embedded in the extension image, so no ruleset needs to be shipped or
+# mounted separately.
+#
+# BEFORE ATTACHING THIS TO ANY OTHER ROUTE, note what @recommended-conf turns on:
+#   SecRequestBodyAccess On
+#   SecRequestBodyLimit 131072          (128 KB)
+#   SecRequestBodyLimitAction Reject    <-- larger bodies are REJECTED
+#   SecResponseBodyAccess On
+# Harmless for Keycloak (login forms are a few KB). Fatal for Nextcloud, whose
+# uploads are configured up to 16G — that route needs ProcessPartial and a
+# WebDAV exclusion, or no WAF at all.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyExtensionPolicy
+metadata:
+  name: coraza-waf
+  namespace: keycloak
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: keycloak
+  wasm:
+    - name: coraza
+      rootID: waf
+      failOpen: true
+      code:
+        type: Image
+        image:
+          url: ghcr.io/corazawaf/coraza-proxy-wasm:0.6.0
+          # NOT the digest `docker manifest inspect` reports for the tag. That
+          # one (d66f9448…) is the multi-arch OCI *index*; Envoy checksums the
+          # resolved *platform manifest* instead and rejects the policy with
+          #   "module downloaded from … has checksum 65d6009b…,
+          #    which does not match: d66f9448…"  → reason: Invalid
+          # so this is the linux/amd64 manifest digest.
+          sha256: 65d6009b9da2e8965e592a08b74a86725435fc01aa39c756dce0bd5ea64b3f4e
+      config:
+        # ORDER MATTERS. @recommended-conf itself sets `SecRuleEngine
+        # DetectionOnly`, so every engine-level override has to come AFTER the
+        # include or it is silently reset. This is the trap when switching to
+        # enforcement later: `SecRuleEngine On` placed above the include would
+        # be reverted to DetectionOnly and the WAF would never block anything.
+        directives_map:
+          default:
+            - "Include @recommended-conf"
+            # Explicit even though the include already sets it — states the
+            # intent, and stays correct once this flips to `On`.
+            - "SecRuleEngine DetectionOnly"
+            - "SecAuditEngine RelevantOnly"
+            - "SecResponseBodyMimeType text/plain text/html text/xml application/json"
+            - "Include @crs-setup-conf"
+            - "Include @owasp_crs/*.conf"
+        default_directives: default

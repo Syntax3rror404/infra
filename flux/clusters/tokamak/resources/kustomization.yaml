@@ -19,6 +19,7 @@ resources:
   - gateway-internal.yaml
   - gateway-kubernetes-api.yaml
   - crowdsec-securitypolicy.yaml
+  - coraza-waf.yaml
   - grafana-dashboard-talos.yaml
   - renovate.yaml
   - rbac.yaml

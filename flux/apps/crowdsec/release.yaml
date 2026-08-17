@@ -77,6 +77,39 @@ spec:
               reason: "kube-apiserver protected by mandatory Keycloak JWT + RBAC; exempt successful admin traffic from behavioral scan scenarios"
               expression:
                 - evt.Meta.http_status matches '^[123]'
+          # Two distinct false positives on nextcloud.${external_domain}, both
+          # observed self-banning the owner's own Nextcloud desktop client:
+          #
+          # 1) ext_authz feedback loop. Once ANY ip is banned, the Envoy bouncer
+          #    answers every further request with its own 403 block page. Those
+          #    403s are logged by Envoy and re-parsed here, and http-probing
+          #    counts 403 just like 404 — so a retrying client renews its own ban
+          #    indefinitely (observed: 11 events in a single second, all 403 on
+          #    ordinary paths like /status.php). The block itself is unaffected;
+          #    this only stops a decision from amplifying itself. Envoy marks
+          #    these unambiguously as response_code_details=ext_authz_denied /
+          #    response_flags=UAEX, which the envoy-logs parser does not map into
+          #    evt.Meta, hence the evt.Line.Raw match.
+          #
+          # 2) WebDAV chunked upload. crowdsecurity/nextcloud-whitelist already
+          #    exempts DAV 404s but only for PROPFIND/GET/DELETE — the upload
+          #    verbs are missing, so a failing chunked upload (MKCOL 201 followed
+          #    by PUT 404) trips http-probing. These verbs require an
+          #    authenticated session; an unauthenticated prober gets 401, not
+          #    404, and is therefore still detected.
+          #
+          # Verified with `cscli explain` against real log lines: the 403 and the
+          # DAV PUT 404 are whitelisted, while a GET 404 on /wp-login.php still
+          # triggers http-probing, http-wordpress-scan and admin-interface-probing.
+          custom-nextcloud-dav-whitelist.yaml: |
+            name: custom/nextcloud-dav-whitelist
+            description: "Stop CrowdSec's own 403 block page and failed WebDAV uploads from self-banning legitimate Nextcloud clients"
+            filter: "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log'] && evt.Meta.target_fqdn == 'nextcloud.${external_domain}'"
+            whitelist:
+              reason: "ext_authz block-page 403s must not feed back into scan scenarios; authenticated WebDAV upload 404s are not probing"
+              expression:
+                - evt.Meta.http_status == '403' && evt.Line.Raw contains 'ext_authz_denied'
+                - evt.Meta.http_status == '404' && evt.Meta.http_verb in ['PUT', 'MKCOL', 'MOVE'] && evt.Meta.http_path matches '^/remote.php/(web)?dav/'
       # Mirrors current `cscli console status` (manual/custom/tainted/context
       # were already enabled imperatively) + turns on console_management so
       # decisions assigned to this instance via the console get pulled too.
