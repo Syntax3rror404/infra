@@ -258,8 +258,15 @@ spec:
                    -o "$DEST"; then
                 echo "ai_user_agents.txt: $(wc -l < "$DEST") entries"
               else
-                echo "WARNING: download failed (rate limited?), starting with an empty list"
-                : > "$DEST"
+                # NOT an empty file: CrowdSec does not register a zero-entry
+                # data file in its expr library, so File("ai_user_agents.txt")
+                # then fails with "not found in expr library" on every single
+                # evaluation of the scenario (observed 44 errors in ~2 minutes).
+                # One short placeholder line keeps the key registered, and the
+                # scenario's own `len(#) > 4` guard makes it unmatchable — so
+                # the scenario is inert rather than erroring.
+                echo "WARNING: download failed (rate limited?), using inert placeholder list"
+                echo "-" > "$DEST"
               fi
           securityContext:
             allowPrivilegeEscalation: false
