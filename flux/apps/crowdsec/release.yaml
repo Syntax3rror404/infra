@@ -21,6 +21,14 @@ metadata:
 spec:
   interval: ${helm_release_interval}
   maxHistory: 3
+  # Helm's default wait is 5m, which this release no longer fits into. The
+  # agent DaemonSet rolls sequentially across 3 nodes and each pod now spends
+  # up to ~25s in the download-ai-user-agents retry loop before falling back,
+  # so a full rollout takes ~6m (measured: pods came up 16:03:02, 16:05:13,
+  # 16:07:05). Helm then reports "timeout waiting for DaemonSet ... InProgress"
+  # and marks the release failed even though the rollout completes fine
+  # moments later — which in turn blocks subsequent reconciles.
+  timeout: 15m
   chartRef:
     kind: OCIRepository
     name: crowdsec
