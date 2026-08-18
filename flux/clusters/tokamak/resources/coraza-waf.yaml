@@ -76,4 +76,54 @@ spec:
             - "SecResponseBodyMimeType text/plain text/html text/xml application/json"
             - "Include @crs-setup-conf"
             - "Include @owasp_crs/*.conf"
+            # Must come AFTER the includes — it references a loaded rule by id.
+            #
+            # 932160 ("Remote Command Execution: Unix Shell Code Found") looks
+            # for shell tokens, and its list contains "$path". It therefore
+            # matches the *name* of a legacy RFC 2109 cookie ($Path), which some
+            # HTTP client libraries still send:
+            #   Matched Data: $path found within REQUEST_COOKIES_NAMES:$Path
+            # That was 93 of 93 detections in the first day of detect-only mode
+            # — every single one a false positive on the cookie name, none an
+            # actual payload. Left in place it scores 15 per request, exceeds
+            # the inbound anomaly threshold, and would block those requests once
+            # SecRuleEngine flips to On.
+            #
+            # Drop only the cookie-name target. The rule stays fully active for
+            # ARGS, request body and URI, which is where real shell injection
+            # would appear.
+            - 'SecRuleUpdateTargetById 932160 "!REQUEST_COOKIES_NAMES"'
+
+            # ---- Positive model: Keycloak path allowlist -------------------
+            # CRS above is a blocklist — it only reacts to patterns it already
+            # knows. This rule is the inverse: anything outside Keycloak's
+            # actually published surface is flagged. Derived from this realm's
+            # own discovery document plus an observed interactive login, not
+            # from guesswork:
+            #   /realms/mog                       issuer
+            #   /realms/mog/.well-known/...       discovery
+            #   /realms/mog/protocol/openid-connect/...
+            #                                     auth, token, certs, userinfo,
+            #                                     logout, revoke, introspect,
+            #                                     auth/device, ext/ciba, ext/par,
+            #                                     login-status-iframe.html
+            #   /realms/mog/login-actions/...     interactive login flow
+            #   /realms/mog/clients-registrations/...
+            #   /resources/...                    login theme assets
+            #   /robots.txt
+            #
+            # The realm is pinned to `mog` on purpose. /realms/master is the
+            # Keycloak admin realm and was found reachable from the internet
+            # (openid-configuration 200, auth 302) even though only `mog` is
+            # used publicly — so master lands outside the allowlist too. Add
+            # further realms here explicitly if that ever changes.
+            #
+            # Still `pass,log` — it reports, it does not block, matching the
+            # engine-wide DetectionOnly stance. Verify with:
+            #   kubectl logs -n envoy-gateway-system <envoy-pod> -c envoy \
+            #     | grep keycloak-allowlist
+            # Once a few days show only scanner noise, swap `pass,log` for
+            # `deny,status:404,log` — 404 rather than 403 so the surface is not
+            # enumerable.
+            - 'SecRule REQUEST_URI "!@rx ^/(robots\.txt|resources/.*|realms/mog(/(\.well-known/.*|protocol/openid-connect(/.*)?|login-actions/.*|clients-registrations/.*))?)$" "id:2000,phase:1,pass,log,msg:''keycloak-allowlist: path outside published surface'',tag:''keycloak-allowlist''"'
         default_directives: default
