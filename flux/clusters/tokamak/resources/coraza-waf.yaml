@@ -145,10 +145,14 @@ spec:
             # loop that already caused two lockouts, so the CrowdSec whitelist
             # needs to match Coraza blocks precisely before enforcement is on.
             #
+            # NOTE: the path must sit under one of the prefixes the HTTPRoute
+            # actually matches (/realms, /resources, /.well-known). Envoy
+            # rejects anything else with route_not_found *before* the route's
+            # filters run, so a WAF rule there can never fire.
             # Scope is deliberately one nonsense path. ctl:ruleEngine=On enables
             # enforcement for THAT transaction only; the engine stays
             # DetectionOnly everywhere else. No real client requests this URI.
-            - 'SecRule REQUEST_URI "@streq /claude-waf-blocktest-9f3a" "id:2998,phase:1,pass,nolog,ctl:ruleEngine=On"'
-            - 'SecRule REQUEST_URI "@streq /claude-waf-blocktest-9f3a" "id:2999,phase:1,deny,status:403,log,msg:''waf block test — delete this rule''"'
+            - 'SecRule REQUEST_URI "@streq /realms/claude-waf-blocktest-9f3a" "id:2998,phase:1,pass,nolog,ctl:ruleEngine=On"'
+            - 'SecRule REQUEST_URI "@streq /realms/claude-waf-blocktest-9f3a" "id:2999,phase:1,deny,status:403,log,msg:''waf block test — delete this rule''"'
             # ==== END TEMPORARY ===========================================
         default_directives: default
