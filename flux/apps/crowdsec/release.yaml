@@ -118,6 +118,35 @@ spec:
               expression:
                 - evt.Meta.http_status == '403' && evt.Line.Raw contains 'ext_authz_denied'
                 - evt.Meta.http_status == '404' && evt.Meta.http_verb in ['PUT', 'MKCOL', 'MOVE'] && evt.Meta.http_path matches '^/remote.php/(web)?dav/'
+          # Coraza (the WASM WAF on the Keycloak route, see
+          # clusters/tokamak/resources/coraza-waf.yaml) blocks by emitting an
+          # Envoy local reply. That 403 is written to the access log this agent
+          # parses, so repeated WAF blocks would feed crowdsecurity/http-probing
+          # and escalate to an IP ban across EVERY service — Nextcloud, kubectl,
+          # everything. For a real attacker that is desirable; for a WAF false
+          # positive it is the same self-lockout that already happened twice.
+          #
+          # Measured signature of a Coraza block (Coraza calls SendHttpResponse
+          # without a details string, so unlike the CrowdSec bouncer it leaves
+          # no marker of its own):
+          #   "response_code":403  "response_code_details":""  "upstream_host":null
+          # A 403 that genuinely came from Keycloak carries
+          # "response_code_details":"via_upstream" and a real upstream_host, so
+          # it is NOT whitelisted here and still counts toward scan detection.
+          #
+          # Note what this trades away: WAF blocks no longer escalate an
+          # attacker to an IP ban. In practice that costs little — the scanners
+          # observed so far were all caught independently by
+          # crowdsecurity/http-backdoors-attempts. Revisit once the WAF runs in
+          # enforcement mode with a tuned, quiet rule set.
+          custom-coraza-block-whitelist.yaml: |
+            name: custom/coraza-block-whitelist
+            description: "Keep Coraza's own WAF blocks from escalating into cluster-wide IP bans"
+            filter: "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log'] && evt.Meta.target_fqdn == 'auth.${external_domain}'"
+            whitelist:
+              reason: "WAF-generated local replies must not feed behavioural scan scenarios"
+              expression:
+                - evt.Meta.http_status == '403' && evt.Line.Raw contains '"response_code_details":""' && evt.Line.Raw contains '"upstream_host":null'
       # Mirrors current `cscli console status` (manual/custom/tainted/context
       # were already enabled imperatively) + turns on console_management so
       # decisions assigned to this instance via the console get pulled too.
