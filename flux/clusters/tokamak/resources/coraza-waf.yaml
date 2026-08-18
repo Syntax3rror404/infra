@@ -130,4 +130,25 @@ spec:
             # `deny,status:404,log` — 404 rather than 403 so the surface is not
             # enumerable.
             - 'SecRule REQUEST_URI "!@rx ^/(robots\.txt|resources/.*|realms/mog(/|/(\.well-known/.*|protocol/openid-connect(/.*)?|login-actions/.*|clients-registrations/.*))?)$" "id:2000,phase:1,pass,log,msg:''keycloak-allowlist: path outside published surface'',tag:''keycloak-allowlist''"'
+            # ==== TEMPORARY — REMOVE AFTER MEASUREMENT ====================
+            # Purpose: find out which response_code_details Envoy records when
+            # Coraza itself blocks a request. Coraza calls
+            # proxywasm.SendHttpResponse(status, nil, nil, ...) without a details
+            # string, and Envoy just passes that through, so the value cannot be
+            # derived from source — it has to be observed once.
+            #
+            # We need it because a Coraza block is an Envoy local reply that
+            # lands in the access log, which CrowdSec parses. Repeated blocks
+            # would feed crowdsecurity/http-probing and escalate to an IP ban —
+            # desirable for a real attacker, but for a false positive it locks
+            # the user out of *everything*, kubectl included. That is the exact
+            # loop that already caused two lockouts, so the CrowdSec whitelist
+            # needs to match Coraza blocks precisely before enforcement is on.
+            #
+            # Scope is deliberately one nonsense path. ctl:ruleEngine=On enables
+            # enforcement for THAT transaction only; the engine stays
+            # DetectionOnly everywhere else. No real client requests this URI.
+            - 'SecRule REQUEST_URI "@streq /claude-waf-blocktest-9f3a" "id:2998,phase:1,pass,nolog,ctl:ruleEngine=On"'
+            - 'SecRule REQUEST_URI "@streq /claude-waf-blocktest-9f3a" "id:2999,phase:1,deny,status:403,log,msg:''waf block test — delete this rule''"'
+            # ==== END TEMPORARY ===========================================
         default_directives: default
