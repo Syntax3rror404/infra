@@ -118,6 +118,10 @@ spec:
             # used publicly — so master lands outside the allowlist too. Add
             # further realms here explicitly if that ever changes.
             #
+            # The `(/|/(...))?` shape allows the bare issuer both with and
+            # without a trailing slash. The first live test flagged
+            # /realms/mog/ as outside the surface — a bug in this rule, not an
+            # attack; keep that alternation when editing.
             # Still `pass,log` — it reports, it does not block, matching the
             # engine-wide DetectionOnly stance. Verify with:
             #   kubectl logs -n envoy-gateway-system <envoy-pod> -c envoy \
@@ -125,5 +129,5 @@ spec:
             # Once a few days show only scanner noise, swap `pass,log` for
             # `deny,status:404,log` — 404 rather than 403 so the surface is not
             # enumerable.
-            - 'SecRule REQUEST_URI "!@rx ^/(robots\.txt|resources/.*|realms/mog(/(\.well-known/.*|protocol/openid-connect(/.*)?|login-actions/.*|clients-registrations/.*))?)$" "id:2000,phase:1,pass,log,msg:''keycloak-allowlist: path outside published surface'',tag:''keycloak-allowlist''"'
+            - 'SecRule REQUEST_URI "!@rx ^/(robots\.txt|resources/.*|realms/mog(/|/(\.well-known/.*|protocol/openid-connect(/.*)?|login-actions/.*|clients-registrations/.*))?)$" "id:2000,phase:1,pass,log,msg:''keycloak-allowlist: path outside published surface'',tag:''keycloak-allowlist''"'
         default_directives: default
