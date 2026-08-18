@@ -17,12 +17,21 @@
 # kubectl context; if this filter ever fails to initialise and we failed
 # closed, we would lose both web logins AND cluster access at once.
 #
-# DETECTION ONLY FOR NOW: SecRuleEngine is DetectionOnly, so rules evaluate and
-# log but never block. OWASP CRS is generic heuristics and is well known to
-# false-positive on real applications until tuned — see the upstream warning:
-# "a WAF is not a plug-and-play security solution. It requires a configuration
-# and tuning tailored to the environment". Switch to `SecRuleEngine On` only
-# after the log stream has been reviewed and any FP-triggering rules excluded.
+# ENFORCING. SecRuleEngine is On: CRS drops a request once its inbound anomaly
+# score reaches the threshold (5). Upstream warns that "a WAF is not a
+# plug-and-play security solution — it requires configuration and tuning
+# tailored to the environment", so this was not switched on blind. Tuning that
+# preceded it:
+#   * ~1 day in DetectionOnly. 93 detections, all of them one false positive
+#     (932160 on a legacy $Path cookie name) — excluded below.
+#   * ARGS:password removed from CRS targets, because the login body is
+#     inspected and passwords legitimately look like injection payloads.
+#   * The path allowlist below stays on `pass,log`. It does NOT block: the
+#     account console and the SAML endpoint are served but outside its pattern,
+#     so arming it would break legitimate Keycloak features. Narrowing the
+#     HTTPRoute to /realms/mog is the better control and is done there.
+#
+# Rollback is one word: SecRuleEngine On -> DetectionOnly.
 #
 # CRS is embedded in the extension image, so no ruleset needs to be shipped or
 # mounted separately.
@@ -69,9 +78,11 @@ spec:
         directives_map:
           default:
             - "Include @recommended-conf"
-            # Explicit even though the include already sets it — states the
-            # intent, and stays correct once this flips to `On`.
-            - "SecRuleEngine DetectionOnly"
+            # ENFORCING. Must stay AFTER the include, which itself sets
+            # DetectionOnly — placed above it this line would be silently
+            # reverted and the WAF would never block anything. Rollback to
+            # observation mode is this one word.
+            - "SecRuleEngine On"
             - "SecAuditEngine RelevantOnly"
             - "SecResponseBodyMimeType text/plain text/html text/xml application/json"
             - "Include @crs-setup-conf"
@@ -93,6 +104,19 @@ spec:
             # ARGS, request body and URI, which is where real shell injection
             # would appear.
             - 'SecRuleUpdateTargetById 932160 "!REQUEST_COOKIES_NAMES"'
+            # @recommended-conf enables SecRequestBodyAccess, so the login POST
+            # body is inspected — password field included. Passwords legally
+            # contain what CRS hunts for: an apostrophe reads as SQLi, an angle
+            # bracket as XSS. Left in place, a user whose password contains one
+            # is blocked from logging in, and it presents as "wrong password"
+            # rather than as a WAF block — near-impossible to diagnose.
+            #
+            # Drop ARGS:password as a target from every CRS-tagged rule. That
+            # field is only ever a credential; it never reaches an interpreter
+            # where an injection could fire. username and credentialId stay
+            # inspected. Verified: Coraza implements SecRuleUpdateTargetByTag,
+            # and CRS rules carry the tag OWASP_CRS.
+            - 'SecRuleUpdateTargetByTag "OWASP_CRS" "!ARGS:password"'
 
             # ---- Positive model: Keycloak path allowlist -------------------
             # CRS above is a blocklist — it only reacts to patterns it already
