@@ -22,8 +22,9 @@
 # plug-and-play security solution — it requires configuration and tuning
 # tailored to the environment", so this was not switched on blind. Tuning that
 # preceded it:
-#   * ~1 day in DetectionOnly. 93 detections, all of them one false positive
-#     (932160 on a legacy $Path cookie name) — excluded below.
+#   * ~1 day in DetectionOnly, then 12h enforcing. 393 detections, every one
+#     the same false positive (932160 on a legacy $Path cookie name). The
+#     rule is removed below — a targeted target-exclusion did not take.
 #   * ARGS:password removed from CRS targets, because the login body is
 #     inspected and passwords legitimately look like injection payloads.
 #   * The path allowlist below stays on `pass,log`. It does NOT block: the
@@ -89,21 +90,33 @@ spec:
             - "Include @owasp_crs/*.conf"
             # Must come AFTER the includes — it references a loaded rule by id.
             #
-            # 932160 ("Remote Command Execution: Unix Shell Code Found") looks
-            # for shell tokens, and its list contains "$path". It therefore
-            # matches the *name* of a legacy RFC 2109 cookie ($Path), which some
-            # HTTP client libraries still send:
+            # 932160 ("Remote Command Execution: Unix Shell Code Found") scans
+            # for shell tokens and its wordlist contains "$path", so it matches
+            # the *name* of a legacy RFC 2109 cookie ($Path) that some HTTP
+            # client libraries still send:
             #   Matched Data: $path found within REQUEST_COOKIES_NAMES:$Path
-            # That was 93 of 93 detections in the first day of detect-only mode
-            # — every single one a false positive on the cookie name, none an
-            # actual payload. Left in place it scores 15 per request, exceeds
-            # the inbound anomaly threshold, and would block those requests once
-            # SecRuleEngine flips to On.
             #
-            # Drop only the cookie-name target. The rule stays fully active for
-            # ARGS, request body and URI, which is where real shell injection
-            # would appear.
-            - 'SecRuleUpdateTargetById 932160 "!REQUEST_COOKIES_NAMES"'
+            # Every single match this rule has ever produced here — 393 of 393 —
+            # came from REQUEST_COOKIES_NAMES. Not one from ARGS or the body,
+            # i.e. never from anywhere shell injection could actually reach an
+            # interpreter.
+            #
+            # The targeted exclusion was tried first and DOES NOT WORK in this
+            # build:
+            #   SecRuleUpdateTargetById 932160 "!REQUEST_COOKIES_NAMES"
+            # It sits in the live config and the rule keeps firing on exactly
+            # that target. coraza-proxy-wasm is built with multiphase
+            # evaluation, which hoists this phase-2 rule into phase 1 (cookies
+            # are available there); the target update evidently does not reach
+            # the hoisted variant. Note the block logs say "Access denied
+            # (phase 1)" and cite 949111, the phase-1 blocking evaluation,
+            # rather than 949110. The same directive as SecRuleUpdateTargetByTag
+            # on ARGS:password *does* work, because those rules stay in phase 2.
+            #
+            # Hence removing the rule outright. Blunt, but it is the only form
+            # that takes effect, and the 11 remaining rules of the 932 RCE
+            # family stay active.
+            - 'SecRuleRemoveById 932160'
             # @recommended-conf enables SecRequestBodyAccess, so the login POST
             # body is inspected — password field included. Passwords legally
             # contain what CRS hunts for: an apostrophe reads as SQLi, an angle
