@@ -1,0 +1,302 @@
+<mxGraphModel dx="1400" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1400" math="0" shadow="0" adaptiveColors="auto">
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+
+    <mxCell id="title" value="&lt;b&gt;Talos Linux Cluster — OpenTofu-managed (terraform/talos)&lt;/b&gt;&#xa;3 Control Planes + 3 Worker, bare metal · Hostnamen generisch dargestellt" style="text;html=1;align=left;verticalAlign=middle;fontSize=16;fontColor=#333333;" vertex="1" parent="1">
+      <mxGeometry x="40" y="30" width="900" height="60" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="ext_factory" value="&lt;b&gt;Talos Image Factory&lt;/b&gt;&#xa;factory.talos.dev&#xa;liefert Installer-Image für Schematic-ID" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;" vertex="1" parent="1">
+      <mxGeometry x="1000" y="30" width="300" height="80" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="ext_idp" value="&lt;b&gt;OIDC Provider (Keycloak)&lt;/b&gt;&#xa;https://&lt;idp-host&gt;/realms/&lt;realm&gt;&#xa;client_id: kubernetes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=center;" vertex="1" parent="1">
+      <mxGeometry x="1740" y="30" width="330" height="80" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="lane0" value="0 · GitOps-Antrieb" style="swimlane;html=1;startSize=40;horizontal=1;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;fontSize=14;fontStyle=1;swimlaneFillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="40" y="140" width="340" height="1120" as="geometry"/>
+    </mxCell>
+    <mxCell id="g1" value="&lt;b&gt;Git Repository (main)&lt;/b&gt;&#xa;Pfad ./terraform/talos&#xa;einzige Quelle der Wahrheit" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane0">
+      <mxGeometry x="20" y="60" width="300" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="g2" value="&lt;b&gt;Flux GitRepository&lt;/b&gt;&#xa;flux-system" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane0">
+      <mxGeometry x="20" y="170" width="300" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="g3" value="&lt;b&gt;Terraform CR &quot;talos&quot;&lt;/b&gt; (tofu-controller)&#xa;infra.contrib.fluxcd.io/v1alpha2&#xa;interval: 10m · approvePlan: auto&#xa;path: ./terraform/talos" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane0">
+      <mxGeometry x="20" y="260" width="300" height="110" as="geometry"/>
+    </mxCell>
+    <mxCell id="g4" value="&lt;b&gt;tf-runner Pod&lt;/b&gt;&#xa;ServiceAccount tf-runner (flux-system)&#xa;nodeSelector + Toleration:&#xa;läuft nur auf Control-Plane-Nodes&#xa;führt init / plan / apply aus" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane0">
+      <mxGeometry x="20" y="400" width="300" height="120" as="geometry"/>
+    </mxCell>
+    <mxCell id="g5" value="&lt;b&gt;RBAC&lt;/b&gt; (Role + RoleBinding)&#xa;tf-runner darf Secret&#xa;tfstate-default-talos in kube-system&#xa;lesen/schreiben" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;dashed=1;" vertex="1" parent="lane0">
+      <mxGeometry x="20" y="550" width="300" height="100" as="geometry"/>
+    </mxCell>
+    <mxCell id="g6" value="&lt;b&gt;Konsequenz&lt;/b&gt;&#xa;Ein manuelles &quot;tofu apply&quot; wird beim&#xa;nächsten Reconcile (max. 10 min)&#xa;wieder auf den Git-Stand gezogen.&#xa;Änderungen also immer via Commit." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane0">
+      <mxGeometry x="20" y="680" width="300" height="120" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="lane1" value="1 · Eingaben &amp; State" style="swimlane;html=1;startSize=40;horizontal=1;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;fontSize=14;fontStyle=1;swimlaneFillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="420" y="140" width="340" height="1120" as="geometry"/>
+    </mxCell>
+    <mxCell id="l1a" value="&lt;b&gt;terraform.tfvars&lt;/b&gt;&#xa;cluster_name = &lt;cluster&gt;&#xa;talos_version = 1.13.7&#xa;kubernetes_version = 1.36.3&#xa;endpoint_vip = 192.168.35.40&#xa;pod_subnet = 10.244.0.0/16&#xa;service_subnet = 10.245.0.0/16&#xa;default_gateway = 192.168.35.1&#xa;nameserver = 192.168.33.1&#xa;search_domain = &lt;search-domain&gt;&#xa;controlplanes[3] / workers[3]&#xa;talos_extensions[5] · oidc{...}" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane1">
+      <mxGeometry x="20" y="60" width="300" height="230" as="geometry"/>
+    </mxCell>
+    <mxCell id="l1b" value="&lt;b&gt;variables.tf — Patch-Defaults&lt;/b&gt;&#xa;sysctls_patch:&#xa;· TCP BBR + fq qdisc, TFO, MTU probing&#xa;· rmem/wmem 64 MB, backlog/somaxconn&#xa;· inotify, vm.max_map_count, dirty ratios&#xa;· sunrpc slots, ip_local_port_range&#xa;sysfs_patch:&#xa;· RPS/RFS auf enp1s0 + enp2s0 (ffff)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane1">
+      <mxGeometry x="20" y="310" width="300" height="170" as="geometry"/>
+    </mxCell>
+    <mxCell id="l1c" value="&lt;b&gt;provider.tf&lt;/b&gt;&#xa;siderolabs/talos v0.11.0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane1">
+      <mxGeometry x="20" y="500" width="300" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="l1d" value="&lt;b&gt;backend.tf — State&lt;/b&gt;&#xa;backend &quot;kubernetes&quot;&#xa;secret_suffix = talos&#xa;namespace = kube-system&#xa;→ Secret tfstate-default-talos&#xa;(Bootstrap zuerst local, danach&#xa;tofu init -migrate-state)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane1">
+      <mxGeometry x="20" y="580" width="300" height="150" as="geometry"/>
+    </mxCell>
+    <mxCell id="l1e" value="&lt;b&gt;output.tf&lt;/b&gt;&#xa;schematic_id&#xa;installer_image&#xa;talosconfig (sensitive)&#xa;kubeconfig (sensitive)&#xa;machineconfigs / _controlplane / _worker&#xa;(sensitive, per Hostname adressierbar)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane1">
+      <mxGeometry x="20" y="760" width="300" height="160" as="geometry"/>
+    </mxCell>
+    <mxCell id="l1f" value="&lt;b&gt;Chicken-and-Egg&lt;/b&gt;&#xa;Der State liegt in genau dem Cluster,&#xa;den dieses Modul provisioniert." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane1">
+      <mxGeometry x="20" y="950" width="300" height="90" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="lane2" value="2 · Talos-Provider-Ressourcen" style="swimlane;html=1;startSize=40;horizontal=1;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;fontSize=14;fontStyle=1;swimlaneFillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="800" y="140" width="380" height="1120" as="geometry"/>
+    </mxCell>
+    <mxCell id="r1" value="&lt;b&gt;talos_image_factory_schematic&lt;/b&gt;&#xa;officialExtensions: amd-ucode, amdgpu,&#xa;iscsi-tools, util-linux-tools, realtek-firmware&#xa;extraKernelArgs: -selinux, selinux=0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="60" width="340" height="100" as="geometry"/>
+    </mxCell>
+    <mxCell id="r2" value="&lt;b&gt;data.talos_image_factory_urls&lt;/b&gt;&#xa;platform = metal · talos v1.13.7&#xa;→ urls.installer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="185" width="340" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="r3" value="&lt;b&gt;talos_machine_secrets&lt;/b&gt;&#xa;Cluster-PKI: etcd-CA, K8s-CA, Talos-CA,&#xa;Bootstrap-Token, client_configuration&#xa;(lebt ausschließlich im tfstate)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="290" width="340" height="100" as="geometry"/>
+    </mxCell>
+    <mxCell id="r4" value="&lt;b&gt;data.talos_machine_configuration.controlplane&lt;/b&gt;&#xa;for_each = var.controlplanes (3×)&#xa;machine_type = controlplane&#xa;cluster_endpoint = https://&lt;VIP&gt;:6443" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="415" width="340" height="100" as="geometry"/>
+    </mxCell>
+    <mxCell id="r5" value="&lt;b&gt;data.talos_machine_configuration.worker&lt;/b&gt;&#xa;for_each = var.workers (3×)&#xa;machine_type = worker" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="540" width="340" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="r6" value="&lt;b&gt;talos_machine_configuration_apply.controlplanes&lt;/b&gt;&#xa;3× apply auf node = &lt;cp-ip&gt; (Talos API :50000)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="645" width="340" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="r7" value="&lt;b&gt;talos_machine_configuration_apply.workers&lt;/b&gt;&#xa;depends_on: controlplanes&#xa;3× apply auf node = &lt;worker-ip&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="750" width="340" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="r8" value="&lt;b&gt;talos_machine_bootstrap&lt;/b&gt;&#xa;einmalig auf controlplanes[0] → etcd-Init" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="855" width="340" height="70" as="geometry"/>
+    </mxCell>
+    <mxCell id="r9" value="&lt;b&gt;talos_cluster_kubeconfig&lt;/b&gt;&#xa;node = VIP · depends_on: bootstrap" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="950" width="340" height="70" as="geometry"/>
+    </mxCell>
+    <mxCell id="r10" value="&lt;b&gt;data.talos_client_configuration&lt;/b&gt;&#xa;endpoints = alle 3 Control-Plane-IPs&#xa;→ talosconfig (Kontext ohne Default-Nodes)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane2">
+      <mxGeometry x="20" y="1040" width="340" height="70" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="lane3" value="3 · Gerenderte Machine-Config (Patches)" style="swimlane;html=1;startSize=40;horizontal=1;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;fontSize=14;fontStyle=1;swimlaneFillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1220" y="140" width="440" height="1120" as="geometry"/>
+    </mxCell>
+    <mxCell id="p0" value="&lt;b&gt;Für alle 6 Nodes&lt;/b&gt;&#xa;· sysctls_patch + sysfs_patch&#xa;· kubelet: rotate-server-certificates&#xa;· /etc/cri/conf.d/20-customization.part&#xa;&#160;&#160;(discard_unpacked_layers = false)&#xa;· install: image = Factory-Installer,&#xa;&#160;&#160;wipe = true, diskSelector.model = OS-Disk&#xa;· features.hostDNS (forwardKubeDNSToHost)&#xa;· cluster.discovery: disabled&#xa;· cni: none · dnsDomain: cluster.local&#xa;· podSubnet / serviceSubnet" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane3">
+      <mxGeometry x="20" y="60" width="400" height="215" as="geometry"/>
+    </mxCell>
+    <mxCell id="p1" value="&lt;b&gt;Pro-Node-Patch (locals.tf, v1alpha1-Docs)&lt;/b&gt;&#xa;· HostnameConfig (auto: off, fester Hostname)&#xa;· ResolverConfig (Nameserver + Search-Domain)&#xa;· LinkConfig enp2s0: &lt;node-ip&gt;/24 + Gateway&#xa;· LinkConfig lo: 169.254.116.108/32&#xa;· UserVolumeConfig &quot;longhorn&quot;&#xa;&#160;&#160;diskSelector → NVMe-Datendisk, kein System-Disk&#xa;&#160;&#160;maxSize 1800 GB, Dateisystem xfs" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane3">
+      <mxGeometry x="20" y="300" width="400" height="175" as="geometry"/>
+    </mxCell>
+    <mxCell id="p2" value="&lt;b&gt;Nur Control Plane&lt;/b&gt;&#xa;· Layer2VIPConfig &lt;VIP&gt; auf enp2s0&#xa;· allowSchedulingOnControlPlanes: false&#xa;· proxy.disabled → kein kube-proxy (Cilium)&#xa;· coreDNS.disabled → CoreDNS via Flux&#xa;· apiServer: event-ttl 15m, env GOGC=75&#xa;· features.kubernetesTalosAPIAccess&#xa;&#160;&#160;Rollen os:reader, os:operator&#xa;&#160;&#160;nur Namespace kube-system" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane3">
+      <mxGeometry x="20" y="500" width="400" height="190" as="geometry"/>
+    </mxCell>
+    <mxCell id="p3" value="&lt;b&gt;OIDC-Patch (nur CP, wenn var.oidc gesetzt)&lt;/b&gt;&#xa;· Datei /var/etc/kubernetes/oidc/auth-config.yaml&#xa;&#160;&#160;AuthenticationConfiguration (jwt)&#xa;· apiServer: --authentication-config&#xa;· extraVolume hostPath → /etc/kubernetes/oidc (ro)&#xa;· username-Claim + Prefix oidc:&#xa;· groups-Claim + Prefix oidc:" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane3">
+      <mxGeometry x="20" y="715" width="400" height="165" as="geometry"/>
+    </mxCell>
+    <mxCell id="p4" value="&lt;b&gt;Bewusst NICHT hier verwaltet&lt;/b&gt;&#xa;CNI (Cilium), CoreDNS, kube-proxy-Ersatz,&#xa;Longhorn, Gateways → kommen komplett&#xa;über Flux, nicht über OpenTofu." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane3">
+      <mxGeometry x="20" y="905" width="400" height="110" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="lane4" value="4 · Zielcluster (Bare Metal)" style="swimlane;html=1;startSize=40;horizontal=1;fillColor=#f5f5f5;strokeColor=#999999;fontColor=#333333;fontSize=14;fontStyle=1;swimlaneFillColor=none;" vertex="1" parent="1">
+      <mxGeometry x="1700" y="140" width="440" height="1120" as="geometry"/>
+    </mxCell>
+    <mxCell id="vip" value="&lt;b&gt;Cluster-VIP 192.168.35.40:6443&lt;/b&gt;&#xa;Talos Layer-2-VIP, wandert zwischen den CPs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;align=center;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="55" width="400" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="cplabel" value="&lt;b&gt;Control Plane (3×, etcd-Quorum)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="125" width="400" height="24" as="geometry"/>
+    </mxCell>
+    <mxCell id="cp1" value="&lt;b&gt;cp-01&lt;/b&gt; · 192.168.35.31&#xa;OS-Disk: &lt;model-cp&gt; · Daten-Disk: NVMe 2 TB&#xa;Bootstrap-Node (talos_machine_bootstrap)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="155" width="400" height="70" as="geometry"/>
+    </mxCell>
+    <mxCell id="cp2" value="&lt;b&gt;cp-02&lt;/b&gt; · 192.168.35.32&#xa;OS-Disk: &lt;model-cp&gt; · Daten-Disk: NVMe 2 TB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="235" width="400" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="cp3" value="&lt;b&gt;cp-03&lt;/b&gt; · 192.168.35.33&#xa;OS-Disk: &lt;model-cp&gt; · Daten-Disk: NVMe 2 TB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="305" width="400" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="wlabel" value="&lt;b&gt;Worker (3×, Workload + Longhorn)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontColor=#333333;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="378" width="400" height="24" as="geometry"/>
+    </mxCell>
+    <mxCell id="w1" value="&lt;b&gt;worker-01&lt;/b&gt; · 192.168.35.41&#xa;OS-Disk: &lt;model-a&gt; · Daten-Disk: NVMe 2 TB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="408" width="400" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="w2" value="&lt;b&gt;worker-02&lt;/b&gt; · 192.168.35.42&#xa;OS-Disk: &lt;model-b&gt; · Daten-Disk: NVMe 2 TB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="478" width="400" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="w3" value="&lt;b&gt;worker-03&lt;/b&gt; · 192.168.35.43&#xa;OS-Disk: &lt;model-c&gt; · Daten-Disk: NVMe 2 TB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="548" width="400" height="60" as="geometry"/>
+    </mxCell>
+    <mxCell id="disknote" value="OS-Disk-Modell unterscheidet sich pro Node;&#xa;install_diskSelector adressiert das Modell,&#xa;nicht den Slot → Reihenfolge egal.&#xa;Daten-Disk ist überall identisch." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;dashed=1;fontSize=11;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="620" width="400" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="lan" value="&lt;b&gt;LAN&lt;/b&gt; · 2,5-GbE-Switch · enp2s0&#xa;Gateway 192.168.35.1&#xa;DNS 192.168.33.1 (OPNsense/dnsmasq)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="715" width="400" height="80" as="geometry"/>
+    </mxCell>
+    <mxCell id="admin" value="&lt;b&gt;Admin-Zugriff&lt;/b&gt;&#xa;talosctl → Endpoints = 3 CP-IPs, Port 50000&#xa;(keine Default-Nodes: -n immer angeben)&#xa;kubectl → VIP :6443, OIDC-Kontext" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="810" width="400" height="100" as="geometry"/>
+    </mxCell>
+    <mxCell id="manual" value="&lt;b&gt;Manuell, NICHT durch apply ausgelöst&lt;/b&gt;&#xa;talos_version anheben schreibt nur die neue&#xa;install.image-URL in die Config.&#xa;Upgrade pro Node (CPs einzeln, dann Worker):&#xa;talosctl upgrade -n &lt;ip&gt; --image &lt;installer&gt; --preserve&#xa;K8s separat: talosctl upgrade-k8s --to &lt;version&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;align=left;spacingLeft=8;verticalAlign=top;spacingTop=6;" vertex="1" parent="lane4">
+      <mxGeometry x="20" y="925" width="400" height="140" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="g1" target="g2">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="g2" target="g3">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e3" value="startet" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=11;" edge="1" parent="1" source="g3" target="g4">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e4" value="liest tfvars" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=11;" edge="1" parent="1" source="g4" target="l1a">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e5" value="liest/schreibt State" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#6c8ebf;fontSize=11;" edge="1" parent="1" source="g4" target="l1d">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="g5" target="g4">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="l1a" target="r1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="l1a" target="r4">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="l1a" target="r5">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e13" value="config_patches" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;fontSize=11;" edge="1" parent="1" source="l1b" target="r4">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="l1b" target="r5">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="e20" value="registriert Schematic" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;fontSize=11;" edge="1" parent="1" source="r1" target="ext_factory">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e21" value="schematic_id" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;fontSize=11;" edge="1" parent="1" source="r1" target="r2">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e22" value="installer image" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;fontSize=11;" edge="1" parent="1" source="r2" target="r4">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="r2" target="r5">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e24" value="machine_secrets" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;fontSize=11;" edge="1" parent="1" source="r3" target="r4">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="r3" target="r5">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e26" value="client_configuration" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#82b366;fontSize=11;" edge="1" parent="1" source="r3" target="r10">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e27" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="r4" target="r6">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e28" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="r5" target="r7">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e29" value="depends_on" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#b85450;fontSize=11;" edge="1" parent="1" source="r6" target="r7">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e30" value="depends_on" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#b85450;fontSize=11;" edge="1" parent="1" source="r6" target="r8">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e31" value="depends_on" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#b85450;fontSize=11;" edge="1" parent="1" source="r8" target="r9">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e32" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#9673a6;" edge="1" parent="1" source="r9" target="l1e">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e33" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#9673a6;" edge="1" parent="1" source="r10" target="l1e">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="e40" value="rendert" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;fontSize=11;" edge="1" parent="1" source="r4" target="p0">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e41" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="r5" target="p1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e42" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="r4" target="p2">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e43" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="r4" target="p3">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e44" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="r5" target="p0">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e45" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d79b00;" edge="1" parent="1" source="r4" target="p1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="e50" value="apply :50000" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;fontSize=11;" edge="1" parent="1" source="r6" target="cp1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e51" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;" edge="1" parent="1" source="r6" target="cp2">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e52" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;" edge="1" parent="1" source="r6" target="cp3">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e53" value="apply :50000" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;fontSize=11;" edge="1" parent="1" source="r7" target="w1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e54" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="r7" target="w2">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e55" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="r7" target="w3">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e56" value="etcd bootstrap" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;fontSize=11;" edge="1" parent="1" source="r8" target="cp1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e57" value="kubeconfig via VIP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#d79b00;fontSize=11;" edge="1" parent="1" source="r9" target="vip">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="e60" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#d79b00;" edge="1" parent="1" source="cp1" target="vip">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e61" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#d79b00;" edge="1" parent="1" source="cp2" target="vip">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e62" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#d79b00;" edge="1" parent="1" source="cp3" target="vip">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e63" value="JWT-Validierung (kube-apiserver)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#d6b656;fontSize=11;" edge="1" parent="1" source="cp1" target="ext_idp">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e64" value="Installer-Image beim Install/Upgrade" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#d6b656;fontSize=11;" edge="1" parent="1" source="ext_factory" target="cp1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e65" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#999999;" edge="1" parent="1" source="lan" target="w1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="e66" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#9673a6;" edge="1" parent="1" source="l1e" target="admin">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+  </root>
+</mxGraphModel>
