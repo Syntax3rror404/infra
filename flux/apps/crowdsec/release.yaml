@@ -234,8 +234,14 @@ spec:
             limits:
               memory: 128Mi
           volumeMounts:
+            # subPath is mandatory and matches the main container. Without it the
+            # mount lands on the PVC root while the real database sits in
+            # <pvc-root>/crowdsec/crowdsec.db — cscli then silently creates an
+            # empty database at the root, reports "No bouncers to prune." and
+            # exits 0. A wrong-target failure that looks like success.
             - name: crowdsec-db
               mountPath: /var/lib/crowdsec/data
+              subPath: crowdsec
             # Mount the config PVC at /etc/crowdsec here, NOT at
             # /etc/crowdsec_data as the main container does. config.yaml refers
             # to /etc/crowdsec/{local_api,online_api}_credentials.yaml and
