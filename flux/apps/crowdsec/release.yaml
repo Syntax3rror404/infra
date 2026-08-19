@@ -191,23 +191,30 @@ spec:
     # Local API: stores decisions, serves them to the Envoy bouncer.
     # ---------------------------------------------------------------
     lapi:
-      # Housekeeping before LAPI starts. Every source IP that authenticates
-      # with the pre-registered envoybouncer key gets its own entry from LAPI
-      # (`Auto Created: true`). Each restart of the bouncer pod adds another and
-      # none are ever removed — after seven weeks the list held 21 entries, 20
-      # of them dead.
+      # Housekeeping before LAPI starts. Two registries grow without bound:
       #
-      # These are NOT additional API keys, they are per-instance records of the
-      # same key, so this is housekeeping and not a security issue. But it makes
-      # `cscli bouncers list` unusable, and that list is exactly what one needs
-      # when debugging "is the bouncer pulling decisions at all?".
+      #   bouncers  — every source IP authenticating with the pre-registered
+      #               envoybouncer key gets its own entry (`Auto Created: true`).
+      #               Each bouncer pod restart adds one. Measured: 21 entries,
+      #               20 dead, oldest seven weeks old.
+      #   machines  — every agent pod registers under its pod name, and the
+      #               DaemonSet rolls on every config change. Measured: 57
+      #               entries for 3 running agents.
+      #
+      # Neither is a security issue — the bouncer entries are per-instance
+      # records of one shared key, and stale machines cannot connect. But both
+      # lists become useless, and they are exactly what one reads when debugging
+      # "is the bouncer pulling decisions?" or "is that agent still parsing?".
       #
       # Runs as an init container because cscli operates directly on the SQLite
       # file: before LAPI starts there is guaranteed to be no competing writer.
       #
-      # `-d 24h` spares any bouncer seen within the last 24 hours; the active one
-      # polls every 10s. `|| true` so a failure while tidying up can never keep
-      # LAPI from starting.
+      # `--duration 24h` spares anything seen within the last 24 hours: the
+      # active bouncer polls every 10s and running agents stay connected, so
+      # only genuinely dead records are removed. Agents re-register on their own
+      # (auto_registration is enabled) should one ever be pruned while offline.
+      # `|| true` so a failure while tidying up can never keep LAPI from
+      # starting.
       extraInitContainers:
         - name: prune-stale-bouncers
           # Keep in sync with the chart's LAPI image (currently v1.7.8).
@@ -219,7 +226,8 @@ spec:
                 echo "no persisted config.yaml yet (first start) - nothing to prune"
                 exit 0
               fi
-              cscli bouncers prune -d 24h --force || true
+              cscli bouncers prune --duration 24h --force || true
+              cscli machines prune --duration 24h --force || true
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
