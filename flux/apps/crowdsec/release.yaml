@@ -191,6 +191,58 @@ spec:
     # Local API: stores decisions, serves them to the Envoy bouncer.
     # ---------------------------------------------------------------
     lapi:
+      # Housekeeping vor dem LAPI-Start. Jede Quell-IP, die sich mit dem
+      # vorregistrierten envoybouncer-Schluessel meldet, bekommt von der LAPI
+      # automatisch einen eigenen Eintrag (`Auto Created: true`). Bei jedem
+      # Neustart des Bouncer-Pods entsteht so ein weiterer, und keiner wird je
+      # entfernt — nach sieben Wochen standen 21 Eintraege in der Liste, 20
+      # davon tot.
+      #
+      # Das sind KEINE zusaetzlichen API-Schluessel, sondern Instanz-Eintraege
+      # desselben Schluessels. Kein Sicherheitsproblem, aber `cscli bouncers
+      # list` wird unbrauchbar, und genau die Liste braucht man beim Debuggen
+      # ("zieht der Bouncer ueberhaupt Entscheidungen?").
+      #
+      # Laeuft als Init-Container, weil cscli direkt auf die SQLite-Datei
+      # zugreift: vor dem Start der LAPI gibt es garantiert keinen
+      # konkurrierenden Schreiber. /etc/crowdsec/config.yaml wird erst vom
+      # Start-Skript erzeugt und existiert hier noch nicht — deshalb die auf
+      # dem Config-PVC persistierte Fassung.
+      #
+      # `-d 24h` verschont jeden Bouncer, der in den letzten 24 Stunden Kontakt
+      # hatte; der aktive fragt alle 10 Sekunden. `|| true`, damit ein Fehler
+      # beim Aufraeumen niemals den Start der LAPI verhindert.
+      extraInitContainers:
+        - name: prune-stale-bouncers
+          # In Sync halten mit dem Chart-Image der LAPI (aktuell v1.7.8).
+          image: docker.io/crowdsecurity/crowdsec:v1.7.8
+          command: ["sh", "-ec"]
+          args:
+            - |
+              CFG=/etc/crowdsec_data/config.yaml
+              if [ ! -f "$CFG" ]; then
+                echo "keine persistierte config.yaml (Erststart) - nichts zu tun"
+                exit 0
+              fi
+              cscli -c "$CFG" bouncers prune -d 24h --force || true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: crowdsec-db
+              mountPath: /var/lib/crowdsec/data
+            - name: crowdsec-config
+              mountPath: /etc/crowdsec_data
       env:
         # Pull the community blocklist (known-bad IPs) — free, no console needed.
         - name: DISABLE_ONLINE_API
