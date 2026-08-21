@@ -48,7 +48,25 @@ spec:
           # auth.${external_domain} (Keycloak) is excluded: it's auth infrastructure,
           # not crawlable content, so blocking AI-labeled UAs there has no anti-scraping
           # value but risks locking out legitimate OIDC clients (e.g. kubectl).
-          filter: evt.Meta.log_type in ["http_access-log", "http_error-log"] and evt.Meta.target_fqdn != "auth.${external_domain}" and any(File("ai_user_agents.txt"), {len(#) > 4 and Upper(evt.Meta.http_user_agent) contains Upper(#)})
+          #
+          # facebookexternalhit is excluded by name. The list carries it because Meta
+          # reuses that crawler for AI training data, but it is also the OpenGraph
+          # link-preview fetcher, and Apple's Messages app appends it verbatim to an
+          # ordinary Safari UA whenever a user shares a link:
+          #   Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/601.2.4
+          #   (KHTML, like Gecko) Version/9.0.1 Safari/601.2.4
+          #   facebookexternalhit/1.1 Facebot Twitterbot/1.0
+          # Observed twice, last on 2026-08-20, from the operator's own home IP
+          # against vodafone.${external_domain}. Since this scenario is
+          # `type: trigger`, a single shared link banned the whole household NAT
+          # address for every service on the gateway. Blocking it bought nothing --
+          # none of these hosts serve scrapeable content -- so the exclusion is a
+          # pure win. FacebookBot, a separate list entry and Meta's actual training
+          # crawler, stays blocked.
+          #
+          # Evaluated before the any(File(...)) loop so these requests short-circuit
+          # instead of being compared against all 164 list entries.
+          filter: evt.Meta.log_type in ["http_access-log", "http_error-log"] and evt.Meta.target_fqdn != "auth.${external_domain}" and not (Upper(evt.Meta.http_user_agent) contains "FACEBOOKEXTERNALHIT") and any(File("ai_user_agents.txt"), {len(#) > 4 and Upper(evt.Meta.http_user_agent) contains Upper(#)})
           data:
             - source_url: https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/refs/heads/main/haproxy-block-ai-bots.txt
               dest_file: ai_user_agents.txt
