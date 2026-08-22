@@ -10,6 +10,16 @@
   "terraform": {
     "enabled": true
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "CNPG PostgreSQL image pinned in the pgsql-prod Cluster CR (no native manager covers CRD fields)",
+      "managerFilePatterns": ["/^flux/clusters/tokamak/resources/pgsql-prod\\.yaml$/"],
+      "matchStrings": ["imageName:\\s*(?<depName>ghcr\\.io/cloudnative-pg/postgresql):(?<currentValue>\\S+)"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)(?<compatibility>-.+)?$"
+    }
+  ],
   "packageRules": [
     {
       "description": "Renovate itself - automerge immediately",
@@ -91,6 +101,19 @@
     {
       "description": "Exclude custom longhorn instance manager fix from updates",
       "matchPackageNames": ["derekbit/longhorn-instance-manager"],
+      "enabled": false
+    },
+    {
+      "description": "CNPG PostgreSQL - PG patch releases (minor in this scheme). PR only: merging restarts the prod DB",
+      "matchPackageNames": ["ghcr.io/cloudnative-pg/postgresql"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": false,
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "CNPG PostgreSQL - a PG major bump needs CNPG's declarative major upgrade, not a tag change",
+      "matchPackageNames": ["ghcr.io/cloudnative-pg/postgresql"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
