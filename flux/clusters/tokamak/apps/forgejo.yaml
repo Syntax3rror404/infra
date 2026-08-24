@@ -17,7 +17,7 @@ spec:
       config:
         database:
           DB_TYPE: mysql
-          HOST: mariadb-prod-internal.mariadb-prod.svc
+          HOST: ${mariadb_prod}
           NAME: forgejo
           USER: forgejo
           PASSWD: "${forgejo_mariadb_password}"

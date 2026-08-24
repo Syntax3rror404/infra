@@ -99,7 +99,7 @@ spec:
 
         db.config.php: |-
           <?php
-          $CONFIG['dbhost'] = 'mariadb-prod-internal.mariadb-prod.svc';
+          $CONFIG['dbhost'] = '${mariadb_prod}';
 
     persistence:
       enabled: true
@@ -180,7 +180,7 @@ spec:
     externalDatabase:
       enabled: true
       type: mysql
-      host: mariadb-prod-internal.mariadb-prod.svc
+      host: ${mariadb_prod}
       user: nextcloud
       password: "${nextcloud_mariadb_password}"
       database: nextcloud
