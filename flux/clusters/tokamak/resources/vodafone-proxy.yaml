@@ -52,3 +52,31 @@ spec:
       name: sso-oidc-secret
     redirectURL: "https://vodafone.${external_domain}/oauth2/callback"
     refreshToken: true
+    # Puts the access token into Authorization: Bearer for the jwt filter below,
+    # which runs after oauth2 in the chain. Reading it from the cookie instead
+    # would need disableTokenEncryption (tokens are encrypted since EG v1.6).
+    forwardAccessToken: true
+  jwt:
+    # A missing token must not 401 here -- that would break the OIDC callback.
+    # Enforcement stays with authorization below: no token, no rule match, Deny.
+    optional: true
+    providers:
+      - name: keycloak
+        issuer: "https://auth.${external_domain}/realms/mog"
+        # No audiences: Keycloak access tokens carry aud=account, not the client id.
+        remoteJWKS:
+          uri: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/certs"
+  authorization:
+    defaultAction: Deny
+    rules:
+      - name: allow-vodafone-group
+        action: Allow
+        principal:
+          jwt:
+            provider: keycloak
+            claims:
+              # Requires a Group Membership mapper (claim "groups") on the client.
+              # Leading slash = Keycloak's "Full group path" is on.
+              - name: groups
+                valueType: StringArray
+                values: ["/vodafone"]
