@@ -130,6 +130,12 @@ spec:
             # inspected. Verified: Coraza implements SecRuleUpdateTargetByTag,
             # and CRS rules carry the tag OWASP_CRS.
             - 'SecRuleUpdateTargetByTag "OWASP_CRS" "!ARGS:password"'
+            # CRS blocks loopback URLs in args as SSRF, which kills every OIDC
+            # native-app login: kubelogin always sends redirect_uri=http://localhost:PORT.
+            # Measured 2026-08-31: localhost and 127.0.0.1 -> 403, example.com -> passes.
+            # Safe to drop, because Keycloak matches redirect_uri against the client's
+            # registered URIs -- an exact allowlist, stronger than a regex heuristic.
+            - 'SecRuleUpdateTargetByTag "OWASP_CRS" "!ARGS:redirect_uri"'
 
             # ---- Positive model: Keycloak path allowlist -------------------
             # CRS above is a blocklist — it only reacts to patterns it already
