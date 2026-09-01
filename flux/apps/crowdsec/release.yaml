@@ -100,9 +100,15 @@ spec:
             description: "Whitelist authenticated kube-apiserver traffic (JWT-gated route)"
             filter: "evt.Meta.service == 'http' && evt.Meta.log_type in ['http_access-log', 'http_error-log'] && evt.Meta.target_fqdn == 'k8s.${external_domain}'"
             whitelist:
-              reason: "kube-apiserver protected by mandatory Keycloak JWT + RBAC; exempt successful admin traffic from behavioral scan scenarios"
+              reason: "kube-apiserver protected by mandatory Keycloak JWT + RBAC; anything but 401 is authenticated traffic, exempt it from behavioral scan scenarios"
               expression:
-                - evt.Meta.http_status matches '^[123]'
+                # Not '^[123]': Lens lists job history and requests pods the GC
+                # already removed -- 11x 404 in one second tripped http-probing
+                # and banned the admin's own IP (2026-09-01). Envoy answers a
+                # missing/invalid JWT with 401 and never reaches the apiserver,
+                # so any other status means the token was valid. A 401 burst
+                # stays detectable.
+                - evt.Meta.http_status != '401'
           # Two distinct false positives on nextcloud.${external_domain}, both
           # observed self-banning the owner's own Nextcloud desktop client:
           #
