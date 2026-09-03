@@ -242,7 +242,7 @@ spec:
       extraInitContainers:
         - name: prune-stale-bouncers
           # Keep in sync with the chart's LAPI image (currently v1.7.8).
-          image: docker.io/crowdsecurity/crowdsec:v1.7.8
+          image: docker.io/crowdsecurity/crowdsec:v1.8.1
           command: ["sh", "-ec"]
           args:
             - |
