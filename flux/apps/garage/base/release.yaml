@@ -9,7 +9,12 @@ spec:
   url: https://git.deuxfleurs.fr/Deuxfleurs/garage
   ref:
     # semver uses tag
-    semver: ">=v2.1.0 <v3.0.0"
+    # Capped below v2.4.0: that build panics in rustls ("could not automatically
+    # determine the process-level CryptoProvider") as soon as kubernetes-discovery
+    # opens a TLS client, so all 3 replicas crashloop. Fixed upstream by PR #1527
+    # (merged 2026-09-07): raise to <v3.0.0 once v2.4.1 is tagged. Same root cause
+    # hit consul-discovery, see issue #1526.
+    semver: ">=v2.1.0 <v2.4.0"
   ignore: |
     # exclude all
     /*

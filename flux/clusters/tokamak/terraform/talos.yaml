@@ -32,7 +32,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m
-  approvePlan: auto
+  # No approvePlan: the controller plans and waits. Approve by copying the name
+  # from .status.plan.pending into approvePlan. Removed for the v0.12 provider
+  # migration, whose plan destroys and recreates every node resource.
   path: ./terraform/talos
   sourceRef:
     kind: GitRepository
