@@ -30,7 +30,7 @@ spec:
     type: Kubernetes
     kubernetes:
       envoyService:
-        externalTrafficPolicy: Cluster
+        externalTrafficPolicy: Local
       envoyDeployment:
         container:
           resources:
