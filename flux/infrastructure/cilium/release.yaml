@@ -37,7 +37,10 @@ spec:
       datapathMode: netkit
       distributedLRU:
         enabled: true
-      mapDynamicSizeRatio: 0.004
+      # Chart default. 0.004 sized the TCP conntrack map to 936864 entries on
+      # 64GB nodes while measured pressure was 1.8% -- ~445MB of vmalloc per
+      # node standing empty. 0.0025 still leaves ~34x headroom.
+      mapDynamicSizeRatio: 0.0025
     bpfClockProbe: true
     # fix for masquerade under talos
     socketLB:
