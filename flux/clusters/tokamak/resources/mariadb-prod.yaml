@@ -16,15 +16,6 @@ spec:
     key: root-password
     generate: true
 
-  # The image entrypoint skips the system-table migration unless this is set, and
-  # the operator does not set it (upstream #1920 adds updateStrategy
-  # .mariadbAutoUpgradeEnabled, merged but not in 26.10.0). Without it a major
-  # version bump leaves an unmigrated datadir and only logs one line.
-  # The entrypoint dumps the mysql schema to the datadir before upgrading.
-  env:
-    - name: MARIADB_AUTO_UPGRADE
-      value: "1"
-
   myCnf: |
     [mariadb]
     bind-address=*
@@ -45,6 +36,11 @@ spec:
   updateStrategy:
     autoUpdateDataPlane: true
     type: ReplicasFirstPrimaryLast
+    # Runs mariadb-upgrade on start. Kept on permanently because no image is
+    # pinned here -- the operator picks the version, so a major bump can arrive
+    # unannounced and would otherwise leave the datadir unmigrated. No-op when
+    # there is nothing to migrate. Needs operator >= 26.10.1.
+    mariadbAutoUpgradeEnabled: true
 
   storage:
     size: 10Gi
