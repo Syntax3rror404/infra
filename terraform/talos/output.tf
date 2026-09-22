@@ -19,19 +19,16 @@ output "kubeconfig" {
 # you can output a specific node with
 # tofu output -json machineconfigs | jq -r '.["nodename"]'
 output "machineconfigs" {
-  value = merge(
-    { for k, v in talos_machine_configuration_apply.controlplanes : k => v.machine_configuration },
-    { for k, v in talos_machine_configuration_apply.workers      : k => v.machine_configuration },
-  )
+  value     = { for k, v in data.talos_machine_configuration.node : k => v.machine_configuration }
   sensitive = true
 }
 
 output "machineconfigs_controlplane" {
-  value     = { for k, v in talos_machine_configuration_apply.controlplanes : k => v.machine_configuration }
+  value     = { for k, v in data.talos_machine_configuration.node : k => v.machine_configuration if local.all_nodes[k].role == "controlplane" }
   sensitive = true
 }
 
 output "machineconfigs_worker" {
-  value     = { for k, v in talos_machine_configuration_apply.workers : k => v.machine_configuration }
+  value     = { for k, v in data.talos_machine_configuration.node : k => v.machine_configuration if local.all_nodes[k].role == "worker" }
   sensitive = true
 }

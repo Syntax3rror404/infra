@@ -34,7 +34,18 @@ variable "pod_subnet" {
   default = "10.244.0.0/16"
 }
 
+# Installer image version. Bumping this upgrades the OS on every node.
 variable "talos_version" {
+  type    = string
+  default = "1.13.0"
+}
+
+# Machine-config generation contract, pinned to the format the cluster already
+# runs. Independent of talos_version: raising it regenerates every machine config
+# and is a separate, deliberate step, not part of an OS upgrade. From v1.14 the
+# generator emits SecurityProfileConfig{workloadIsolation: true}, which needs the
+# sandboxd namespace that upgraded clusters do not have.
+variable "talos_contract" {
   type    = string
   default = "1.13.0"
 }

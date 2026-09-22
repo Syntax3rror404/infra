@@ -33,9 +33,10 @@ metadata:
 spec:
   interval: 10m
   # No approvePlan: the controller plans and waits. Approve by copying the name
-  # from .status.plan.pending into approvePlan. Removed for the v0.12 provider
-  # migration, whose plan destroys and recreates every node resource.
+  # from .status.plan.pending into approvePlan.
   path: ./terraform/talos
+  # Talos nodes upgrade one at a time; parallel reboots would cost etcd quorum.
+  parallelism: 1
   sourceRef:
     kind: GitRepository
     name: flux-system

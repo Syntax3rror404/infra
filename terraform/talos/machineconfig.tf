@@ -1,185 +1,84 @@
 resource "talos_machine_secrets" "this" {
 }
 
-locals {
-  cluster_endpoint = "https://${var.endpoint_vip}:6443"
-}
+data "talos_machine_configuration" "node" {
+  for_each = local.all_nodes
 
-data "talos_machine_configuration" "controlplane" {
-  for_each = { for m in var.controlplanes : m.hostname => m }
-
-  cluster_name       = var.cluster_name
-  machine_type       = "controlplane"
-  cluster_endpoint   = local.cluster_endpoint
-  machine_secrets    = talos_machine_secrets.this.machine_secrets
-  talos_version      = var.talos_version
+  cluster_name     = var.cluster_name
+  machine_type     = each.value.role
+  cluster_endpoint = local.cluster_endpoint
+  machine_secrets  = talos_machine_secrets.this.machine_secrets
+  # Generation contract, not the installed version -- see var.talos_contract.
+  talos_version      = var.talos_contract
   kubernetes_version = var.kubernetes_version
-  config_patches = concat(
-    [
-      var.sysctls_patch,
-      var.sysfs_patch,
-      <<-EOT
-        machine:
-          kubelet:
-            extraArgs:
-              rotate-server-certificates: true
-          files:
-            - path: /etc/cri/conf.d/20-customization.part
-              op: create
-              content: |
-                [plugins."io.containerd.cri.v1.images"]
-                  discard_unpacked_layers = false
-          install:
-            image: ${data.talos_image_factory_urls.this.urls.installer}
-            wipe: true
-            diskSelector:
-              model: "${each.value.install_diskSelector}"
-          features:
-            kubernetesTalosAPIAccess:
-              enabled: true
-              allowedRoles:
-                - os:reader
-                - os:operator
-              allowedKubernetesNamespaces:
-                - kube-system
-            hostDNS:
-              enabled: true
-              forwardKubeDNSToHost: true
-              resolveMemberNames: false
-        cluster:
-          allowSchedulingOnControlPlanes: false
-          proxy:
-            disabled: true
-          discovery:
-            enabled: false
-          coreDNS:
-            disabled: true
-          apiServer:
-            extraArgs:
-              event-ttl: 15m
-            env:
-              GOGC: "75"
-          network:
-            dnsDomain: cluster.local
-            podSubnets:
-              - ${var.pod_subnet}
-            serviceSubnets:
-              - ${var.service_subnet}
-            cni:
-              name: none
-      EOT
-      ,
-      local.controlplane_network_patch[each.key],
-    ],
-    var.oidc != null ? [
-      <<-EOT
-        machine:
-          files:
-            - path: /var/etc/kubernetes/oidc/auth-config.yaml
-              permissions: 0o644
-              op: create
-              content: |
-                apiVersion: apiserver.config.k8s.io/v1
-                kind: AuthenticationConfiguration
-                jwt:
-                  - issuer:
-                      url: "${var.oidc.issuer_url}"
-                      audiences:
-                        - "${var.oidc.client_id}"
-                      audienceMatchPolicy: MatchAny
-                    claimMappings:
-                      username:
-                        claim: "${var.oidc.username_claim}"
-                        prefix: "${var.oidc.username_prefix}"
-                      groups:
-                        claim: "${var.oidc.groups_claim}"
-                        prefix: "${var.oidc.groups_prefix}"
-        cluster:
-          apiServer:
-            extraArgs:
-              authentication-config: /etc/kubernetes/oidc/auth-config.yaml
-            extraVolumes:
-              - hostPath: /var/etc/kubernetes/oidc
-                mountPath: /etc/kubernetes/oidc
-                readonly: true
-      EOT
-    ] : []
-  )
+  config_patches     = local.config_patches[each.key]
 }
 
-data "talos_machine_configuration" "worker" {
-  for_each = { for w in var.workers : w.hostname => w }
-
-  cluster_name       = var.cluster_name
-  machine_type       = "worker"
-  cluster_endpoint   = local.cluster_endpoint
-  machine_secrets    = talos_machine_secrets.this.machine_secrets
-  talos_version      = var.talos_version
-  kubernetes_version = var.kubernetes_version
-  config_patches = [
-    var.sysctls_patch,
-    var.sysfs_patch,
-    <<-EOT
-      machine:
-        kubelet:
-          extraArgs:
-            rotate-server-certificates: true
-        files:
-          - path: /etc/cri/conf.d/20-customization.part
-            op: create
-            content: |
-              [plugins."io.containerd.cri.v1.images"]
-                discard_unpacked_layers = false
-        install:
-          image: ${data.talos_image_factory_urls.this.urls.installer}
-          wipe: true
-          diskSelector:
-            model: "${each.value.install_diskSelector}"
-        features:
-          hostDNS:
-            enabled: true
-            forwardKubeDNSToHost: true
-            resolveMemberNames: false
-      cluster:
-        discovery:
-          enabled: false
-        network:
-          dnsDomain: cluster.local
-          podSubnets:
-            - ${var.pod_subnet}
-          serviceSubnets:
-            - ${var.service_subnet}
-          cni:
-            name: none
-    EOT
-    ,
-    local.worker_network_patch[each.key],
-  ]
+# Derived from the secrets rather than fetched from the cluster, so it carries no
+# dependency on talos_cluster -- that would cycle through drain_on_upgrade below.
+ephemeral "talos_cluster_kubeconfig" "this" {
+  machine_secrets = talos_machine_secrets.this.machine_secrets
+  cluster_name    = var.cluster_name
+  endpoint        = var.endpoint_vip
 }
 
-resource "talos_machine_configuration_apply" "controlplanes" {
-  for_each = { for m in var.controlplanes : m.hostname => m }
+resource "talos_machine" "node" {
+  for_each = local.all_nodes
 
-  node                        = each.value.ip
-  client_configuration        = talos_machine_secrets.this.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.controlplane[each.key].machine_configuration
+  node                  = each.value.ip
+  client_configuration  = talos_machine_secrets.this.client_configuration
+  machine_configuration = data.talos_machine_configuration.node[each.key].machine_configuration
+
+  # Bumping var.talos_version rewrites this URL and upgrades the node in place.
+  image = data.talos_image_factory_urls.this.urls.installer
+
+  # talos_cluster owns Kubernetes upgrades via upgrade-k8s; without this the five
+  # component image fields would be re-applied here in parallel, bypassing it.
+  ignore_kubernetes_upgrade_drift = true
+
+  drain_on_upgrade = true
+  kubeconfig_wo    = ephemeral.talos_cluster_kubeconfig.this.kubeconfig_raw
 }
 
-resource "talos_machine_configuration_apply" "workers" {
+resource "talos_cluster" "this" {
   depends_on = [
-    talos_machine_configuration_apply.controlplanes
+    talos_machine.node
   ]
-  for_each = { for w in var.workers : w.hostname => w }
 
-  node                        = each.value.ip
-  client_configuration        = talos_machine_secrets.this.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.worker[each.key].machine_configuration
-}
-
-resource "talos_machine_bootstrap" "this" {
-  depends_on = [
-    talos_machine_configuration_apply.controlplanes
-  ]
   node                 = var.controlplanes[0].ip
+  control_plane_nodes  = local.controlplane_ips
   client_configuration = talos_machine_secrets.this.client_configuration
+  kubernetes_version   = var.kubernetes_version
+}
+
+# One-off: carry the previous role-split resources into the single node map
+# without a destroy/create round. Removable once applied.
+moved {
+  from = talos_machine.controlplanes["tokamak-m1"]
+  to   = talos_machine.node["tokamak-m1"]
+}
+
+moved {
+  from = talos_machine.controlplanes["tokamak-m2"]
+  to   = talos_machine.node["tokamak-m2"]
+}
+
+moved {
+  from = talos_machine.controlplanes["tokamak-m3"]
+  to   = talos_machine.node["tokamak-m3"]
+}
+
+moved {
+  from = talos_machine.workers["tokamak-w1"]
+  to   = talos_machine.node["tokamak-w1"]
+}
+
+moved {
+  from = talos_machine.workers["tokamak-w2"]
+  to   = talos_machine.node["tokamak-w2"]
+}
+
+moved {
+  from = talos_machine.workers["tokamak-w3"]
+  to   = talos_machine.node["tokamak-w3"]
 }
