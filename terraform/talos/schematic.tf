@@ -5,9 +5,9 @@ resource "talos_image_factory_schematic" "this" {
         systemExtensions = {
           officialExtensions = var.talos_extensions
         }
-        # Drops Talos' forced pti=on; the kernel's auto mode then skips PTI on
-        # AMD (meltdown: Not affected).
-        extraKernelArgs = ["-selinux", "selinux=0", "-pti"]
+        # Talos refuses to boot without pti=on and slab_nomerge (KSPP check
+        # before LoadConfig) -- never remove them here.
+        extraKernelArgs = ["-selinux", "selinux=0"]
       }
     }
   )
