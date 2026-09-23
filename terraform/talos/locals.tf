@@ -164,9 +164,16 @@ locals {
     ))
   }
 
+  filesystem_trim_patch = <<-EOT
+    ---
+    apiVersion: v1alpha1
+    kind: FilesystemTrimConfig
+    interval: ${var.trim_interval}
+  EOT
+
   config_patches = {
     for k, n in local.all_nodes : k => concat(
-      [var.sysctls_patch, var.sysfs_patch, local.base_patch[k]],
+      [var.sysctls_patch, var.sysfs_patch, local.filesystem_trim_patch, local.base_patch[k]],
       n.role == "controlplane" ? [local.controlplane_patch] : [],
       [local.network_patch[k]],
       n.role == "controlplane" && var.oidc != null ? [local.oidc_patch] : [],

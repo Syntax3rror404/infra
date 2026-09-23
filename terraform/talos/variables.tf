@@ -93,53 +93,55 @@ variable "sysctls_patch" {
   type        = string
   description = "Machine-level sysctls applied to both controlplane and worker nodes as a Talos config patch."
   default     = <<-EOT
-    machine:
-      sysctls:
-        # --- User namespaces ---
-        user.max_user_namespaces: 11255  # Allow many user namespaces (needed for UserNamespaces feature; gVisor)
-        # --- Inotify / filesystem watchers ---
-        fs.inotify.max_user_instances: 8192  # Max inotify instances per user
-        fs.inotify.max_user_watches: 1048576  # Max number of files that can be watched (high workloads, watchdogs)
-        # --- Queuing disciplines & network buffers ---
-        net.core.default_qdisc: fq  # Use Fair Queuing (better latency & throughput for 10Gbps+)
-        net.core.rmem_max: 67108864  # Max receive buffer size (64 MB, high-throughput apps e.g. QUIC)
-        net.core.wmem_max: 67108864  # Max send buffer size (64 MB, high-throughput apps e.g. QUIC)
-        # --- TCP performance tuning ---
-        net.ipv4.tcp_congestion_control: bbr  # Use BBR congestion control (better throughput/latency than CUBIC)
-        net.ipv4.tcp_fastopen: 3  # Enable TCP Fast Open (send/recv data in SYN for faster handshakes)
-        net.ipv4.tcp_mtu_probing: 1  # Enable MTU probing (handles jumbo frames, avoids blackholing)
-        net.ipv4.tcp_rmem: 4096 87380 33554432  # TCP read buffer: min / default / max (32 MB max)
-        net.ipv4.tcp_wmem: 4096 65536 33554432  # TCP write buffer: min / default / max (32 MB max)
-        net.ipv4.tcp_window_scaling: 1  # Enable TCP window scaling (needed for >64KB throughput)
-        # --- BBR companion tuning (critical for BBR to actually work well) ---
-        net.ipv4.tcp_slow_start_after_idle: 0  # Prevents BBR from resetting to slow-start after idle (huge for long-lived gRPC/HTTP2)
-        net.ipv4.tcp_notsent_lowat: 131072  # Caps send buffer bloat; lets BBR react to RTT changes quickly
-        net.ipv4.tcp_no_metrics_save: 1  # Don't cache old CUBIC metrics that would handicap BBR reconnects
-        # --- Memory management ---
-        vm.max_map_count: 262144  # Required by OpenSearch/Elasticsearch for mmap() usage
-        vm.min_free_kbytes: 262144  # 256 MB reserve; protects atomic allocations in the network RX path under memory pressure
-        # --- Connection queue / backlog ---
-        net.core.somaxconn: 65535  # Max number of connections in listen() backlog
-        net.core.netdev_max_backlog: 4096  # Max number of packets queued on interface input
-        net.ipv4.tcp_max_syn_backlog: 8192  # SYN queue must scale with somaxconn, otherwise it drops first
-        net.ipv4.tcp_max_tw_buckets: 1440000  # Prevents "time wait bucket table overflow" under load with tcp_tw_reuse=1
-        net.core.rps_sock_flow_entries: 32768  # Global RFS flow hash table; pairs with per-queue rps_flow_cnt in sysfs (RFS = Receive Flow Steering)
-        # --- TCP keepalive & timeouts ---
-        net.ipv4.tcp_keepalive_intvl: 60  # Interval (s) between keepalive probes
-        net.ipv4.tcp_keepalive_time: 600  # Time (s) before sending keepalive probes
-        net.ipv4.tcp_fin_timeout: 10  # Time (s) to wait for FIN-WAIT-2 before closing
-        net.ipv4.tcp_tw_reuse: 1  # Allow reuse of TIME-WAIT sockets (reduces port exhaustion)
-        # --- NFS / RPC performance tuning ---
-        sunrpc.tcp_slot_table_entries: 128  # Number of concurrent RPC requests per TCP connection (higher = better throughput for NFS)
-        sunrpc.tcp_max_slot_table_entries: 128  # Maximum allowed RPC slots (caps dynamic scaling, improves stability under load)
-        # --- Memory / NVMe write behavior ---
-        vm.dirty_background_ratio: "5"   # Start async writeback at 5% dirty RAM (~3 GB) instead of 10% default
-        vm.dirty_ratio: "10"             # Block writes at 10% dirty RAM (~6 GB) instead of 20% — prevents large NVMe write bursts
-        # --- Ephemeral ports ---
-        net.ipv4.ip_local_port_range: 1024 65535  # ~64k ports available instead of ~28k default
-        # --- NAPI poll budget ---
-        net.core.netdev_budget: "600"        # Packets per NAPI poll (default 300) — reduces interrupt overhead
-        net.core.netdev_budget_usecs: "8000" # Max time per NAPI poll in µs
+---
+apiVersion: v1alpha1
+kind: SysctlConfig
+params:
+  # --- User namespaces ---
+  user.max_user_namespaces: "11255"  # Allow many user namespaces (needed for UserNamespaces feature; gVisor)
+  # --- Inotify / filesystem watchers ---
+  fs.inotify.max_user_instances: "8192"  # Max inotify instances per user
+  fs.inotify.max_user_watches: "1048576"  # Max number of files that can be watched (high workloads, watchdogs)
+  # --- Queuing disciplines & network buffers ---
+  net.core.default_qdisc: "fq"  # Use Fair Queuing (better latency & throughput for 10Gbps+)
+  net.core.rmem_max: "67108864"  # Max receive buffer size (64 MB, high-throughput apps e.g. QUIC)
+  net.core.wmem_max: "67108864"  # Max send buffer size (64 MB, high-throughput apps e.g. QUIC)
+  # --- TCP performance tuning ---
+  net.ipv4.tcp_congestion_control: "bbr"  # Use BBR congestion control (better throughput/latency than CUBIC)
+  net.ipv4.tcp_fastopen: "3"  # Enable TCP Fast Open (send/recv data in SYN for faster handshakes)
+  net.ipv4.tcp_mtu_probing: "1"  # Enable MTU probing (handles jumbo frames, avoids blackholing)
+  net.ipv4.tcp_rmem: "4096 87380 33554432"  # TCP read buffer: min / default / max (32 MB max)
+  net.ipv4.tcp_wmem: "4096 65536 33554432"  # TCP write buffer: min / default / max (32 MB max)
+  net.ipv4.tcp_window_scaling: "1"  # Enable TCP window scaling (needed for >64KB throughput)
+  # --- BBR companion tuning (critical for BBR to actually work well) ---
+  net.ipv4.tcp_slow_start_after_idle: "0"  # Prevents BBR from resetting to slow-start after idle (huge for long-lived gRPC/HTTP2)
+  net.ipv4.tcp_notsent_lowat: "131072"  # Caps send buffer bloat; lets BBR react to RTT changes quickly
+  net.ipv4.tcp_no_metrics_save: "1"  # Don't cache old CUBIC metrics that would handicap BBR reconnects
+  # --- Memory management ---
+  vm.max_map_count: "262144"  # Required by OpenSearch/Elasticsearch for mmap() usage
+  vm.min_free_kbytes: "262144"  # 256 MB reserve; protects atomic allocations in the network RX path under memory pressure
+  # --- Connection queue / backlog ---
+  net.core.somaxconn: "65535"  # Max number of connections in listen() backlog
+  net.core.netdev_max_backlog: "4096"  # Max number of packets queued on interface input
+  net.ipv4.tcp_max_syn_backlog: "8192"  # SYN queue must scale with somaxconn, otherwise it drops first
+  net.ipv4.tcp_max_tw_buckets: "1440000"  # Prevents "time wait bucket table overflow" under load with tcp_tw_reuse=1
+  net.core.rps_sock_flow_entries: "32768"  # Global RFS flow hash table; pairs with per-queue rps_flow_cnt in sysfs (RFS = Receive Flow Steering)
+  # --- TCP keepalive & timeouts ---
+  net.ipv4.tcp_keepalive_intvl: "60"  # Interval (s) between keepalive probes
+  net.ipv4.tcp_keepalive_time: "600"  # Time (s) before sending keepalive probes
+  net.ipv4.tcp_fin_timeout: "10"  # Time (s) to wait for FIN-WAIT-2 before closing
+  net.ipv4.tcp_tw_reuse: "1"  # Allow reuse of TIME-WAIT sockets (reduces port exhaustion)
+  # --- NFS / RPC performance tuning ---
+  sunrpc.tcp_slot_table_entries: "128"  # Number of concurrent RPC requests per TCP connection (higher = better throughput for NFS)
+  sunrpc.tcp_max_slot_table_entries: "128"  # Maximum allowed RPC slots (caps dynamic scaling, improves stability under load)
+  # --- Memory / NVMe write behavior ---
+  vm.dirty_background_ratio: "5"   # Start async writeback at 5% dirty RAM (~3 GB) instead of 10% default
+  vm.dirty_ratio: "10"             # Block writes at 10% dirty RAM (~6 GB) instead of 20% — prevents large NVMe write bursts
+  # --- Ephemeral ports ---
+  net.ipv4.ip_local_port_range: "1024 65535"  # ~64k ports available instead of ~28k default
+  # --- NAPI poll budget ---
+  net.core.netdev_budget: "600"        # Packets per NAPI poll (default 300) — reduces interrupt overhead
+  net.core.netdev_budget_usecs: "8000" # Max time per NAPI poll in µs
   EOT
 }
 
@@ -147,12 +149,22 @@ variable "sysfs_patch" {
   type        = string
   description = "Machine-level sysfs settings applied to both controlplane and worker nodes as a Talos config patch."
   default     = <<-EOT
-    machine:
-      sysfs:
-        # --- RPS/RFS: Use all cores for NET_RX-Softirq ---
-        class/net/enp2s0/queues/rx-0/rps_cpus: "ffff"
-        class/net/enp2s0/queues/rx-0/rps_flow_cnt: "4096"
-        class/net/enp1s0/queues/rx-0/rps_cpus: "ffff"
-        class/net/enp1s0/queues/rx-0/rps_flow_cnt: "4096"
+---
+apiVersion: v1alpha1
+kind: SysfsConfig
+params:
+  # --- RPS/RFS: Use all cores for NET_RX-Softirq ---
+  class/net/enp2s0/queues/rx-0/rps_cpus: "ffff"
+  class/net/enp2s0/queues/rx-0/rps_flow_cnt: "4096"
+  class/net/enp1s0/queues/rx-0/rps_cpus: "ffff"
+  class/net/enp1s0/queues/rx-0/rps_flow_cnt: "4096"
   EOT
+}
+
+# Talos never trims on its own: an upgraded cluster has no FilesystemTrimConfig,
+# and the filesystems are not mounted with discard. Runs are spread out by a
+# per-volume, per-node hash within the interval.
+variable "trim_interval" {
+  type    = string
+  default = "168h0m0s"
 }
