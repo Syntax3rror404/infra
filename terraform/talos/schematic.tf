@@ -5,7 +5,9 @@ resource "talos_image_factory_schematic" "this" {
         systemExtensions = {
           officialExtensions = var.talos_extensions
         }
-        extraKernelArgs = ["-selinux", "selinux=0"]
+        # Drops Talos' forced pti=on; the kernel's auto mode then skips PTI on
+        # AMD (meltdown: Not affected).
+        extraKernelArgs = ["-selinux", "selinux=0", "-pti"]
       }
     }
   )
