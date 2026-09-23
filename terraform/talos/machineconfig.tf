@@ -50,35 +50,3 @@ resource "talos_cluster" "this" {
   client_configuration = talos_machine_secrets.this.client_configuration
   kubernetes_version   = var.kubernetes_version
 }
-
-# One-off: carry the previous role-split resources into the single node map
-# without a destroy/create round. Removable once applied.
-moved {
-  from = talos_machine.controlplanes["tokamak-m1"]
-  to   = talos_machine.node["tokamak-m1"]
-}
-
-moved {
-  from = talos_machine.controlplanes["tokamak-m2"]
-  to   = talos_machine.node["tokamak-m2"]
-}
-
-moved {
-  from = talos_machine.controlplanes["tokamak-m3"]
-  to   = talos_machine.node["tokamak-m3"]
-}
-
-moved {
-  from = talos_machine.workers["tokamak-w1"]
-  to   = talos_machine.node["tokamak-w1"]
-}
-
-moved {
-  from = talos_machine.workers["tokamak-w2"]
-  to   = talos_machine.node["tokamak-w2"]
-}
-
-moved {
-  from = talos_machine.workers["tokamak-w3"]
-  to   = talos_machine.node["tokamak-w3"]
-}
