@@ -19,7 +19,7 @@ data "talos_machine_configuration" "node" {
 ephemeral "talos_cluster_kubeconfig" "this" {
   machine_secrets = talos_machine_secrets.this.machine_secrets
   cluster_name    = var.cluster_name
-  endpoint        = var.endpoint_vip
+  endpoint        = local.cluster_endpoint
 }
 
 resource "talos_machine" "node" {
@@ -35,6 +35,9 @@ resource "talos_machine" "node" {
   # talos_cluster owns Kubernetes upgrades via upgrade-k8s; without this the five
   # component image fields would be re-applied here in parallel, bypassing it.
   ignore_kubernetes_upgrade_drift = true
+
+  # kexec reboots hang these nodes; always a full power cycle through the firmware.
+  reboot_mode = "POWERCYCLE"
 
   drain_on_upgrade = true
   kubeconfig_wo    = ephemeral.talos_cluster_kubeconfig.this.kubeconfig_raw

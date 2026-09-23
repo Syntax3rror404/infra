@@ -31,6 +31,9 @@ metadata:
   name: talos
   namespace: flux-system
 spec:
+  # Paused while OS upgrades run locally node by node; a kubectl suspend is
+  # reverted by the cluster-resources Kustomization within 5 minutes.
+  suspend: true
   interval: 10m
   # No approvePlan: the controller plans and waits. Approve by copying the name
   # from .status.plan.pending into approvePlan.
