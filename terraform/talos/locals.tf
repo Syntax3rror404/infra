@@ -17,12 +17,6 @@ locals {
         kubelet:
           extraArgs:
             rotate-server-certificates: true
-        files:
-          - path: /etc/cri/conf.d/20-customization.part
-            op: create
-            content: |
-              [plugins."io.containerd.cri.v1.images"]
-                discard_unpacked_layers = false
         install:
           image: ${data.talos_image_factory_urls.this.urls.installer}
           wipe: true
@@ -164,6 +158,19 @@ locals {
     ))
   }
 
+  # Replaces the legacy /etc/cri/conf.d/20-customization.part machine file. The
+  # name "customization" is reserved for that legacy file and cannot be used.
+  # Applying or removing this restarts CRI on the node.
+  cri_customization_patch = <<-EOT
+    ---
+    apiVersion: v1alpha1
+    kind: CRICustomizationConfig
+    name: images
+    content: |
+      [plugins."io.containerd.cri.v1.images"]
+        discard_unpacked_layers = false
+  EOT
+
   filesystem_trim_patch = <<-EOT
     ---
     apiVersion: v1alpha1
@@ -173,7 +180,7 @@ locals {
 
   config_patches = {
     for k, n in local.all_nodes : k => concat(
-      [var.sysctls_patch, var.sysfs_patch, local.filesystem_trim_patch, local.base_patch[k]],
+      [var.sysctls_patch, var.sysfs_patch, local.cri_customization_patch, local.filesystem_trim_patch, local.base_patch[k]],
       n.role == "controlplane" ? [local.controlplane_patch] : [],
       [local.network_patch[k]],
       n.role == "controlplane" && var.oidc != null ? [local.oidc_patch] : [],
