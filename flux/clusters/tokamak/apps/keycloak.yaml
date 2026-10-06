@@ -37,6 +37,12 @@ spec:
           kind: Gateway
           name: envoy-gateway-external
           namespace: envoy-gateway-system
+      # Redirect the bare host root to the account console so users don't have
+      # to type the full path.
+      rootRedirect:
+        enabled: true
+        path: /realms/mog/account/
+        statusCode: 302
       # Pin the realm. The chart default is a bare `/realms`, which also
       # publishes /realms/master — the admin realm's OIDC endpoints were
       # answering from the internet (openid-configuration 200, auth 302) even
