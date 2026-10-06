@@ -17,6 +17,9 @@ data:
   external_domain: "menofgaming.de"
   internal_domain: "tokamak.labza"
 
+  # Keycloak realm referenced by routes, WAF and OIDC proxies
+  keycloak_realm: "mog"
+
   # Storage Configuration
   default_storage_class: "longhorn"
 

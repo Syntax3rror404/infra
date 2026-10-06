@@ -47,9 +47,9 @@ spec:
       name: pve
   oidc:
     provider:
-      issuer: "https://auth.${external_domain}/realms/mog"
-      authorizationEndpoint: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/auth"
-      tokenEndpoint: "https://auth.${external_domain}/realms/mog/protocol/openid-connect/token"
+      issuer: "https://auth.${external_domain}/realms/${keycloak_realm}"
+      authorizationEndpoint: "https://auth.${external_domain}/realms/${keycloak_realm}/protocol/openid-connect/auth"
+      tokenEndpoint: "https://auth.${external_domain}/realms/${keycloak_realm}/protocol/openid-connect/token"
     clientID: "${oauth2_proxy_clientID}"
     clientSecret:
       name: sso-oidc-secret

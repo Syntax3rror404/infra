@@ -41,13 +41,13 @@ spec:
       # to type the full path.
       rootRedirect:
         enabled: true
-        path: /realms/mog/account/
+        path: /realms/${keycloak_realm}/account/
         statusCode: 302
       # Pin the realm. The chart default is a bare `/realms`, which also
       # publishes /realms/master — the admin realm's OIDC endpoints were
       # answering from the internet (openid-configuration 200, auth 302) even
       # though the admin console itself is internal-only on adminHttpRoute.
-      # Gateway API PathPrefix matches whole path elements, so /realms/mog
+      # Gateway API PathPrefix matches whole path elements, so /realms/<realm>
       # cannot be widened by a crafted realm name (/realms/mogX does not match).
       # This is the cheap control: /realms/master stops being routable at all,
       # rather than being flagged one layer later by the WAF.
@@ -55,13 +55,13 @@ spec:
       # /.well-known stays. Besides the realm-scoped OIDC discovery document,
       # Keycloak also answers the RFC 8414 form, which inserts the well-known
       # segment instead of appending it:
-      # /.well-known/oauth-authorization-server/realms/mog returns the same
+      # /.well-known/oauth-authorization-server/realms/<realm> returns the same
       # metadata (verified: HTTP 200, byte-identical). Removing the prefix would
       # break clients that resolve metadata that way.
       matches:
         - path:
             type: PathPrefix
-            value: /realms/mog
+            value: /realms/${keycloak_realm}
         - path:
             type: PathPrefix
             value: /resources
