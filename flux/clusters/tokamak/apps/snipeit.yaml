@@ -19,6 +19,7 @@ spec:
       database: snipeit
       username: snipeit
       password: "${snipeit_mariadb_password}"
+      grantRequeueInterval: 168h
       useExisting:
         enabled: true
         namespace: mariadb-prod

@@ -84,6 +84,7 @@ spec:
       database: keycloak
       username: keycloak
       password: "${keycloak_mariadb_password}"
+      grantRequeueInterval: 168h
       useExisting:
         enabled: true
         namespace: mariadb-prod

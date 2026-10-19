@@ -13,6 +13,7 @@ spec:
       database: teamspeak
       username: teamspeak
       password: "${teamspeak_mariadb_password}"
+      grantRequeueInterval: 168h
       useExisting:
         enabled: true
         namespace: mariadb-prod
