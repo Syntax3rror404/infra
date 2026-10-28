@@ -365,7 +365,7 @@ spec:
       # Download lists
       extraInitContainers:
         - name: download-ai-user-agents
-          image: docker.io/curlimages/curl:8.23.0@sha256:a134550be58ab783810e613ae96fd253c38f7bdd16d9bf9be350700c7a29ac06
+          image: docker.io/curlimages/curl:8.23.0@sha256:6b46ee7c652d53ef17ddf1428b1a365a66d913d21c54df42e2e46d5bd321bb46
           command: ["sh", "-c"]
           args:
             # This list is re-fetched on every pod start (the target is an
