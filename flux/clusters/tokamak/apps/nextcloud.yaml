@@ -22,6 +22,40 @@ spec:
         seccompProfile:
           type: RuntimeDefault
 
+      # chart only pre-creates redis-session.ini for redis.enabled, not externalRedis
+      extraInitContainers:
+        - name: init-redis-session-ini
+          image: docker.io/library/alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+          command: ["touch", "/php-confd/redis-session.ini"]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+          securityContext:
+            runAsUser: 33
+            runAsGroup: 101
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: php-confd
+              mountPath: /php-confd
+      extraVolumes:
+        - name: php-confd
+          emptyDir:
+            sizeLimit: 1Mi
+      extraVolumeMounts:
+        - name: php-confd
+          mountPath: /usr/local/etc/php/conf.d/redis-session.ini
+          subPath: redis-session.ini
+
       phpConfigs:
         zz-pm.conf: |
           [www]
