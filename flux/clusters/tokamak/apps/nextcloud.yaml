@@ -177,6 +177,15 @@ spec:
         seccompProfile:
           type: RuntimeDefault
 
+    externalRedis:
+      enabled: true
+      host: valkey.nextcloud.svc.cluster.local
+      port: "6379"
+      existingSecret:
+        enabled: true
+        secretName: nextcloud-valkey
+        passwordKey: password
+
     externalDatabase:
       enabled: true
       type: mysql
