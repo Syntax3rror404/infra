@@ -25,6 +25,10 @@ spec:
           ROOT_URL: https://git.${internal_domain}
           SSH_DOMAIN: git.${internal_domain}
           DOMAIN: git.${internal_domain}
+          LFS_START_SERVER: true
+        # Root fs is read-only, keep LFS objects on the PVC
+        lfs:
+          PATH: /data/lfs
 
     httpRoute:
       enabled: false
