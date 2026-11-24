@@ -49,8 +49,10 @@ locals {
           allowedRoles:
             - os:reader
             - os:operator
+            - os:admin
           allowedKubernetesNamespaces:
             - kube-system
+            - talos-commander
     cluster:
       allowSchedulingOnControlPlanes: false
       proxy:

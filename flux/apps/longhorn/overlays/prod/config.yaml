@@ -34,6 +34,10 @@ spec:
       defaultDataPath: /var/mnt/longhorn
       storageReservedPercentageForDefaultDisk: 0
       taintToleration: node-role.kubernetes.io/control-plane=:NoSchedule; node-role.kubernetes.io/master=:NoSchedule
+      # Volumes have one replica (defaultClassReplicaCount), so the default policy blocks every drain of a node
+      # that holds one. A stopped replica stays on disk through Talos upgrades and reboots; removing a node after
+      # draining it loses such data, so move the volumes away first.
+      nodeDrainPolicy: allow-if-replica-is-stopped
 
     #image:
     #  longhorn:
